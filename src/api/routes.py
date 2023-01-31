@@ -11,16 +11,6 @@ api = Blueprint('api', __name__)
 app = Flask(__name__)
 crypto = Bcrypt(app)
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
-
-
 @api.route('/signup', methods=['POST'])
 def create_user():
     email=request.json.get('email')
@@ -44,3 +34,24 @@ def user_login():
     token=create_access_token(identity=user.id)
     refresh_token=create_refresh_token(identity=user.id)
     return jsonify({"access_token":token, "refresh_token": refresh_token})
+
+# Ruta Rutinas
+#GET Y POST de las rutinas y pasos
+#Crear rutina
+
+@api.route('/rutinas', methods=['GET'])
+def mostrar_rutinas():
+    return
+
+
+@api.route('/nueva_rutina', methods=['POST'])
+def crear_rutina():
+    ## JWT Requeried debe ser una ruta protegida, solo puede acceder usuarios registrados.
+    ## JWT Identity
+    nombre = request.json.get('nombre')
+    descripcion = request.json.get('descripcion')
+    nueva_rutina = Rutina(nombre=nombre, descripcion=descripcion)
+    db.session.add(nueva_rutina)
+    db.session.commit()
+    return jsonify({'msg': "Rutina creada!"})
+
