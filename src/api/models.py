@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__="user"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
@@ -22,8 +23,8 @@ class Rutina (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
-    user.id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.Relationship("User")
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
     # no tiene que tener columna de pasos????
 
     def __repr__(self):
@@ -37,25 +38,25 @@ class Rutina (db.Model):
         }
 
 class Paso (db.Model):
-    id = db.column(db.integer, primary_key=True)
-    nombre = db.column(db.String)
-    descripcion = db.column(db.String)
-    objetivo = db.column(db.String)
-    instrucciones = db.column(db.String)
-    contenido = db.column(db.String)
-    periodicidad = db.column(db.Strng)
-    inicio = db.column(db.DateTime) #No se importa?
-    terminacion = db.column(db.Datetime)
-    completada = db.column(db.Boolean)
-    user.id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.Relationship("User")
-    rutina.id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
-    rutina = db.Relationship("Rutina")
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String)
+    descripcion = db.Column(db.String)
+    objetivo = db.Column(db.String)
+    instrucciones = db.Column(db.String)
+    contenido = db.Column(db.String)
+    periodicidad = db.Column(db.String)
+    inicio = db.Column(db.DateTime) #No se importa?
+    terminacion = db.Column(db.DateTime)
+    completada = db.Column(db.Boolean)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+    rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
+    rutina = db.relationship("Rutina")
 
     def __repr__(self):
         return f'<Paso {self.nombre}>'
     
-    def serializar(self):
+    def serialize(self):
         return{
         "id": self.id,
         "nombre": self.nombre,

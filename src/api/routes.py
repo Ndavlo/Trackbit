@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Rutina
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt
 from flask_bcrypt import Bcrypt
@@ -40,18 +40,23 @@ def user_login():
 #Crear rutina
 
 @api.route('/rutinas', methods=['GET'])
+@jwt_required()
 def mostrar_rutinas():
     return
 
 
 @api.route('/nueva_rutina', methods=['POST'])
+@jwt_required()
 def crear_rutina():
-    ## JWT Requeried debe ser una ruta protegida, solo puede acceder usuarios registrados.
-    ## JWT Identity
+    current_user_id = get_jwt_identity()
     nombre = request.json.get('nombre')
     descripcion = request.json.get('descripcion')
-    nueva_rutina = Rutina(nombre=nombre, descripcion=descripcion)
+    nueva_rutina = Rutina(nombre=nombre, descripcion=descripcion, user_id=current_user_id)
     db.session.add(nueva_rutina)
     db.session.commit()
     return jsonify({'msg': "Rutina creada!"})
 
+@api.route('/<rutina_id>/nuevo_paso')
+@jwt_required()
+def crear_paso():
+    current_user_id = get_jwt_identity()
