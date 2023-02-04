@@ -68,7 +68,10 @@ def crear_paso():
     periodicidad = request.json.get('periodicidad')
     inicio = request.json.get('inicio')
     terminacion = request.json.get('terminacion')
-    ## COMO SE ASIGNA A UNA RUTINA?
+    nuevo_paso = Paso(nombre=nombre, descripcion=descripcion, objetivo=objetivo, instrucciones=instrucciones, contenido=contenido, periodicidad=periodicidad, inicio=inicio, terminacion=terminacion)
+    db.session.add(nuevo_paso)
+    de.session.commit()
+    return jsonify({'msg': "Paso agregado!"})
 
 
 ###Periodicidad
