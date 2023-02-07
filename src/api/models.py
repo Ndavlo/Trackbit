@@ -8,6 +8,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    rutinas = db.relationship('Rutina', backref='person', lazy=True)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -19,7 +20,13 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
+class BlockedTokens(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    token_id = db.Column(db.String(200), unique = True)
+
+
 class Rutina (db.Model):
+    __tablename__ = 'rutinas'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
@@ -38,6 +45,7 @@ class Rutina (db.Model):
         }
 
 class Paso (db.Model):
+    __tablename__ = "pasos"
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
@@ -50,8 +58,8 @@ class Paso (db.Model):
     completada = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
-    rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
-    rutina = db.relationship("Rutina")
+    #rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
+    #rutina = db.relationship("Rutina")
 
     def __repr__(self):
         return f'<Paso {self.nombre}>'

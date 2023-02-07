@@ -18,8 +18,12 @@ def create_user():
     password=crypto.generate_password_hash(password, rounds=None).decode('utf8')
     new_user=User(email=email, password=password, is_active=True)
     db.session.add(new_user)
-    db.session.commit()
-    return jsonify({'msg': "Usuario creado"})
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'msg':"email already in use"}), 500
+    return jsonify({'msg': "Usuario creado"}), 200
 
 @api.route('/login', methods=['POST'])
 def user_login():
@@ -42,7 +46,10 @@ def user_login():
 @api.route('/rutinas', methods=['GET'])
 @jwt_required()
 def mostrar_rutinas():
-    return
+    user = get_jwt_identity()
+    rutinas = Rutina.query.filter_by(user_id=user).all()
+    response_body = list(map(lambda r: r.serialize(), rutinas))
+    return jsonify(response_body),200
 
 
 @api.route('/nueva_rutina', methods=['POST'])
