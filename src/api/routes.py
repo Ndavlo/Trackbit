@@ -48,7 +48,7 @@ def user_login():
 def mostrar_rutinas():
     user = get_jwt_identity()
     rutinas = Rutina.query.filter_by(user_id=user).all()
-    response_body = list(map(lambda r: r.serialize(), rutinas))
+    response_body = list(map(lambda r: r.serialize2(), rutinas))
     return jsonify(response_body),200
 
 

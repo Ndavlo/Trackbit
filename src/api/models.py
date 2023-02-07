@@ -32,7 +32,7 @@ class Rutina (db.Model):
     descripcion = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
-    # no tiene que tener columna de pasos????
+
 
     def __repr__(self):
         return f'<Rutina {self.id}>'
@@ -45,11 +45,12 @@ class Rutina (db.Model):
         }
 
     def serialize2 (self):
+        pasos = list(map(lambda r: r.serialize(), self.paso))
         return {
             "id": self.id,
             "nombre": self.nombre,
             "descripcion": self.descripcion,
-            "paso": self.paso
+            "paso": pasos
         }
 
 class Paso (db.Model):
@@ -61,7 +62,7 @@ class Paso (db.Model):
     instrucciones = db.Column(db.String)
     contenido = db.Column(db.String)
     periodicidad = db.Column(db.String)
-    inicio = db.Column(db.DateTime) #No se importa?
+    inicio = db.Column(db.DateTime)
     terminacion = db.Column(db.DateTime)
     completada = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
