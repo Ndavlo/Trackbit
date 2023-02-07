@@ -6,6 +6,7 @@ from api.models import db, User, Rutina, Paso
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt
 from flask_bcrypt import Bcrypt
+from sqlalchemy.exc import IntegrityError
 
 api = Blueprint('api', __name__)
 app = Flask(__name__)
@@ -15,7 +16,7 @@ crypto = Bcrypt(app)
 def create_user():
     email=request.json.get('email')
     password=request.json.get('password')
-    password=crypto.generate_password_hash(password, rounds=None).decode('utf8')
+    password=crypto.generate_password_hash(password, rounds=12).decode('utf8')
     new_user=User(email=email, password=password, is_active=True)
     db.session.add(new_user)
     try:
@@ -84,3 +85,13 @@ def crear_paso(rutina_id):
 
 
 ###Periodicidad
+
+#### Ruta para acceder a la informacion del perfil
+@api.route('/user')
+@jwt_required()
+def get_user_info():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    print (user.__repr__)
+    return jsonify(user.serialize_info()), 200
+
