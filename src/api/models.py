@@ -8,6 +8,9 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    username = db.Column(db.String(), unique = True, nullable = True)
+    name = db.Column(db.String(120), nullable=True)
+    last_name = db.Column(db.String(120), nullable = True)
     rutinas = db.relationship('Rutina', backref='person', lazy=True)
 
     def __repr__(self):
@@ -18,6 +21,16 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             # do not serialize the password, its a security breach
+        }
+
+    def serialize_info(self):
+        rutinas = list(map(lambda r: r.serialize_name(), self.rutinas))
+        return{
+            "username":self.username,
+            "name":self.name,
+            "last name":self.last_name,
+            "email":self.email,
+            "rutinas": rutinas
         }
 
 class BlockedTokens(db.Model):
@@ -42,6 +55,10 @@ class Rutina (db.Model):
             "id": self.id,
             "nombre": self.nombre,
             "descripcion": self.descripcion,
+        }
+    def serialize_name (self):
+        return {
+            "name": self.nombre
         }
 
     def serialize2 (self):
