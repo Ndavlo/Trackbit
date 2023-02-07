@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Rutina
+from api.models import db, User, Rutina, Paso
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt
 from flask_bcrypt import Bcrypt
@@ -48,7 +48,7 @@ def user_login():
 def mostrar_rutinas():
     user = get_jwt_identity()
     rutinas = Rutina.query.filter_by(user_id=user).all()
-    response_body = list(map(lambda r: r.serialize(), rutinas))
+    response_body = list(map(lambda r: r.serialize2(), rutinas))
     return jsonify(response_body),200
 
 
@@ -63,7 +63,24 @@ def crear_rutina():
     db.session.commit()
     return jsonify({'msg': "Rutina creada!"})
 
-@api.route('/<rutina_id>/nuevo_paso')
+@api.route('/rutina/<rutina_id>/nuevo_paso', methods=['POST'])
 @jwt_required()
-def crear_paso():
+def crear_paso(rutina_id):
+### buscar rutina, si existe continuar, sino, error
+    print(rutina_id)
     current_user_id = get_jwt_identity()
+    nombre = request.json.get('nombre')
+    descripcion = request.json.get('descripcion')
+    objetivo = request.json.get('objetivo')
+    instrucciones = request.json.get('instrucciones')
+    contenido = request.json.get('contenido')
+    periodicidad = request.json.get('periodicidad')
+    inicio = request.json.get('inicio')
+    terminacion = request.json.get('terminacion')
+    nuevo_paso = Paso(nombre=nombre, user_id=current_user_id,  rutina_id=rutina_id, descripcion=descripcion, objetivo=objetivo, instrucciones=instrucciones, contenido=contenido, periodicidad=periodicidad, inicio=inicio, terminacion=terminacion)
+    db.session.add(nuevo_paso)
+    db.session.commit()
+    return jsonify({'msg': "Paso agregado!"})
+
+
+###Periodicidad

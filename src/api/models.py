@@ -26,16 +26,16 @@ class BlockedTokens(db.Model):
 
 
 class Rutina (db.Model):
-    __tablename__ = 'rutinas'
+    __tablename__="rutina"
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
-    # no tiene que tener columna de pasos????
+
 
     def __repr__(self):
-        return f'<Rutina {self.nombre}>'
+        return f'<Rutina {self.id}>'
 
     def serialize (self):
         return {
@@ -44,8 +44,17 @@ class Rutina (db.Model):
             "descripcion": self.descripcion,
         }
 
+    def serialize2 (self):
+        pasos = list(map(lambda r: r.serialize(), self.paso))
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "descripcion": self.descripcion,
+            "paso": pasos
+        }
+
 class Paso (db.Model):
-    __tablename__ = "pasos"
+    __tablename__="paso"
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
@@ -53,13 +62,13 @@ class Paso (db.Model):
     instrucciones = db.Column(db.String)
     contenido = db.Column(db.String)
     periodicidad = db.Column(db.String)
-    inicio = db.Column(db.DateTime) #No se importa?
+    inicio = db.Column(db.DateTime)
     terminacion = db.Column(db.DateTime)
     completada = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
-    #rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
-    #rutina = db.relationship("Rutina")
+    rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
+    rutina = db.relationship("Rutina", backref='paso', lazy=True)
 
     def __repr__(self):
         return f'<Paso {self.nombre}>'
