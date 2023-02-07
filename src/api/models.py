@@ -20,6 +20,7 @@ class User(db.Model):
         }
 
 class Rutina (db.Model):
+    __tablename__="rutina"
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
@@ -28,7 +29,7 @@ class Rutina (db.Model):
     # no tiene que tener columna de pasos????
 
     def __repr__(self):
-        return f'<Rutina {self.nombre}>'
+        return f'<Rutina {self.id}>'
 
     def serialize (self):
         return {
@@ -37,7 +38,16 @@ class Rutina (db.Model):
             "descripcion": self.descripcion,
         }
 
+    def serialize2 (self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "descripcion": self.descripcion,
+            "paso": self.paso
+        }
+
 class Paso (db.Model):
+    __tablename__="paso"
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
@@ -51,7 +61,7 @@ class Paso (db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
     rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
-    rutina = db.relationship("Rutina")
+    rutina = db.relationship("Rutina", backref='paso', lazy=True)
 
     def __repr__(self):
         return f'<Paso {self.nombre}>'

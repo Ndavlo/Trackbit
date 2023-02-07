@@ -56,9 +56,11 @@ def crear_rutina():
     db.session.commit()
     return jsonify({'msg': "Rutina creada!"})
 
-@api.route('/<rutina_id>/nuevo_paso', methods=['POST'])
+@api.route('/rutina/<rutina_id>/nuevo_paso', methods=['POST'])
 @jwt_required()
-def crear_paso():
+def crear_paso(rutina_id):
+### buscar rutina, si existe continuar, sino, error
+    print(rutina_id)
     current_user_id = get_jwt_identity()
     nombre = request.json.get('nombre')
     descripcion = request.json.get('descripcion')
@@ -68,9 +70,9 @@ def crear_paso():
     periodicidad = request.json.get('periodicidad')
     inicio = request.json.get('inicio')
     terminacion = request.json.get('terminacion')
-    nuevo_paso = Paso(nombre=nombre, descripcion=descripcion, objetivo=objetivo, instrucciones=instrucciones, contenido=contenido, periodicidad=periodicidad, inicio=inicio, terminacion=terminacion)
+    nuevo_paso = Paso(nombre=nombre, user_id=current_user_id,  rutina_id=rutina_id, descripcion=descripcion, objetivo=objetivo, instrucciones=instrucciones, contenido=contenido, periodicidad=periodicidad, inicio=inicio, terminacion=terminacion)
     db.session.add(nuevo_paso)
-    de.session.commit()
+    db.session.commit()
     return jsonify({'msg': "Paso agregado!"})
 
 
