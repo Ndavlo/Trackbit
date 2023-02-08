@@ -1,7 +1,18 @@
-/*
-    home.css: This website contains selectors only used in home.css
+main {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: auto;
+    background-image: url(../img/ChelbySobras_hiker_climbing_mountain_during_the_night_sky_full__3b31c7fe-18c6-446c-8dd0-b1336172f40c.png);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 15px;
+}
 
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
+section {
+    background-color: gray;
+    height: 600px;
+    border-color: black;
+    border: solid;
+}
