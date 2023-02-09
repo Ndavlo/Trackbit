@@ -95,3 +95,27 @@ def get_user_info():
     print (user.__repr__)
     return jsonify(user.serialize_info()), 200
 
+#### Ruta para cambiear la informacion del usuario
+@api.route('/user', methods = ['PATCH'])
+@jwt_required()
+def patch_user_info():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    body = request.get_json()
+    msg = ''
+    for key, value in body.items():
+        if key == 'email': 
+            print ("Email cannot be change, it will not be updated")
+            continue
+        if key == 'password': 
+            print ("Password cannot be change with this method, it will not be updated")
+            continue
+        try:
+            user[key] = value
+            print ('Updating user field "'+key+'" to :'+value)
+        except AttributeError:
+            print ('User does not have field "'+key+'", it will not be updated')
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'msg':'ok'}), 200
+
