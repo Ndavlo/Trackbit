@@ -119,3 +119,9 @@ def patch_user_info():
     db.session.commit()
     return jsonify({'msg':'ok'}), 200
 
+@api.route('/uploadpic')
+@jwt_required()
+def upload_pic():
+    user_id = get_jwt_identity()
+    user = db.query.get(user_id)
+

@@ -21,7 +21,7 @@ class User(db.Model):
         return getattr(self, key)
     #make model atributes assignable
     def __setitem__(self, key, value):
-            getattr(self, key)
+            getattr(self, key) #this will throw a AttributeError if the attribute does not exist
             setattr(self, key, value)
   
 
