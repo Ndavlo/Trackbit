@@ -1,0 +1,29 @@
+#loginContainer{
+    display: flex;
+}
+
+.loginForm{
+    width: 50%;
+    height: 800px;
+    background-color: #1b262a;
+}
+
+form{
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    color: white;
+
+}
+
+.loginImg{
+    border-radius: 97px 97px 97px 97px;
+    border: 11px solid #1b262a;
+    height: 800px;
+    width: 50%;
+    background-color: black;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(https://firebasestorage.googleapis.com/v0/b/trackbit-4cb19.appspot.com/o/ChelbySobras_in_a_epic_retro_style_cartoon_design_a_big_epic_ke_f4b8bb20-f1aa-4c4e-b4b3-f6d06514c081-removebg-preview.png?alt=media&token=03b592c7-f7b8-42e1-9095-73b8d6f27971);
+}
