@@ -1,3 +1,20 @@
-/* 
-    General Styles used on every website (Don't Repeat Yourself)
-*/
+nav{
+    color: #FFFFFF;
+    text-shadow: 2px 2px 0 rgb(27,38,42), 2px -2px 0 rgb(27,38,42), -2px 2px 0 rgb(27,38,42), -2px -2px 0 rgb(27,38,42), 2px 0px 0 rgb(27,38,42), 0px 2px 0 rgb(27,38,42), -2px 0px 0 rgb(27,38,42), 0px -2px 0 rgb(27,38,42);
+    color: #FFFFFF;
+    background-color: rgb(27,38,42);
+}
+
+#navbarButtons{
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+#navButton{
+    background-color: rgb(157 117 49);
+    color: rgb(27,38,42);
+    font-size: 1rem;
+    font-weight: 600;
+}
+  
