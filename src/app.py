@@ -13,12 +13,12 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
 import firebase_admin
-from firebase_admin import credentials
+# from firebase_admin import credentials
 
 
 
-cred = credentials.Certificate("./firebasekey.json")
-firebase_admin.initialize_app(cred)
+# cred = credentials.Certificate("./firebasekey.json")
+# firebase_admin.initialize_app(cred)
 
 #from models import Person
 

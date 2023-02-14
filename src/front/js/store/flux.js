@@ -41,9 +41,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if(!response.ok){
 					console.error('There was an error:'+ response.statusText)
 				}
-				data = await response.json()
-				setStore({userInfo : data})
+				let data = await response.json()
+				setStore({userInfo : 'data'})
+			}, 
+
+			logIn : async()=>{
+
+			},
+
+			signIn : async()=>{
+				
 			}
+
 
 		}
 	};
