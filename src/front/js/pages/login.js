@@ -28,8 +28,6 @@ export const Login = () => {
 						<button type="submit" class="btn btn-primary">Acceder</button>
 					</form>
 				</div>
-
-
 				<div className="loginImg"></div>
 			</div>
 		</>
