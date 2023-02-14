@@ -9,9 +9,17 @@ export const Footer = () => (
           <div className="col-sm-12 col-md-6 me-auto p-2 bd-highlight">
             <h6>About</h6>
             <p className="text-justify">Lorem ipsum dolor sit amet. In corporis repellat ex recusandae placeat ut ducimus rerum. Sed iure nihil rem doloribus velit sed voluptates delectus et rerum sunt non voluptatum possimus et quaerat modi qui ipsam harum. Eos aspernatur totam vel natus doloremque et exercitationem quaerat et quasi repudiandae!</p>
+            <form>
+                <div className="mb-3">
+                    <label for="exampleInputPassword1" className="form-label">Suscribete al Newsletter</label>
+                    <input type="email" className="form-control" id="exampleInputPassword1"/>
+                </div>
+                <button id="navButton" type="submit" className="btn btn-md">Submit</button>
+              </form>
           </div>
 
           <div className="col-xs-6 col-md-3 float-end">
+
             <h6>Quick Links</h6>
             <ul className="footer-links">
               <li><a href="#">About Us</a></li>
