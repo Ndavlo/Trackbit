@@ -26,7 +26,8 @@ main {
 
 #firstSection {
     background-color: rgb(27, 38, 42);
-    height: 800px;
+    min-height: 800px;
+    height: 100%;
 }
 
 
@@ -46,6 +47,7 @@ main {
 }
 
 #cards {
+    box-shadow: 0;
     color: rgb(157 117 49);
     text-shadow: 2px 2px 0 rgb(27, 38, 42), 2px -2px 0 rgb(27, 38, 42), -2px 2px 0 rgb(27, 38, 42), -2px -2px 0 rgb(27, 38, 42), 2px 0px 0 rgb(27, 38, 42), 0px 2px 0 rgb(27, 38, 42), -2px 0px 0 rgb(27, 38, 42), 0px -2px 0 rgb(27, 38, 42);
 }
