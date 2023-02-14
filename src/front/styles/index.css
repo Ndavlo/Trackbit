@@ -1,3 +1,7 @@
+*{
+    font-family: 'Patua One';
+}
+
 nav{
     color: #FFFFFF;
     text-shadow: 2px 2px 0 rgb(27,38,42), 2px -2px 0 rgb(27,38,42), -2px 2px 0 rgb(27,38,42), -2px -2px 0 rgb(27,38,42), 2px 0px 0 rgb(27,38,42), 0px 2px 0 rgb(27,38,42), -2px 0px 0 rgb(27,38,42), 0px -2px 0 rgb(27,38,42);
