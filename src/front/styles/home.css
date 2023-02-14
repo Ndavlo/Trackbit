@@ -40,7 +40,7 @@ main {
 
 #firstSectionHeader> h1{
     color: #FFFFFF;
-    margin-top: 80px;
+    padding-top: 80px;
 }
 #firstSectionHeader> h4{
     color: #FFFFFF;
@@ -52,6 +52,11 @@ main {
     text-shadow: 2px 2px 0 rgb(27, 38, 42), 2px -2px 0 rgb(27, 38, 42), -2px 2px 0 rgb(27, 38, 42), -2px -2px 0 rgb(27, 38, 42), 2px 0px 0 rgb(27, 38, 42), 0px 2px 0 rgb(27, 38, 42), -2px 0px 0 rgb(27, 38, 42), 0px -2px 0 rgb(27, 38, 42);
 }
 
+#homeCard{
+    width: 18rem;
+    height: 450px;
+}
+
 
 #secondSection {
     background-color: rgb(0, 0, 0);
@@ -61,7 +66,7 @@ main {
     text-align: center;
 }
 #secondSection > h3{
-    margin-top: 80px;
+    padding-top: 80px;
     margin-bottom: 70px;
     color: #FFFFFF;
 }
