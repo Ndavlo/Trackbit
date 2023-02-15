@@ -26,7 +26,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getMessage: async () => {
 				try{
 					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+					const resp = await fetch(apiUrl + "/api/hello")
 					const data = await resp.json()
 					setStore({ message: data.message })
 					// don't forget to return something, that is how the async resolves
@@ -45,7 +45,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({userInfo : 'data'})
 			}, 
 
-			logIn : async()=>{
+			login : async(email, password)=>{
+				let response = fetch(apiUrl+'/login',{
+					method : 'POST',
+					headers : {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ email, password })
+				})
+				if(!response.ok){
+					console.error('There was an error:'+(await response).statusText)
+					return false
+				}
+
+				setStore({ refreshToken: data.refreshToken, accessToken: data.accessToken })
+				localStorage.setItem("accessToken", data.accessToken)
+				localStorage.setItem("refreshToken", data.refreshToken)
+				return true
 
 			},
 
