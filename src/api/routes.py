@@ -7,6 +7,10 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
+from datetime import timedelta
+from firebase_admin import storage
+
+import tempfile
 
 api = Blueprint('api', __name__)
 app = Flask(__name__)
@@ -92,6 +96,41 @@ def crear_paso(rutina_id):
 def get_user_info():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    print (user.__repr__)
-    return jsonify(user.serialize_info()), 200
+    bucket = storage.bucket(name = 'geeks-6c663.appspot.com')
+    resourse = bucket.blob(user.profile_pic)
+    profile_pic_url = resourse.generate_signed_url(version='v4', expiration = timedelta(minutes=10), method = 'GET')
+
+    response_data = user.serialize()
+    response_data['profile pic'] = profile_pic_url
+    return jsonify(response_data), 200
+
+
+@api.route('/uploadpic', methods = ['POST'])
+@jwt_required()
+def upload_pic():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    file = request.files['file']
+    #Extract extension file
+    extension = file.filename.split('.')[1]
+    temp = tempfile.NamedTemporaryFile(delete=False)
+    file.save(temp)
+
+    bucket = storage.bucket(name = 'geeks-6c663.appspot.com')
+
+    filename = f'pics/{str(user_id)}.{extension}'
+
+    resource = bucket.blob(filename)
+
+    resource.upload_from_filename(temp.name, content_type = f'image/{extension}')
+
+    user.profile_pic = filename
+
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'msg':'image uploaded'}), 200
+   
+
+
 

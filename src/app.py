@@ -12,6 +12,9 @@ from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
+
+import firebase_admin
+from firebase_admin import credentials
 #from models import Person
 
 ENV = os.getenv("FLASK_ENV")
@@ -22,6 +25,10 @@ app.url_map.strict_slashes = False
 
 jwt=JWTManager(app)
 app.config['JWT_SECRET_KEY']=os.getenv("FLASK_APP_KEY")
+#Credentials loading
+cred = credentials.Certificate("./fbk.json")
+#initializing firebase app
+firebase_admin.initialize_app(cred)
 
 @jwt.token_in_blocklist_loader
 def check_token_revoked(jwt_header, jwt_payload: dict) -> bool:

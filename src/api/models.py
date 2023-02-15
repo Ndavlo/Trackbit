@@ -12,6 +12,7 @@ class User(db.Model):
     name = db.Column(db.String(120), nullable=True)
     last_name = db.Column(db.String(120), nullable = True)
     rutinas = db.relationship('Rutina', backref='person', lazy=True)
+    profile_pic = db.Column(db.String(500))
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -20,6 +21,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            "profile pic": self.profile_pic
             # do not serialize the password, its a security breach
         }
 
