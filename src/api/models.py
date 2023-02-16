@@ -11,7 +11,6 @@ class User(db.Model):
     username = db.Column(db.String(), unique = True, nullable = True)
     name = db.Column(db.String(120), nullable=True)
     last_name = db.Column(db.String(120), nullable = True)
-    rutinas = db.relationship('Rutina', backref='person', lazy=True)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -44,7 +43,7 @@ class Rutina (db.Model):
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship("User")
+    user = db.relationship("User", backref="rutina")
 
 
     def __repr__(self):
@@ -106,3 +105,14 @@ class Paso (db.Model):
         "user": self.user.serialize()
         ## No lleva el user y rutina?
         }
+
+class Periodicidad(db.Model):
+    __tablename__="periodicidad"
+    id = db.Column(db.Integer, primary_key=True)
+    paso = db.relationship("Paso")
+    ## fecha inicio
+    ## hora en la que se va a realizar
+    meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
+    temporalidad = db.Column(db.String) # Veces o minutos
+    periodo = db.Column(db.Integer)  # Al dia, a la semana, al mes.
+    repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
