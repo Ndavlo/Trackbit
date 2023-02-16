@@ -127,6 +127,7 @@ def upload_pic():
     user.profile_pic = filename
 
     db.session.add(user)
+    
     db.session.commit()
 
     return jsonify({'msg':'image uploaded'}), 200
