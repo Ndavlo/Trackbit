@@ -103,16 +103,29 @@ class Paso (db.Model):
         "completada": self.completada,
         "rutina": self.rutina.serialize(),
         "user": self.user.serialize()
-        ## No lleva el user y rutina?
         }
 
 class Periodicidad(db.Model):
     __tablename__="periodicidad"
     id = db.Column(db.Integer, primary_key=True)
     paso = db.relationship("Paso")
-    ## fecha inicio
-    ## hora en la que se va a realizar
+    paso_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
+    inicio = db.Column(db.DateTime)
     meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
     temporalidad = db.Column(db.String) # Veces o minutos
     periodo = db.Column(db.Integer)  # Al dia, a la semana, al mes.
     repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
+
+    def __repr__(self):
+        return f'<Periodicidad {self.id}>'
+    
+    def serialize(self):
+        return{
+            "id": self.id,
+            "paso": self.paso,
+            "inicio": self.inicio,
+            "meta": self.meta,
+            "temporalidad": self.temporalidad,
+            "periodo": self.periodo,
+            "repeticion": self.repeticion
+        }
