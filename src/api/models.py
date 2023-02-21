@@ -77,9 +77,12 @@ class Paso (db.Model):
     objetivo = db.Column(db.String)
     instrucciones = db.Column(db.String)
     contenido = db.Column(db.String)
-    periodicidad = db.Column(db.String)
     inicio = db.Column(db.DateTime)
     terminacion = db.Column(db.DateTime)
+    meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
+    temporalidad = db.Column(db.String) # Veces o minutos
+    periodo = db.Column(db.Integer)  # Al dia, a la semana, al mes.
+    repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
     completada = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
@@ -97,7 +100,10 @@ class Paso (db.Model):
         "objetivo": self.objetivo,
         "instrucciones": self.instrucciones,
         "contenido": self.contenido,
-        "periodicidad": self.periodicidad,
+        "meta": self.meta,
+        "temporalidad": self.temporalidad,
+        "periodo": self.periodo,
+        "repeticion": self.repeticion,
         "inicio": self.inicio,
         "terminacion": self.terminacion,
         "completada": self.completada,
@@ -105,27 +111,24 @@ class Paso (db.Model):
         "user": self.user.serialize()
         }
 
-class Periodicidad(db.Model):
-    __tablename__="periodicidad"
+class Reportes (db.Model):  #Esta bien esto?
+    __tablename__="reportes"
     id = db.Column(db.Integer, primary_key=True)
+    user = db.relationship("User")
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     paso = db.relationship("Paso")
     paso_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
     inicio = db.Column(db.DateTime)
-    meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
-    temporalidad = db.Column(db.String) # Veces o minutos
-    periodo = db.Column(db.Integer)  # Al dia, a la semana, al mes.
-    repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
+    terminacion = db.Column(db.DateTime)
 
     def __repr__(self):
-        return f'<Periodicidad {self.id}>'
+        return f'<Reportes {self.id}>'
     
     def serialize(self):
         return{
-            "id": self.id,
-            "paso": self.paso,
-            "inicio": self.inicio,
-            "meta": self.meta,
-            "temporalidad": self.temporalidad,
-            "periodo": self.periodo,
-            "repeticion": self.repeticion
+        "user": self.user,
+        "paso": self.paso,
+        "inicio": self.inicio,
+        "terminacion": self.terminacion
         }
+            
