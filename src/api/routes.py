@@ -68,23 +68,26 @@ def crear_rutina():
 @jwt_required()
 def crear_paso(rutina_id):
 ### buscar rutina, si existe continuar, sino, error
-    print(rutina_id)
+    rutina = Rutina.query.get(rutina_id) ##NO ES rutina.id???
+    if rutina is None:
+        return jsonify({'msg': "La rutina no existe"}), 404
     current_user_id = get_jwt_identity()
     nombre = request.json.get('nombre')
     descripcion = request.json.get('descripcion')
     objetivo = request.json.get('objetivo')
     instrucciones = request.json.get('instrucciones')
     contenido = request.json.get('contenido')
-    periodicidad = request.json.get('periodicidad')
+    meta = request.json.get('meta')
+    temporalidad = request.json.get('temporalidad')
+    periodo = request.json.get('periodo')
+    repeticion = request.json.get('repeticion')
     inicio = request.json.get('inicio')
     terminacion = request.json.get('terminacion')
-    nuevo_paso = Paso(nombre=nombre, user_id=current_user_id,  rutina_id=rutina_id, descripcion=descripcion, objetivo=objetivo, instrucciones=instrucciones, contenido=contenido, periodicidad=periodicidad, inicio=inicio, terminacion=terminacion)
+    nuevo_paso = Paso(nombre=nombre, user_id=current_user_id, meta=meta, temporalidad=temporalidad, periodo=periodo, repeticion=repeticion,  rutina_id=rutina_id, descripcion=descripcion, objetivo=objetivo, instrucciones=instrucciones, contenido=contenido, inicio=inicio, terminacion=terminacion)
     db.session.add(nuevo_paso)
     db.session.commit()
     return jsonify({'msg': "Paso agregado!"})
 
-
-###Periodicidad
 
 #### Ruta para acceder a la informacion del perfil
 @api.route('/user')
@@ -94,4 +97,3 @@ def get_user_info():
     user = User.query.get(user_id)
     print (user.__repr__)
     return jsonify(user.serialize_info()), 200
-

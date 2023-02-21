@@ -11,7 +11,6 @@ class User(db.Model):
     username = db.Column(db.String(), unique = True, nullable = True)
     name = db.Column(db.String(120), nullable=True)
     last_name = db.Column(db.String(120), nullable = True)
-    rutinas = db.relationship('Rutina', backref='person', lazy=True)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -44,7 +43,7 @@ class Rutina (db.Model):
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship("User")
+    user = db.relationship("User", backref="rutina")
 
 
     def __repr__(self):
@@ -78,9 +77,12 @@ class Paso (db.Model):
     objetivo = db.Column(db.String)
     instrucciones = db.Column(db.String)
     contenido = db.Column(db.String)
-    periodicidad = db.Column(db.String)
     inicio = db.Column(db.DateTime)
     terminacion = db.Column(db.DateTime)
+    meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
+    temporalidad = db.Column(db.String) # Veces o minutos
+    periodo = db.Column(db.Integer)  # Al dia, a la semana, al mes.
+    repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
     completada = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
@@ -98,11 +100,35 @@ class Paso (db.Model):
         "objetivo": self.objetivo,
         "instrucciones": self.instrucciones,
         "contenido": self.contenido,
-        "periodicidad": self.periodicidad,
+        "meta": self.meta,
+        "temporalidad": self.temporalidad,
+        "periodo": self.periodo,
+        "repeticion": self.repeticion,
         "inicio": self.inicio,
         "terminacion": self.terminacion,
         "completada": self.completada,
         "rutina": self.rutina.serialize(),
         "user": self.user.serialize()
-        ## No lleva el user y rutina?
         }
+
+class Reportes (db.Model):  #Esta bien esto?
+    __tablename__="reportes"
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.relationship("User")
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    paso = db.relationship("Paso")
+    paso_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
+    inicio = db.Column(db.DateTime)
+    terminacion = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return f'<Reportes {self.id}>'
+    
+    def serialize(self):
+        return{
+        "user": self.user,
+        "paso": self.paso,
+        "inicio": self.inicio,
+        "terminacion": self.terminacion
+        }
+            
