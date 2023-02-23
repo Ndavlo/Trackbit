@@ -4,6 +4,7 @@ import ScrollToTop from "./component/scrollToTop";
 
 import { Home } from "./pages/home";
 import { Login } from "./pages/login";
+import { PasswordRecovery } from "./pages/passwordRecovery";
 import { Userprofile } from "./pages/userprofile";
 import { Formulario } from "./pages/formulario";
 import { Single } from "./pages/single";
@@ -28,6 +29,7 @@ const Layout = () => {
                         <Route element={<Userprofile />} path="/userprofile" />
                         <Route element={<Formulario />} path="/formulario" />
                         <Route element={<Login />} path="/login" />
+                        <Route element={<PasswordRecovery />} path="/passwordrecovery" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>

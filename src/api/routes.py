@@ -119,5 +119,5 @@ def reset_password():
     user_id=get_jwt_identity()
     user=User.query.get(user_id)
     user.password=crypto.generate_password_hash(new_password).decode("utf-8")
-    # 18:43, ver snapshot
+    
     
