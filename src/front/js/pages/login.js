@@ -25,7 +25,9 @@ export const Login = () => {
 							<input type="checkbox" className="form-check-input" id="exampleCheck1"/>
 								<label className="form-check-label" htmlFor="exampleCheck1">Mantener sesion inciada</label>
 						</div>
-						<button type="submit" className="btn btn-primary">Acceder</button>
+						<div className="logButtons">
+						<button type="submit" className="btn">Acceder</button>
+						<button type="submit" className="btn">Olvide mi contraseña</button></div>
 					</form>
 				</div>
 				<div className="loginImg"></div>

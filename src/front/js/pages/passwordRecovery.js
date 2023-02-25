@@ -10,8 +10,10 @@ export const PasswordRecovery = () => {
 	const [mensaje, setMensaje]=useState("")
 	const navigate = useNavigate()
 	useEffect(() => {
-		setTimeout(() =>setMensaje(""),5000)
-	},[mensaje])
+		let timeoutId = setTimeout(() => setMensaje(""), 5000);
+		return () => clearTimeout(timeoutId);
+	  }, [mensaje]);
+	
 
 	async function submitForm(e) {
 		e.preventDefault();
@@ -22,9 +24,15 @@ export const PasswordRecovery = () => {
 		  setMensaje("Las claves deben coincidir");
 		  return;
 		}
-		let token = searchParams.get(token)
-		let resp = await resetPassword(token, passwords[0])
-	}
+		let token = searchParams.get("token");
+    let resp = await resetPassword(token, passwords1);
+    if (resp == "ok") {
+      setMensaje("Clave reiniciada");
+      setTimeout(() => navigate("/"), 2000);
+    } else {
+      setMensaje(resp);
+    }
+  }
 
 	return (
 		<>
@@ -41,7 +49,7 @@ export const PasswordRecovery = () => {
 							<label htmlFor="inputPassword2" className="visually-hidden">Contraseña</label>
 							<input type="password" className="form-control" id="inputPassword2" placeholder="Password" name="password2"/>
 						</div>
-						<button type="submit" className="btn btn-primary">Recuperar</button>
+						<button type="submit" className="btn">Recuperar</button>
 					</form>
 				</div>
 				<div className="loginImg"></div>
