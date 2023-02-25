@@ -57,6 +57,9 @@ main {
     height: 450px;
 }
 
+#homeCard:hover{
+    box-shadow: 0px 0px 20px 10px rgb(157 117 49);
+}
 
 #secondSection {
     background-color: rgb(0, 0, 0);
