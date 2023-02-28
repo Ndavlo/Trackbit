@@ -48,3 +48,16 @@
 .btn{
     background-color: rgb(157 117 49);
 }
+
+.modal{
+background-color: black;
+}
+
+#exampleModalLabel{
+    color: black;
+}
+
+.form-label{
+    color: black;
+
+}
