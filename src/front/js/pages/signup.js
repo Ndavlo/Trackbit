@@ -1,26 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
 import "../../styles/login.css";
-import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
-export const Login = () => {
+export const Signup = () => {
 	const { store, actions } = useContext(Context);
-	const [password, setPassword] = useState()
-	const [email, setEmail] = useState()
-
-	const navigate = useNavigate()
+	const [password, setPassword] = useState('')
+	const [email, setEmail] = useState('')
 	
-	useEffect(()=>{
-		console.log(store.accessToken)
-		if(store.accessToken){
-			navigate('/userprofile')
-		}
-	},[store.accessToken])	
-
-	async function submitLogin (e){
-		e.preventDefault() 
-		let resp = await actions.login(email, password)
+	async function submitSignUp (e){
+		e.preventDefault()
+		console.log(email + password)
+		let resp = await actions.signUp(email, password)
 	}
 
 	return (
@@ -28,10 +18,10 @@ export const Login = () => {
 			<div id="loginContainer">
 				<div className="loginFormCont">
 					<form id="formLogin">
-					<h1 id="loginHead">Accede a tu cuenta</h1>
+					<h1 id="loginHead">Registrate</h1>
 						<div className="mb-3">
 							<label htmlFor="inputEmail" className="form-label">Correo Electronico</label>
-							<input type="emailsdf" className="form-control" id="inputEmail1" aria-describedby="emailHelp" onChange={(e)=>setEmail(e.target.value)}/>
+							<input type="email" className="form-control" id="inputEmail1" aria-describedby="emailHelp" onChange={(e)=>setEmail(e.target.value)}/>
 						</div>
 						<div className="mb-3">
 							<label htmlFor="inputPassword" className="form-label">Contraseña</label>
@@ -41,7 +31,7 @@ export const Login = () => {
 							<input type="checkbox" className="form-check-input" id="exampleCheck1"/>
 								<label className="form-check-label" htmlFor="exampleCheck1">Mantener sesion inciada</label>
 						</div>
-						<button type="submit" className="btn btn-primary" onClick={(e)=>submitLogin(e)}>Acceder</button>
+						<button type="submit" className="btn btn-primary" onClick={(e)=>submitSignUp(e)}>Registro</button>
 					</form>
 				</div>
 				<div className="loginImg"></div>
