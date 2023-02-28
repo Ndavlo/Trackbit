@@ -27,7 +27,7 @@ export const Home = () => {
 					<div className="row">
 
 						<div className="col-sm-6 col-xl-3">
-							<div className="card border-0 mb-3 me-3 bg-transparent" style={{ width: "18rem", height: "450px" }}>
+							<div id="homeCard" className="card border-0 mb-3 me-3 bg-transparent">
 								<img src={calendar} className="card-img-top" alt="..." />
 								<div className="card-body">
 									<h5 className="card-title">1. ¡Selecciona una rutina!</h5>
@@ -37,7 +37,7 @@ export const Home = () => {
 						</div>
 
 						<div className="col-sm-6 col-xl-3">
-							<div className="card border-0 mb-3 me-3 bg-transparent" style={{ width: "18rem", height: "450px" }}>
+							<div id="homeCard" className="card border-0 mb-3 me-3 bg-transparent">
 								<img src={winner} className="card-img-top" alt="..." />
 								<div className="card-body">
 									<h5 className="card-title">2. ¡Gana puntos de experiencia!</h5>
@@ -47,7 +47,7 @@ export const Home = () => {
 						</div>
 
 						<div className="col-sm-6 col-xl-3">
-							<div className="card border-0 mb-3 me-3 bg-transparent" style={{ width: "18rem", height: "450px" }}>
+							<div id="homeCard" className="card border-0 mb-3 me-3 bg-transparent">
 								<img src={bell} className="card-img-top" alt="..." />
 								<div className="card-body">
 									<h5 className="card-title">3. ¡No perderás el ritmo!</h5>
@@ -57,7 +57,7 @@ export const Home = () => {
 						</div>
 
 						<div className="col-sm-6 col-xl-3">
-							<div className="card border-0 mb-3 me-3 bg-transparent" style={{ width: "18rem", height: "450px" }}>
+							<div id="homeCard" className="card border-0 mb-3 me-3 bg-transparent">
 								<img src={cup} className="card-img-top" alt="..." />
 								<div className="card-body">
 									<h5 className="card-title">4. ¡Alcanza tus objetivos!</h5>

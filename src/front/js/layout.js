@@ -5,6 +5,7 @@ import ScrollToTop from "./component/scrollToTop";
 import { Home } from "./pages/home";
 import { Login } from "./pages/login";
 import { Userprofile } from "./pages/userprofile";
+import { Formulario } from "./pages/formulario";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
@@ -18,13 +19,14 @@ const Layout = () => {
     const basename = process.env.BASENAME || "";
 
     return (
-        <div style={{ backgroundColor: 'black' }}>
+        <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Userprofile />} path="/userprofile" />
+                        <Route element={<Formulario />} path="/formulario" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<h1>Not found!</h1>} />
