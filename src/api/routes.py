@@ -7,6 +7,9 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
+from datetime import date, time, datetime, timezone, timedelta
+from .sendrecovery import recovery_password_email
+import os
 
 api = Blueprint('api', __name__)
 app = Flask(__name__)
@@ -97,3 +100,30 @@ def get_user_info():
     user = User.query.get(user_id)
     print (user.__repr__)
     return jsonify(user.serialize_info()), 200
+
+
+### Ruta para solicitar la recuperacion de contrasena
+@api.route('/recoverypassword',methods=["POST"])  ##24:45
+def recovery_password():
+    email=request.json.get("email")
+    user=User.query.filter(User.email==email).first()
+    #Existe o no ese usuario con ese correo
+    if user is None:
+        return jsonify({"msg": "Correo no valido"}), 403
+    # Si existe, continua
+    recovery_token=create_access_token(identity=user.id, expires_delta=timedelta(minutes=5),additional_claims ={"recovery":"true"})
+    recovery_URL=os.getenv('FRONTEND_URL')+"?token=" + recovery_token
+    if recovery_password_email(user_email=user.email, url_recovery=recovery_URL):
+        return jsonify({"msg": "Solcitud enviada con exito"})
+    else:
+        return jsonify({"msg": "Error en la solicitud"}, 500)
+
+@api.route('/resetpassword', methods=['POST'])
+@jwt_required()
+def reset_password():
+    new_password=request.json.get('password')
+    user_id=get_jwt_identity()
+    user=User.query.get(user_id)
+    user.password=crypto.generate_password_hash(new_password).decode("utf-8")
+    
+    

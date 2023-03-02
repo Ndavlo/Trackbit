@@ -11,7 +11,7 @@ export const Footer = () => (
             <p className="text-justify">Lorem ipsum dolor sit amet. In corporis repellat ex recusandae placeat ut ducimus rerum. Sed iure nihil rem doloribus velit sed voluptates delectus et rerum sunt non voluptatum possimus et quaerat modi qui ipsam harum. Eos aspernatur totam vel natus doloremque et exercitationem quaerat et quasi repudiandae!</p>
             <form>
                 <div className="mb-3">
-                    <label for="exampleInputPassword1" className="form-label">Suscribete al Newsletter</label>
+                    <label htmlFor="exampleInputPassword1" className="form-label">Suscribete al Newsletter</label>
                     <input type="email" className="form-control" id="exampleInputPassword1"/>
                 </div>
                 <button id="navButton" type="submit" className="btn btn-md">Submit</button>
