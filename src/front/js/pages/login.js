@@ -6,6 +6,21 @@ import { Context } from "../store/appContext";
 
 export const Login = () => {
 	const { store, actions } = useContext(Context);
+	const [ recoveryEmail, setRecoveryEmail ] = useState("")
+	async function sendRecoveryPassword() {
+		let resp = await fetch(process.env.BACKEND_URL + "/api/recoverypassword", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ email: recoveryEmail }),
+		})
+		if (resp.ok) {
+			alert("Revisa tu correo")
+		} else {
+			alert("Error en la solicitud")
+		}
+	}
 
 	return (
 		<>
@@ -28,34 +43,38 @@ export const Login = () => {
 						<div className="logButtons">
 							<button type="submit" className="btn">Acceder</button>
 							{/* <!-- Modal Button --> */}
-							<button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							<button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#recoveryModal">
 								Olvide mi contraseña
 							</button>
 						</div>
 						{/* <!-- Modal --> */}
-						<div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div className="modal fade" id="recoveryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div className="modal-dialog modal-dialog-centered">
 								<div className="modal-content">
 									<div className="modal-header">
-										<h1 className="modal-title fs-5" id="exampleModalLabel">Recuperar contraseña</h1>
+										<h1 className="modal-title fs-5" id="exampleModalLabel">Restablecer contraseña</h1>
 										<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div className="modal-body">
 										<form>
 											<div className="mb-3">
-												<label for="exampleInputEmail1" className="form-label">Ingresa tu correo</label>
-												<input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
+												<label htmlFor="exampleInputEmail1" id="modalForm" className="form-label">Ingresa tu correo</label>
+												<input
+													type="email"
+													value={recoveryEmail}
+													onChange={(e) => setRecoveryEmail(e.target.value)}
+													className="form-control"
+													id="exampleInputEmail1"
+													placeholder="name@example.com"
+												/>
+												<button type="button" onClick={sendRecoveryPassword} className="btn mt-2">Restablecer</button>
 											</div>
 										</form>
-
-											</div>
-											<div className="modal-footer">
-												<button type="button" className="btn">Enviar</button>
-											</div>
 									</div>
 								</div>
 							</div>
-							{/* <!-- Modal --> */}
+						</div>
+						{/* <!-- Modal --> */}
 
 
 					</form>

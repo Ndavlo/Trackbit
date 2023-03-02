@@ -1,5 +1,6 @@
 #loginContainer{
     display: flex;
+    background-color: #1b262a;
 }
 
 .loginFormCont{
@@ -58,6 +59,9 @@ background-color: black;
 }
 
 .form-label{
-    color: black;
+    color: white;
+}
 
+#modalForm{
+    color: black;
 }

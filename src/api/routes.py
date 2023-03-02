@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
 from datetime import date, time, datetime, timezone, timedelta
 from .sendrecovery import recovery_password_email
+import os
 
 api = Blueprint('api', __name__)
 app = Flask(__name__)
@@ -112,7 +113,7 @@ def recovery_password():
     # Si existe, continua
     recovery_token=create_access_token(identity=user.id, expires_delta=timedelta(minutes=5),additional_claims ={"recovery":"true"})
     recovery_URL=os.getenv('FRONTEND_URL')+"?token=" + recovery_token
-    if recovery_password_email(user_email=user, url_recovery=recovery_URL):
+    if recovery_password_email(user_email=user.email, url_recovery=recovery_URL):
         return jsonify({"msg": "Solcitud enviada con exito"})
     else:
         return jsonify({"msg": "Error en la solicitud"}, 500)

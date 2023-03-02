@@ -1,7 +1,9 @@
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import os
 
 def recovery_password_email(user_email, url_recovery):
+    print(user_email)
     message = Mail(
         from_email=os.environ.get('SENDGRID_SENDER'),
         to_emails=user_email,
