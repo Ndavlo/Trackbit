@@ -14,15 +14,15 @@ main {
 
 #header {
     color: #FFFFFF;
-    text-shadow: 2px 2px 0 rgb(27, 38, 42), 2px -2px 0 rgb(27, 38, 42), -2px 2px 0 rgb(27, 38, 42), -2px -2px 0 rgb(27, 38, 42), 2px 0px 0 rgb(27, 38, 42), 0px 2px 0 rgb(27, 38, 42), -2px 0px 0 rgb(27, 38, 42), 0px -2px 0 rgb(27, 38, 42);
+    text-shadow: 3px 3px 3px rgb(27, 38, 42), 3px -3px 3px rgb(27, 38, 42), -3px 3px 3px rgb(27, 38, 42), -3px -3px 3px rgb(27, 38, 42), 3px 3px 3px rgb(27, 38, 42), 3px 3px 3px rgb(27, 38, 42), -3px 3px 3px rgb(27, 38, 42), 3px -3px 3px rgb(27, 38, 42);
     color: #FFFFFF;
-    font-weight: 900;
 }
 
 #calltoAct {
     background-color: rgb(157 117 49);
     color: white;
 }
+
 
 #firstSection {
     background-color: rgb(27, 38, 42);
@@ -52,11 +52,15 @@ main {
     text-shadow: 2px 2px 0 rgb(27, 38, 42), 2px -2px 0 rgb(27, 38, 42), -2px 2px 0 rgb(27, 38, 42), -2px -2px 0 rgb(27, 38, 42), 2px 0px 0 rgb(27, 38, 42), 0px 2px 0 rgb(27, 38, 42), -2px 0px 0 rgb(27, 38, 42), 0px -2px 0 rgb(27, 38, 42);
 }
 
+
 #homeCard{
     width: 18rem;
     height: 450px;
 }
 
+#homeCard:hover{
+    box-shadow: 0px 0px 20px 10px rgb(157 117 49);
+}
 
 #secondSection {
     background-color: rgb(0, 0, 0);
@@ -77,3 +81,4 @@ main {
     align-items: center;
     justify-content: center;
 }
+

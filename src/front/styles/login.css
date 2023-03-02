@@ -1,5 +1,6 @@
 #loginContainer{
     display: flex;
+    background-color: #1b262a;
 }
 
 .loginFormCont{
@@ -34,4 +35,33 @@
     position: absolute;
     top: 20%;
     text-align: center;
+}
+
+.form-control{
+    color: white;
+}
+
+.logButtons{
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn{
+    background-color: rgb(157 117 49);
+}
+
+.modal{
+background-color: black;
+}
+
+#exampleModalLabel{
+    color: black;
+}
+
+.form-label{
+    color: white;
+}
+
+#modalForm{
+    color: black;
 }

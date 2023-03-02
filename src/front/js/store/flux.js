@@ -19,7 +19,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			getUserInfo: async () => {
-				let response = await getActions().fetchProtected(`${apiUrl}/user`,{})
+				let response = await getActions().fetchProtected(`${apiUrl}/user`, {})
 				let data = await response.json()
 				setStore({ userInfo: data })
 				return undefined
@@ -47,12 +47,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			logOut: async() => {
-				let response = await getActions().fetchProtected(`${apiUrl}/logout`,{})
+			},
+			resetPassword: async (token, newPassword) => {
+				let resp = await fetch(apiUrl + "/api/resetpassword", {
+					method: "POST",
+					body: JSON.stringify({
+						password: newPassword
+					}),
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + token
+					}
+				})
+				if (!resp.ok) {
+					console.error(resp.statusText)
+					return "Error en la recuperacion"
+				}
+				return "ok"
+			},
+
+
+			logOut: async () => {
+				let response = await getActions().fetchProtected(`${apiUrl}/logout`, {})
 				localStorage.removeItem("accessToken")
 				localStorage.removeItem("refreshToken")
 				setStore({ refreshToken: '', accessToken: '' })
-				
+
 			},
 
 			signUp: async (email, password) => {
@@ -74,8 +94,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return true
 			},
 
-			fetchProtected : async(resourse , options)=>{
-				let response = await fetch(resourse, {...options,
+			fetchProtected: async (resourse, options) => {
+				let response = await fetch(resourse, {
+					...options,
 					headers: {
 						"Authorization": 'Bearer ' + getStore().accessToken
 					}
@@ -85,23 +106,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (msg == "Token has expired") {
 						//Send Refresh Token to get new tokens
 						console.log('Refreshing Token')
-						response = await fetch(`${apiUrl}/refresh`,{
-							headers : {
-								'Authorization' : 'Bearer ' + getStore().refreshToken
+						response = await fetch(`${apiUrl}/refresh`, {
+							headers: {
+								'Authorization': 'Bearer ' + getStore().refreshToken
 							}
 						})
 						//Check if there was an error getting new tokens
-						if(!response.ok){
+						if (!response.ok) {
 							console.error('There was an error:' + response.statusText)
 							return response
 						}
 						// if there was no error set new tokens in store and localStorage
-						let data =  await response.json()
+						let data = await response.json()
 						localStorage.setItem("accessToken", data.access_token)
 						localStorage.setItem("refreshToken", data.refresh_token)
 						setStore({ refreshToken: data.refresh_token, accessToken: data.access_token })
 						//fetch again to the same resource with new tokens 
-						return await fetch(resourse, {...options,
+						return await fetch(resourse, {
+							...options,
 							headers: {
 								"Authorization": 'Bearer ' + getStore().accessToken
 							}
@@ -109,7 +131,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 					return undefined
 				}
-			
+
 				return response
 
 			}
@@ -117,7 +139,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 		}
-	};
-};
-
+	}
+}
 export default getState;

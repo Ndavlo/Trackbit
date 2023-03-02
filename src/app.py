@@ -37,6 +37,8 @@ app.config['JWT_SECRET_KEY']=os.getenv("FLASK_APP_KEY")
 
 @jwt.token_in_blocklist_loader
 def check_token_revoked(jwt_header, jwt_payload: dict) -> bool:
+    if jwt_payload["recovery"]=="true":
+        return request.path!="/api/resetpassword"
     jti = jwt_payload["jti"]
     token = BlockedTokens.query.filter(BlockedTokens.token_id == jti).first()
     return token is not None
