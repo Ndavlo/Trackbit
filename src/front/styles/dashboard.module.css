@@ -1,9 +1,55 @@
 .dashboard {
     display: grid;
-    grid-template-columns: 2;
+    /* grid-template-columns: ; */
+}
+
+.cell{
+
+    width: 2em;
+    aspect-ratio: 1;
+    border : 1px solid white;
+    color : white;
 }
 
 .year {
     display: grid;
-    grid-template-columns: 8;
+    grid-template-columns:  min-content;
+    grid-template-rows:  min-content;
+    grid-template-areas: 
+    ". weekdays"
+    "weeknumbers days";
+    border: 1px solid white;
+
+}
+
+.days {
+    grid-area: days;
+    display: grid;
+    grid-template-columns: repeat(7, 2em);
+    grid-template-rows: repeat(54, 2em);
+    background-image:
+      repeating-linear-gradient(#333 0 1px, transparent 1px 100%),
+      repeating-linear-gradient(90deg, #333 0 1px, transparent 1px 100%);
+    background-size: 2em 2em;
+}
+
+.weekdays{
+    display: flex;
+    grid-area: weekdays;
+}
+
+.weekdays div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weeknumbers {
+    grid-area: weeknumbers;
+    display: grid;
+    grid-template-columns: 2em;
+    grid-template-rows: repeat(54, 2em);
+    height: 100%;
+    width: 100%;
+    background-color: aqua;
 }
