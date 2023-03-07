@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect , useContext} from "react";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
+
+
+
+
 
 export const Navbar = () => {
+	const { store, actions } = useContext(Context);
+
+	useEffect(()=>{
+		
+	},[])
+
+	
 	return (
 		<nav className="navbar">
 			<div className="container">
@@ -10,8 +22,9 @@ export const Navbar = () => {
 				</Link>
 				<div className="ml-auto" id="navbarButtons">
 				<button id="navButton" type="button" className="btn btn-sm">Blog</button>
-				<button id="navButton" type="button" className="btn btn-sm">Registrate</button>
+				<Link to="/signup"><button id="navButton" type="button" className="btn btn-sm">Registrarse</button></Link>
 				<Link to="/login"><button id="navButton" type="button" className="btn btn-sm">Log In</button></Link>
+				<button id="navButton" type="button" className="btn btn-sm" onClick={()=>{actions.logOut()}}>Log out</button>
 				</div>
 			</div>
 		</nav>

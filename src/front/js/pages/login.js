@@ -1,12 +1,29 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/login.css";
-
+import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const Login = () => {
 	const { store, actions } = useContext(Context);
+	const [password, setPassword] = useState()
+	const [email, setEmail] = useState()
 	const [ recoveryEmail, setRecoveryEmail ] = useState("")
+
+	const navigate = useNavigate()
+	
+	useEffect(()=>{
+		console.log(store.accessToken)
+		if(store.accessToken){
+			navigate('/userprofile')
+		}
+	},[store.accessToken])	
+
+	async function submitLogin (e){
+		e.preventDefault() 
+		let resp = await actions.login(email, password)
+	}
+		
 	async function sendRecoveryPassword() {
 		let resp = await fetch(process.env.BACKEND_URL + "/api/recoverypassword", {
 			method: "POST",
@@ -27,21 +44,23 @@ export const Login = () => {
 			<div id="loginContainer">
 				<div className="loginFormCont">
 					<form id="formLogin">
-						<h1 id="loginHead">Accede a tu cuenta</h1>
+					<h1 id="loginHead">Accede a tu cuenta</h1>
 						<div className="mb-3">
-							<label htmlFor="exampleInputEmail1" className="form-label">Correo Electronico</label>
-							<input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+							<label htmlFor="inputEmail" className="form-label">Correo Electronico</label>
+							<input type="emailsdf" className="form-control" id="inputEmail1" aria-describedby="emailHelp" onChange={(e)=>setEmail(e.target.value)}/>
 						</div>
 						<div className="mb-3">
-							<label htmlFor="exampleInputPassword1" className="form-label">Contraseña</label>
-							<input type="password" className="form-control" id="exampleInputPassword1" />
+							<label htmlFor="inputPassword" className="form-label">Contraseña</label>
+							<input type="password" className="form-control" id="inputPassword" onChange={(e)=>setPassword(e.target.value)}/>
 						</div>
 						<div className="mb-3 form-check">
-							<input type="checkbox" className="form-check-input" id="exampleCheck1" />
-							<label className="form-check-label" htmlFor="exampleCheck1">Mantener sesion inciada</label>
+							<input type="checkbox" className="form-check-input" id="exampleCheck1"/>
+								<label className="form-check-label" htmlFor="exampleCheck1">Mantener sesion inciada</label>
 						</div>
 						<div className="logButtons">
-							<button type="submit" className="btn">Acceder</button>
+						
+							<button type="submit" className="btn btn-primary" onClick={(e)=>submitLogin(e)}>Acceder</button>
+
 							{/* <!-- Modal Button --> */}
 							<button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#recoveryModal">
 								Olvide mi contraseña
