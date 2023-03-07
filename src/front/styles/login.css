@@ -13,7 +13,7 @@
 }
 
 #formLogin{
-    width: 50%;
+    width: 60%;
     align-items: center;
     justify-content: center;
     margin: auto;
@@ -24,7 +24,7 @@
     border-radius: 97px 97px 97px 97px;
     border: 30px solid #1b262a;
     height: 800px;
-    width: 50%;
+    width: 100%;
     background-color: black;
     background-position: center;
     background-repeat: no-repeat;
@@ -33,7 +33,7 @@
 
 #loginHead{
     position: absolute;
-    top: 20%;
+    top: 25%;
     text-align: center;
 }
 

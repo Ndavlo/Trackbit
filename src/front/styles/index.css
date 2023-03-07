@@ -7,13 +7,18 @@ nav{
     text-shadow: 2px 2px 0 rgb(27,38,42), 2px -2px 0 rgb(27,38,42), -2px 2px 0 rgb(27,38,42), -2px -2px 0 rgb(27,38,42), 2px 0px 0 rgb(27,38,42), 0px 2px 0 rgb(27,38,42), -2px 0px 0 rgb(27,38,42), 0px -2px 0 rgb(27,38,42);
     color: #FFFFFF;
     background-color: rgb(27,38,42);
+    margin-bottom: 20px;
+}
+
+#tLogo{
+    text-decoration: none;
+    color: white;
 }
 
 #navbarButtons{
     gap: 10px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: end;
   }
 #navButton{
     background-color: rgb(157 117 49);

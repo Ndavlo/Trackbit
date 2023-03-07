@@ -23,7 +23,7 @@ export const Home = () => {
 					<h1>Sé quién siempre has querido en 4 pasos.</h1>
 					<h4>Inicia una rutina, ejecuta las tareas, <br></br> gana experiencia y ¡logra tus metas!</h4>
 				</div>
-				<div id="cards" className="container mt-5 mb-4 w-100% text-center">
+				<div id="cards" className="container mt-5 w-100% text-center">
 					<div className="row">
 
 						<div className="col-sm-6 col-xl-3">
@@ -73,12 +73,10 @@ export const Home = () => {
 
 			<section id="secondSection">
 				<h3>Aprende más sobre como se forjan los hábitos en tu mente <br></br> con este video cortesia de Kurzgesagt</h3>
-				<div id="video"><iframe width="1000" height="500"
-					src="https://www.youtube.com/embed/75d_29QWELk">
-				</iframe></div>
-				</section>
-
-
+				<div id="video" className="ratio ratio-16x9">
+					<iframe src="https://www.youtube.com/embed/75d_29QWELk"></iframe>
+				</div>
+			</section>
 		</>
 	);
 };
