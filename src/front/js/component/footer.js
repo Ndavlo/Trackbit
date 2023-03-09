@@ -41,7 +41,7 @@ export const Footer = () => (
 
           <div className="col-md-4 col-sm-6 col-xs-12">
             <ul className="social-icons">
-              <li><a className="facebook" href="#"><i className="fa fa-facebook"></i></a></li>  
+              <li><a className="toTop" href="#"><i class="bi bi-arrow-up"></i></a></li>  
             </ul>
           </div>
         </div>

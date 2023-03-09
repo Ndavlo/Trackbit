@@ -106,10 +106,6 @@ export const Login = () => {
 				</div>
 			</div>
 
-
-
-			<div id="loginContainer">
-			</div>
 		</>
 	);
 };
