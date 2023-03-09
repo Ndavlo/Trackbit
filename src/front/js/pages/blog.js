@@ -16,12 +16,12 @@ export const Blog = () => {
                                 <div className="containerText">
                                     <p>Lorem ipsum dolor sit amet. A consequuntur internos quo reiciendis alias ex magni minima?</p>
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#article1">
                                         Leer mas
                                     </button>
 
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div className="modal fade" id="article1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
                                             <div className="modal-content">
                                                 <div className="modal-header modalHeader">
@@ -65,12 +65,12 @@ export const Blog = () => {
                                 <div className="containerText">
                                     <p>Lorem ipsum dolor sit amet. A consequuntur internos quo reiciendis alias ex magni minima?</p>
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#article2">
                                         Leer mas
                                     </button>
 
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div className="modal fade" id="article2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
                                             <div className="modal-content">
                                                 <div className="modal-header modalHeader">
@@ -114,12 +114,12 @@ export const Blog = () => {
                                 <div className="containerText">
                                     <p>Lorem ipsum dolor sit amet. A consequuntur internos quo reiciendis alias ex magni minima?</p>
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#article3">
                                         Leer mas
                                     </button>
 
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div className="modal fade" id="article3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
                                             <div className="modal-content">
                                                 <div className="modal-header modalHeader">
@@ -163,12 +163,12 @@ export const Blog = () => {
                                 <div className="containerText">
                                     <p>Lorem ipsum dolor sit amet. A consequuntur internos quo reiciendis alias ex magni minima?</p>
                                     {/* <!-- Button trigger modal --> */}
-                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#article4">
                                         Leer mas
                                     </button>
 
                                     {/* <!-- Modal --> */}
-                                    <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div className="modal fade" id="article4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
                                             <div className="modal-content">
                                                 <div className="modal-header modalHeader">
