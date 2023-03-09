@@ -1,5 +1,6 @@
 import { array } from "prop-types";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../store/appContext";
 import stl from '../../styles/dashboard.module.css'
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -75,7 +76,7 @@ function Days({ days }) {
 export function Dashboard() {
     const [registries, setRegitries] = useState(regist)
     const { store, actions } = useContext(Context);
-    
+
     return (
         <div className={stl.dashboard}>
             <div className={stl['dashboard-bar']}>
