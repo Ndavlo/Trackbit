@@ -2,9 +2,9 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Rutina, Paso
+from api.models import db, User, Rutina, Paso, BlockedTokens
 from api.utils import generate_sitemap, APIException
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt, get_jti
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
 from datetime import date, time, datetime, timezone, timedelta
@@ -26,7 +26,7 @@ def create_user():
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
-        return jsonify({'msg':"email already in use"}), 500
+        return jsonify({'msg':"email already in use"}), 400
     return jsonify({'msg': "Usuario creado"}), 200
 
 @api.route('/login', methods=['POST'])
@@ -39,8 +39,10 @@ def user_login():
     if not crypto.check_password_hash(user.password, password):
         return jsonify({'msg' :'Login Failed'}), 401
     
-    token=create_access_token(identity=user.id)
     refresh_token=create_refresh_token(identity=user.id)
+    # jti = refresh_token.get_jti
+    additional_claims = {'r_jti': get_jti(refresh_token)}
+    token=create_access_token(identity=user.id, additional_claims = additional_claims)
     return jsonify({"access_token":token, "refresh_token": refresh_token})
 
 # Ruta Rutinas
@@ -99,6 +101,64 @@ def get_user_info():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     print (user.__repr__)
+    return jsonify(user.serialize_info())
+
+#### Ruta para cambiear la informacion del usuario
+@api.route('/user', methods = ['PATCH'])
+@jwt_required()
+def patch_user_info():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    body = request.get_json()
+    msg = ''
+    for key, value in body.items():
+        if key == 'email': 
+            print ("Email cannot be change, it will not be updated")
+            continue
+        if key == 'password': 
+            print ("Password cannot be change with this method, it will not be updated")
+            continue
+        try:
+            user[key] = value
+            print ('Updating user field "'+key+'" to :'+value)
+        except AttributeError:
+            print ('User does not have field "'+key+'", it will not be updated')
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'msg':'ok'}), 200
+
+@api.route('/uploadpic')
+@jwt_required()
+def upload_pic():
+    user_id = get_jwt_identity()
+    user = db.query.get(user_id)
+
+@api.route('/refresh')
+@jwt_required(refresh=True)
+def refresh_token():
+    user_identity = get_jwt_identity()
+    #add used refresh token to blocklist
+    db.session.add(BlockedTokens(token_id=get_jwt()["jti"]))
+    db.session.commit()
+
+    refresh_token=create_refresh_token(identity=user_identity)
+    additional_claims = {'r_jti': get_jti(refresh_token)}
+    token=create_access_token(identity=user_identity, additional_claims=additional_claims)
+    return jsonify({"access_token":token, "refresh_token": refresh_token}), 200
+
+@api.route('/logout')
+@jwt_required()
+def logout():
+    access_token_blocked=BlockedTokens(token_id=get_jwt()['jti'])
+    refresh_token_blocked=BlockedTokens(token_id=get_jwt()['r_jti'])
+    db.session.add(access_token_blocked)
+    db.session.add(refresh_token_blocked)
+    db.session.commit()
+    return jsonify({"msg":"User logged out"})
+
+
+
+
     return jsonify(user.serialize_info()), 200
 
 

@@ -14,6 +14,15 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.email}>'
+    
+    #making model atributes subscriptable
+    def __getitem__(self, key):
+        return getattr(self, key)
+    #make model atributes assignable
+    def __setitem__(self, key, value):
+            getattr(self, key) #this will throw a AttributeError if the attribute does not exist
+            setattr(self, key, value)
+  
 
     def serialize(self):
         return {
