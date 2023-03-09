@@ -60,6 +60,13 @@
     background-size: 14.2857143% 1.851851852%;
 }
 
+.day {
+    padding: 0.3em;
+    background-color: #666666;
+    overflow: hidden;
+    font-size: 0.7em;
+}
+
 .weekdays{
     display: flex;
     grid-area: weekdays;

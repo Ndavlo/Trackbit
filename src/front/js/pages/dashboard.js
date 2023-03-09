@@ -1,5 +1,5 @@
 import { array } from "prop-types";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import stl from '../../styles/dashboard.module.css'
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,11 +7,15 @@ import { motion, AnimatePresence } from "framer-motion";
 let year = 2023
 let firstDay = new Date(year, 0, 1)
 let regist = []
+let today = new Date()
+const oneDay = 86400000
+const oneWeek = oneDay * 7
+const thisWeekNumber = Math.ceil((Date.now() - firstDay.getTime()) / 1000 / 86400 / 7)
 
 function WeekDays() {
 
 
-    const weekDays = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+    const weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
     return (
         <div className={stl.weekdays}>
             {weekDays.map((e, i) => {
@@ -28,18 +32,20 @@ function WeekNumbers() {
             {arr.map((e, i) => {
                 return (
                     <div key={i} className={stl.cell}>
-                        <span>{i}</span>
+                        <span>{thisWeekNumber - i}</span>
                     </div>)
             })}
         </div>
     )
 }
 
-function Day({ day, week }) {
-    return <div className={stl.cell}
-        style={{ 'gridArea': `${week}/${day}/${week}/${day}` }}
+function Day({ day, week, date }) {
+    const weekDays = ['D', 'L', 'M', 'M', 'J', 'V', 'S']
+    return <div className={`${stl.cell} ${stl.day}`}
+        style={{ 'gridArea': `${week}/${day + 1}/${week}/${day + 1}` }}
     >
         <CellBar percentage={50} />
+        <span>{`${weekDays[day]}-${new Intl.DateTimeFormat('en-US', { month: "short" }).format(date)}-${date.getDate()}`}</span>
     </div>
 }
 function CellBar({ percentage }) {
@@ -67,7 +73,12 @@ function ActivityRegister() {
 function Days({ days }) {
     return (
         <div className={stl.days}>
-            {days.map((e, i) => <Day key={i} day={e.day} week={e.week} />)}
+            {days?.map((e, i) => <Day
+                key={i}
+                date={e.date}
+                day={e.date.getDay()}
+                week={ thisWeekNumber - Math.floor(( e.date.getTime() - firstDay.getTime()) / 1000 / 86400 / 7)}
+            />)}
         </div>
     )
 
@@ -76,6 +87,10 @@ function Days({ days }) {
 export function Dashboard() {
     const [registries, setRegitries] = useState(regist)
     const { store, actions } = useContext(Context);
+
+    useEffect(() => {
+        actions.getRegistries()
+    }, [])
 
     return (
         <div className={stl.dashboard}>
@@ -87,7 +102,6 @@ export function Dashboard() {
                             time: now,
                             day: now.getDay(),
                             week: Math.ceil((now.getTime() - firstDay.getTime()) / 1000 / 86400 / 7),
-                            week2: (now.getTime() - firstDay.getTime()) / 604800000
                         }
                         console.log(registry)
                         setRegitries([...registries, registry])
@@ -97,7 +111,7 @@ export function Dashboard() {
             <div className={stl.year}>
                 <WeekDays />
                 <WeekNumbers />
-                <Days days={registries} />
+                <Days days={store.registries} />
             </div>
         </div>
     )
