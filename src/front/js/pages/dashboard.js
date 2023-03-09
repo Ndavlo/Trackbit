@@ -54,19 +54,28 @@ function CellBar({ percentage }) {
     </div>
 }
 
-function ActivityRegister() {
+function ActivityRegisterPanel() {
     return (
-        <div>
-            <label for="habito">Habito:</label>
-            <select name="habito" id="habito">
-                <option value="rigatoni">Rigatoni</option>
-                <option value="dave">Dave</option>
-                <option value="pumpernickel">Pumpernickel</option>
-                <option value="reeses">Reeses</option>
-            </select>
+        <AnimatePresence>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className={stl.backdrop}
+            >
+                <div className={stl.panel}>
+                    <label htmlFor="habito">Habito:</label>
+                    <select name="habito" id="habito">
+                        <option value="rigatoni">Rigatoni</option>
+                        <option value="dave">Dave</option>
+                        <option value="pumpernickel">Pumpernickel</option>
+                        <option value="reeses">Reeses</option>
+                    </select>
 
-            <button>Registrar Actividad</button>
-        </div>
+                    <button>Registrar Actividad</button>
+                </div>
+            </motion.div>
+        </AnimatePresence>
     )
 }
 
@@ -77,7 +86,7 @@ function Days({ days }) {
                 key={i}
                 date={e.date}
                 day={e.date.getDay()}
-                week={ thisWeekNumber - Math.floor(( e.date.getTime() - firstDay.getTime()) / 1000 / 86400 / 7)}
+                week={thisWeekNumber - Math.floor((e.date.getTime() - firstDay.getTime()) / 1000 / 86400 / 7)}
             />)}
         </div>
     )
@@ -86,25 +95,29 @@ function Days({ days }) {
 
 export function Dashboard() {
     const [registries, setRegitries] = useState(regist)
+    const [showPanel, setShowPanel] = useState(false)
     const { store, actions } = useContext(Context);
 
     useEffect(() => {
         actions.getRegistries()
     }, [])
 
+    function showPanelHandler(panelName) {
+        setShowPanel(panelName)
+    }
+
+    let panel = []
+    if (showPanel) {
+        panel = <ActivityRegisterPanel />
+    }
+
     return (
         <div className={stl.dashboard}>
+            {panel}
             <div className={stl['dashboard-bar']}>
                 <button
                     onClick={() => {
-                        let now = new Date()
-                        let registry = {
-                            time: now,
-                            day: now.getDay(),
-                            week: Math.ceil((now.getTime() - firstDay.getTime()) / 1000 / 86400 / 7),
-                        }
-                        console.log(registry)
-                        setRegitries([...registries, registry])
+                        showPanelHandler('register-activity-panel')
                     }}
                 >Registrar Actividad</button>
             </div>

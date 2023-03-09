@@ -92,3 +92,20 @@
     justify-content: center;
 }
 
+.backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000099;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 1em;
+    gap: 1em;
+}
