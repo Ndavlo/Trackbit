@@ -60,19 +60,19 @@ export const Navbar = () => {
 					<button id="navButton" type="button" className="btn btn-sm" onClick={() => { actions.logOut() }}>Log out</button> */}
 				</div>
 
-				<div className="offcanvas offcanvas-end d-md-none" tabindex="-1" id="navbarOffcanvasMd" aria-labelledby="navbarOffcanvasMdLabel">
-					<div class="offcanvas-header">
-						<h5 class="offcanvas-title" id="offCanvasHeader">Menu</h5>
-						<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+				<div className="offcanvas offcanvas-end d-md-none" tabIndex="-1" id="navbarOffcanvasMd" aria-labelledby="navbarOffcanvasMdLabel">
+					<div className="offcanvas-header">
+						<h5 className="offcanvas-title" id="offCanvasHeader">Menu</h5>
+						<button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 					</div>
-
 					<div className="offcanvas-body">
 						{menuOptions.map((option, key) => {
 							return !!option.link ?
-								<Link className="navMenuButton offButton " id={option.id} key={key} to={option.link}>{option.text}</Link>
+								<Link className="navMenuButton offButton " id={option.id} key={key} to={option.link} onClick={() => { window.location.href = option.link; document.getElementById("navbarOffcanvasMd").setAttribute("data-bs-dismiss", "offcanvas"); }}>{option.text}</Link>
 								:
-								<a className="navMenuButton offButton" id={option.id} key={key} onClick={option.action}>{option.text}</a>
-						})} </div>
+								<a className="navMenuButton offButton" id={option.id} key={key} onClick={() => { option.action(); document.getElementById("navbarOffcanvasMd").setAttribute("data-bs-dismiss", "offcanvas"); }}>{option.text}</a>
+						})}
+					</div>
 				</div>
 			</div>
 		</nav>

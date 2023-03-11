@@ -49,11 +49,11 @@ export const Login = () => {
 								<h1 id="loginHead">Accede a tu cuenta</h1>
 								<div className="mb-3">
 									<label htmlFor="inputEmail" className="form-label">Correo Electronico</label>
-									<input type="emailsdf" className="form-control" id="inputEmail1" aria-describedby="emailHelp" onChange={(e) => setEmail(e.target.value)} />
+									<input type="emailsdf" className="form-control text-dark" id="inputEmail1" aria-describedby="emailHelp" onChange={(e) => setEmail(e.target.value)} />
 								</div>
 								<div className="mb-3">
 									<label htmlFor="inputPassword" className="form-label">Contraseña</label>
-									<input type="password" className="form-control" id="inputPassword" onChange={(e) => setPassword(e.target.value)} />
+									<input type="password" className="form-control text-dark" id="inputPassword" onChange={(e) => setPassword(e.target.value)} />
 								</div>
 								<div className="mb-3 form-check">
 									<input type="checkbox" className="form-check-input" id="exampleCheck1" />

@@ -38,7 +38,8 @@ export const Blog = () => {
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
                                                         Et aliquam odio eum nostrum perferendis sed quibusdam assumenda. Ex veritatis perferendis et recusandae omnis id cupiditate blanditiis vel doloremque totam est porro blanditiis. Et deserunt excepturi est eius sequi aut velit sint et eius fugit qui voluptas animi. Ut ipsa totam est veniam veritatis qui assumenda aliquid non illum rerum 33 veniam error sit blanditiis autem ut quia praesentium.
-
+                                                        <br></br>
+                                                        <br></br>
                                                         Ab veritatis voluptatum sit voluptatem provident qui earum placeat et unde optio eum quia numquam? Ad eius quas eum rerum dolores aut enim voluptate non eveniet excepturi hic autem labore et autem ipsa. Qui enim unde sed natus quaerat eum nesciunt illum sed molestiae reiciendis et sunt repellat est nemo voluptate!
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
@@ -87,7 +88,8 @@ export const Blog = () => {
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
                                                         Et aliquam odio eum nostrum perferendis sed quibusdam assumenda. Ex veritatis perferendis et recusandae omnis id cupiditate blanditiis vel doloremque totam est porro blanditiis. Et deserunt excepturi est eius sequi aut velit sint et eius fugit qui voluptas animi. Ut ipsa totam est veniam veritatis qui assumenda aliquid non illum rerum 33 veniam error sit blanditiis autem ut quia praesentium.
-
+                                                        <br></br>
+                                                        <br></br>
                                                         Ab veritatis voluptatum sit voluptatem provident qui earum placeat et unde optio eum quia numquam? Ad eius quas eum rerum dolores aut enim voluptate non eveniet excepturi hic autem labore et autem ipsa. Qui enim unde sed natus quaerat eum nesciunt illum sed molestiae reiciendis et sunt repellat est nemo voluptate!
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
@@ -136,7 +138,8 @@ export const Blog = () => {
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
                                                         Et aliquam odio eum nostrum perferendis sed quibusdam assumenda. Ex veritatis perferendis et recusandae omnis id cupiditate blanditiis vel doloremque totam est porro blanditiis. Et deserunt excepturi est eius sequi aut velit sint et eius fugit qui voluptas animi. Ut ipsa totam est veniam veritatis qui assumenda aliquid non illum rerum 33 veniam error sit blanditiis autem ut quia praesentium.
-
+                                                        <br></br>
+                                                        <br></br>
                                                         Ab veritatis voluptatum sit voluptatem provident qui earum placeat et unde optio eum quia numquam? Ad eius quas eum rerum dolores aut enim voluptate non eveniet excepturi hic autem labore et autem ipsa. Qui enim unde sed natus quaerat eum nesciunt illum sed molestiae reiciendis et sunt repellat est nemo voluptate!
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
@@ -185,7 +188,8 @@ export const Blog = () => {
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
                                                         Et aliquam odio eum nostrum perferendis sed quibusdam assumenda. Ex veritatis perferendis et recusandae omnis id cupiditate blanditiis vel doloremque totam est porro blanditiis. Et deserunt excepturi est eius sequi aut velit sint et eius fugit qui voluptas animi. Ut ipsa totam est veniam veritatis qui assumenda aliquid non illum rerum 33 veniam error sit blanditiis autem ut quia praesentium.
-
+                                                        <br></br>
+                                                        <br></br>
                                                         Ab veritatis voluptatum sit voluptatem provident qui earum placeat et unde optio eum quia numquam? Ad eius quas eum rerum dolores aut enim voluptate non eveniet excepturi hic autem labore et autem ipsa. Qui enim unde sed natus quaerat eum nesciunt illum sed molestiae reiciendis et sunt repellat est nemo voluptate!
                                                         Lorem ipsum dolor sit amet. Qui possimus nobis sit sunt quis non quaerat eius. Eum voluptatibus rerum et obcaecati quaerat in culpa ullam eos excepturi iste vel aliquam magni ut explicabo dolorem ea repellat atque. Qui nihil saepe et beatae iure quo magni quia ab quam labore et pariatur quod non delectus dolor nam doloribus fuga.
 
@@ -205,7 +209,7 @@ export const Blog = () => {
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </section>

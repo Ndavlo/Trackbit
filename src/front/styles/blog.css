@@ -40,6 +40,10 @@ background-color: black;
     background-color: rgb(46, 44, 44);
 }
 
+.modalP{
+    text-align: justify;
+}
+
 .modalFooter{
     background-color: rgb(46, 44, 44);
 }

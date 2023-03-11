@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Rutina, Paso, BlockedTokens
+from api.models import db, User, Rutina, Paso, BlockedTokens, Newsletter_emails
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt, get_jti
 from flask_bcrypt import Bcrypt
@@ -18,16 +18,18 @@ crypto = Bcrypt(app)
 @api.route('/signup', methods=['POST'])
 def create_user():
     email=request.json.get('email')
+    name=request.json.get('name')
+    last_name=request.json.get('last_name')
     password=request.json.get('password')
     password=crypto.generate_password_hash(password, rounds=12).decode('utf8')
-    new_user=User(email=email, password=password, is_active=True)
+    new_user=User(email=email, password=password, name=name, last_name=last_name,  username=email, is_active=True)
     db.session.add(new_user)
     try:
         db.session.commit()
+        return jsonify({'msg':"Sign Up Sucessfull"}), 200
     except IntegrityError:
         db.session.rollback()
         return jsonify({'msg':"email already in use"}), 400
-    return jsonify({'msg': "Usuario creado"}), 200
 
 @api.route('/login', methods=['POST'])
 def user_login():
@@ -45,9 +47,6 @@ def user_login():
     token=create_access_token(identity=user.id, additional_claims = additional_claims)
     return jsonify({"access_token":token, "refresh_token": refresh_token})
 
-# Ruta Rutinas
-#GET Y POST de las rutinas y pasos
-#Crear rutina
 
 @api.route('/rutinas', methods=['GET'])
 @jwt_required()
@@ -187,3 +186,15 @@ def reset_password():
     user.password=crypto.generate_password_hash(new_password).decode("utf-8")
     
     
+@api.route('/newslettersub', methods=['POST'])
+def subscribe_newsletter():
+    email=request.json.get('email')
+    new_subscriber=Newsletter_emails(email=email)
+    print(new_subscriber.serialize())
+    db.session.add(new_subscriber)
+    try:
+        db.session.commit()
+        return jsonify({'msg':"You are now subscribed!"}), 200
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'msg':"You are already subscribed"}), 400
