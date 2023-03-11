@@ -38,11 +38,12 @@ main {
     text-align: center;
 }
 
-#firstSectionHeader> h1{
+#firstSectionHeader>h1 {
     color: #FFFFFF;
     padding-top: 80px;
 }
-#firstSectionHeader> h4{
+
+#firstSectionHeader>h4 {
     color: #FFFFFF;
 }
 
@@ -53,12 +54,12 @@ main {
 }
 
 
-#homeCard{
+#homeCard {
     width: 18rem;
     height: 450px;
 }
 
-#homeCard:hover{
+#homeCard:hover {
     box-shadow: 0px 0px 20px 10px rgb(157 117 49);
 }
 
@@ -68,17 +69,20 @@ main {
     color: rgb(157 117 49);
     text-shadow: 2px 2px 0 rgb(27, 38, 42), 2px -2px 0 rgb(27, 38, 42), -2px 2px 0 rgb(27, 38, 42), -2px -2px 0 rgb(27, 38, 42), 2px 0px 0 rgb(27, 38, 42), 0px 2px 0 rgb(27, 38, 42), -2px 0px 0 rgb(27, 38, 42), 0px -2px 0 rgb(27, 38, 42);
     text-align: center;
+    padding-bottom: 40px;
 }
-#secondSection > h3{
-    padding-top: 80px;
-    margin-bottom: 70px;
+
+#secondSection>h3 {
+    padding-top: 60px;
+    margin-bottom: 50px;
     color: #FFFFFF;
 }
 
-#video{
+#video {
     display: flex;
     margin: auto;
     align-items: center;
     justify-content: center;
+    max-width: 1000px;
+    max-height: 700px;
 }
-

@@ -32,7 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ email, password })
+					body: JSON.stringify({ email: email, password: password })
 				})
 				if (!response.ok) {
 					console.error('There was an error2:' + (await response).statusText)
@@ -46,8 +46,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return true
 
 			},
-
-		},
 		resetPassword: async (token, newPassword) => {
 			let resp = await fetch(apiUrl + "/api/resetpassword", {
 				method: "POST",
@@ -75,13 +73,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 		},
 
-		signUp: async (email, password) => {
+		signUp: async (email, password, name, lastName) => {
 			const resp = await fetch(apiUrl + '/signup', {
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ email, password })
+				body: JSON.stringify({ email: email, password: password, name:name, last_name:lastName })
+			})
+			if (!resp.ok) {
+				console.error("There was an error: " + resp.statusText)
+				const data = await resp.json()
+				console.log(data)
+				return data.msg
+			}
+			const data = await resp.json()
+			console.log(data)
+			return true
+		},
+		subscribeToNews: async (email) => {
+			const resp = await fetch(apiUrl + '/newslettersub', {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ email: email})
 			})
 			if (!resp.ok) {
 				console.error("There was an error: " + resp.statusText)
@@ -139,6 +155,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 	}
+}
 }
 
 export default getState;

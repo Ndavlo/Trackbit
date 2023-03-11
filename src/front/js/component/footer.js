@@ -1,8 +1,21 @@
-import React, { Component } from "react";
+import React, { useState, useContext } from "react";
 import "../../styles/footer.css";
+import { Context } from "../store/appContext";
 
+export const Footer = () => {
+  const { store, actions } = useContext(Context);
+	const [subEmail, setSubEmail] = useState('')
 
-export const Footer = () => (
+function submitEmail (e){
+		e.preventDefault()
+    if(subEmail === ""){
+      alert("Ingresa tu Correo")
+    }
+    actions?.subscribeToNews(subEmail)
+	}
+
+return (
+  <>
 <footer className="site-footer">
       <div className="container d-flex bd-highlight mb-3">
         <div className="row">
@@ -11,10 +24,10 @@ export const Footer = () => (
             <p className="text-justify">Lorem ipsum dolor sit amet. In corporis repellat ex recusandae placeat ut ducimus rerum. Sed iure nihil rem doloribus velit sed voluptates delectus et rerum sunt non voluptatum possimus et quaerat modi qui ipsam harum. Eos aspernatur totam vel natus doloremque et exercitationem quaerat et quasi repudiandae!</p>
             <form>
                 <div className="mb-3">
-                    <label htmlFor="exampleInputPasswor" className="form-label">Suscribete al Newsletter</label>
-                    <input type="email" className="form-control" id="exampleInputPasswor"/>
+                    <label htmlFor="exampleInputEmail" className="form-label">Suscribete al Newsletter</label>
+                    <input type="email" className="form-control text-dark" id="exampleInputEmail" onChange={(e) => setSubEmail(e.target.value)} />
                 </div>
-                <button id="navButton" type="submit" className="btn btn-md">Submit</button>
+                <button id="navButton" type="submit" onClick={(e)=>submitEmail(e)} className="btn btn-md">Submit</button>
               </form>
           </div>
 
@@ -26,7 +39,6 @@ export const Footer = () => (
               <li><a href="#">Contact Us</a></li>
               <li><a href="#">Contribute</a></li>
               <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Sitemap</a></li>
             </ul>
           </div>
         </div>
@@ -41,10 +53,11 @@ export const Footer = () => (
 
           <div className="col-md-4 col-sm-6 col-xs-12">
             <ul className="social-icons">
-              <li><a className="facebook" href="#"><i className="fa fa-facebook"></i></a></li>  
+              <li><a className="toTop" href="#"><i className="bi bi-arrow-up"></i></a></li>  
             </ul>
           </div>
         </div>
       </div>
 </footer>
-);
+</>
+);}
