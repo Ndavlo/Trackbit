@@ -139,7 +139,6 @@ def refresh_token():
     #add used refresh token to blocklist
     db.session.add(BlockedTokens(token_id=get_jwt()["jti"]))
     db.session.commit()
-
     refresh_token=create_refresh_token(identity=user_identity)
     additional_claims = {'r_jti': get_jti(refresh_token)}
     token=create_access_token(identity=user_identity, additional_claims=additional_claims)
@@ -155,10 +154,6 @@ def logout():
     db.session.commit()
     return jsonify({"msg":"User logged out"})
 
-
-
-
-    return jsonify(user.serialize_info()), 200
 
 
 ### Ruta para solicitar la recuperacion de contrasena
@@ -186,6 +181,14 @@ def reset_password():
     user.password=crypto.generate_password_hash(new_password).decode("utf-8")
     
     
+@api.route('/habits', methods=['POST'])
+@jwt_required()
+def register_activity():
+    '''fuction that handler for the register activity handler'''
+    user = get_jwt_identity()
+    name = request.json.get('name')
+    
+    return(jsonify({'msg': name}))
 @api.route('/newslettersub', methods=['POST'])
 def subscribe_newsletter():
     email=request.json.get('email')

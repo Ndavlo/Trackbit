@@ -46,30 +46,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return true
 
 			},
-		resetPassword: async (token, newPassword) => {
-			let resp = await fetch(apiUrl + "/api/resetpassword", {
-				method: "POST",
-				body: JSON.stringify({
-					password: newPassword
-				}),
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": "Bearer " + token
+
+
+			resetPassword: async (token, newPassword) => {
+				let resp = await fetch(apiUrl + "/api/resetpassword", {
+					method: "POST",
+					body: JSON.stringify({
+						password: newPassword
+					}),
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + token
+					}
+				})
+				if (!resp.ok) {
+					console.error(resp.statusText)
+					return "Error en la recuperacion"
 				}
-			})
-			if (!resp.ok) {
-				console.error(resp.statusText)
-				return "Error en la recuperacion"
-			}
-			return "ok"
-		},
+				return "ok"
+			},
 
 
-		logOut: async () => {
-			let response = await getActions().fetchProtected(`${apiUrl}/logout`, {})
-			localStorage.removeItem("accessToken")
-			localStorage.removeItem("refreshToken")
-			setStore({ refreshToken: '', accessToken: '' })
+			logOut: async () => {
+				let response = await fetchProtected(`${apiUrl}/logout`, {})
+				localStorage.removeItem("accessToken")
+				localStorage.removeItem("refreshToken")
+				setStore({ refreshToken: '', accessToken: '' })
+			},
 
 		},
 
@@ -79,7 +82,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				headers: {
 					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ email: email, password: password, name:name, last_name:lastName })
+				body: JSON.stringify({ email: email, password: password, name: name, last_name: lastName })
 			})
 			if (!resp.ok) {
 				console.error("There was an error: " + resp.statusText)
@@ -91,71 +94,108 @@ const getState = ({ getStore, getActions, setStore }) => {
 			console.log(data)
 			return true
 		},
+
 		subscribeToNews: async (email) => {
 			const resp = await fetch(apiUrl + '/newslettersub', {
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ email: email})
+				body: JSON.stringify({ email: email })
 			})
 			if (!resp.ok) {
 				console.error("There was an error: " + resp.statusText)
 				const data = await resp.json()
 				console.log(data)
-				return data.msg
+				return true
 			}
-			const data = await resp.json()
-			console.log(data)
-			return true
 		},
 
-		fetchProtected: async (resourse, options) => {
-			let response = await fetch(resourse, {
-				...options,
-				headers: {
-					"Authorization": 'Bearer ' + getStore().accessToken
-				}
-			})
-			if (!response.ok) {
-				let msg = (await response.json()).msg
-				if (msg == "Token has expired") {
-					//Send Refresh Token to get new tokens
-					console.log('Refreshing Token')
-					response = await fetch(`${apiUrl}/refresh`, {
-						headers: {
-							'Authorization': 'Bearer ' + getStore().refreshToken
-						}
-					})
-					//Check if there was an error getting new tokens
-					if (!response.ok) {
-						console.error('There was an error:' + response.statusText)
-						return response
+
+		getRegistries: () => {
+
+			let today = new Date()
+			const oneDay = 86400000
+			const oneWeek = oneDay * 7
+			today.setHours(0, 0, 0, 0)
+			let registries = []
+			for (let i = 0; i < 67; i++) {
+				registries.push(
+					{
+						date: new Date(today.getTime() - i * oneDay),
+						registries: [
+							{
+								time: Date.now(),
+								habit: 1,
+								level: 0.5,
+							}
+						]
 					}
-					// if there was no error set new tokens in store and localStorage
-					let data = await response.json()
-					localStorage.setItem("accessToken", data.access_token)
-					localStorage.setItem("refreshToken", data.refresh_token)
-					setStore({ refreshToken: data.refresh_token, accessToken: data.access_token })
-					//fetch again to the same resource with new tokens 
-					return await fetch(resourse, {
-						...options,
-						headers: {
-							"Authorization": 'Bearer ' + getStore().accessToken
-						}
-					})
-				}
-				return undefined
+				)
 			}
+			console.log(registries)
+			setStore({ registries: registries })
+		},
 
-			return response
+		addRegitry: () => {
+			getActions().fetchProtected(`${apiUrl}/activity`)
 
+		},
+
+		addHabit: (name) => {
+			console.log(JSON.stringify({ name }))
+			fetchProtected(`${apiUrl}/habits`, {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ name })
+			})
+		},
+
+		getHabits: () => {
+			getActions().fetchProtected(`${apiUrl}/habits`)
 		}
 
+	}
 
 
+
+	async function fetchProtected(resource = '', options = {}) {
+		console.log('fetching protected')
+		const { headers, ...opt } = options
+		let response = await fetch(resource = resource, options = {
+			...opt,
+			headers: {
+				...headers,
+				"Authorization": 'Bearer ' + getStore().accessToken
+			}
+		})
+		if (!response.ok) {
+			const msg = (await response.json()).msg
+			if (msg == "Token has expired") {
+				console.log('refreshing token')
+				response = await fetch(`${apiUrl}/refresh`, {
+					headers: {
+						"Authorization": 'Bearer ' + getStore().refreshToken
+					}
+				})
+				if (!response.ok) {
+					return response.statusText
+				}
+				let data = await response.json()
+				setStore({ refreshToken: data.refresh_token, accessToken: data.access_token })
+				localStorage.setItem("accessToken", data.access_token)
+				localStorage.setItem("refreshToken", data.refresh_token)
+				fetchProtected(resource, options)
+			}
+		} else {
+			return response
+		}
 	}
 }
-}
+
+
+
 
 export default getState;
