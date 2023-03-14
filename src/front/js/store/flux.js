@@ -32,7 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ email, password })
+					body: JSON.stringify({ email: email, password: password })
 				})
 				if (!response.ok) {
 					console.error('There was an error2:' + (await response).statusText)
@@ -46,22 +46,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return true
 
 			},
-
-
-			resetPassword: async (token, newPassword) => {
-				let resp = await fetch(apiUrl + "/api/resetpassword", {
-					method: "POST",
-					body: JSON.stringify({
-						password: newPassword
-					}),
-					headers: {
-						"Content-Type": "application/json",
-						"Authorization": "Bearer " + token
-					}
-				})
-				if (!resp.ok) {
-					console.error(resp.statusText)
-					return "Error en la recuperacion"
+			
+		resetPassword: async (token, newPassword) => {
+			let resp = await fetch(apiUrl + "/api/resetpassword", {
+				method: "POST",
+				body: JSON.stringify({
+					password: newPassword
+				}),
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": "Bearer " + token
 				}
 				return "ok"
 			},
@@ -74,20 +68,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ refreshToken: '', accessToken: '' })
 			},
 
-			signUp: async (email, password) => {
-				const resp = await fetch(apiUrl + '/signup', {
-					method: 'POST',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({ email, password })
-				})
-				if (!resp.ok) {
-					console.error("There was an error: " + resp.statusText)
-					const data = await resp.json()
-					console.log(data)
-					return data.msg
-				}
+		},
+
+		signUp: async (email, password, name, lastName) => {
+			const resp = await fetch(apiUrl + '/signup', {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ email: email, password: password, name:name, last_name:lastName })
+			})
+			if (!resp.ok) {
+				console.error("There was an error: " + resp.statusText)
+				const data = await resp.json()
+				console.log(data)
+				return data.msg
+			}
+			const data = await resp.json()
+			console.log(data)
+			return true
+		},
+		
+		subscribeToNews: async (email) => {
+			const resp = await fetch(apiUrl + '/newslettersub', {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ email: email})
+			})
+			if (!resp.ok) {
+				console.error("There was an error: " + resp.statusText)
 				const data = await resp.json()
 				console.log(data)
 				return true
@@ -175,6 +186,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			return response
 		}
 	}
+}
 }
 
 
