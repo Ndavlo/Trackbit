@@ -141,3 +141,11 @@ class Reportes (db.Model):  #Esta bien esto?
         "terminacion": self.terminacion
         }
             
+class Habit (db.Model):
+    __tablename__ = 'habitos'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='user_habit_uc'),
+                     )

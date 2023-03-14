@@ -54,28 +54,30 @@ function CellBar({ percentage }) {
     </div>
 }
 
-function ActivityRegisterPanel() {
+function ActivityRegisterPanel({ closeHandler }) {
     return (
-        <AnimatePresence>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className={stl.backdrop}
-            >
-                <div className={stl.panel}>
-                    <label htmlFor="habito">Habito:</label>
-                    <select name="habito" id="habito">
-                        <option value="rigatoni">Rigatoni</option>
-                        <option value="dave">Dave</option>
-                        <option value="pumpernickel">Pumpernickel</option>
-                        <option value="reeses">Reeses</option>
-                    </select>
 
-                    <button>Registrar Actividad</button>
-                </div>
-            </motion.div>
-        </AnimatePresence>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={stl.backdrop}
+        >
+            <div className={stl.panel}>
+                <button onClick={() => closeHandler()}>X</button>
+                <label htmlFor="habito">Habito:</label>
+                <select name="habito" id="habito">
+                    <option value="rigatoni">Rigatoni</option>
+                    <option value="dave">Dave</option>
+                    <option value="pumpernickel">Pumpernickel</option>
+                    <option value="reeses">Reeses</option>
+                </select>
+
+
+                <button>Registrar Actividad</button>
+            </div>
+        </motion.div>
+
     )
 }
 
@@ -93,8 +95,37 @@ function Days({ days }) {
 
 }
 
+function HabitRegisterPanel({ closeHandler }) {
+    const { store, actions } = useContext(Context);
+    const [name, setName] = useState('')
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={stl.backdrop}
+        >
+            <div className={stl.panel}>
+                <button onClick={() => closeHandler()}>X</button>
+                <label>Nombre</label>
+                <input type='text' onChange={(e)=>setName(e.target.value)}/>
+                <label htmlFor="habito">Habito:</label>
+                <select name="habito" id="habito">
+                    <option value="rigatoni">Rigatoni</option>
+                    <option value="dave">Dave</option>
+                    <option value="pumpernickel">Pumpernickel</option>
+                    <option value="reeses">Reeses</option>
+                </select>
+
+                <button onClick={()=>actions.addHabit(name)}>Registrar Actividad</button>
+            </div>
+        </motion.div>
+    )
+
+}
+
 export function Dashboard() {
-    const [registries, setRegitries] = useState(regist)
+    // const [registries, setRegitries] = useState(regist)
     const [showPanel, setShowPanel] = useState(false)
     const { store, actions } = useContext(Context);
 
@@ -105,21 +136,35 @@ export function Dashboard() {
     function showPanelHandler(panelName) {
         setShowPanel(panelName)
     }
+    function closePanelHandler() {
+        setShowPanel(false)
+    }
 
     let panel = []
-    if (showPanel) {
-        panel = <ActivityRegisterPanel />
+    if (showPanel == 'activity') {
+        panel = <ActivityRegisterPanel closeHandler={closePanelHandler} />
+    } else if (showPanel == 'habit') {
+        panel = <HabitRegisterPanel closeHandler={closePanelHandler} />
     }
 
     return (
         <div className={stl.dashboard}>
-            {panel}
+            <AnimatePresence>
+                {panel}
+            </AnimatePresence>
             <div className={stl['dashboard-bar']}>
                 <button
                     onClick={() => {
-                        showPanelHandler('register-activity-panel')
+                        showPanelHandler('activity')
                     }}
                 >Registrar Actividad</button>
+
+                <button
+                    onClick={() => {
+                        showPanelHandler('habit')
+                    }}
+                >Crear nuevo habito</button>
+
             </div>
             <div className={stl.year}>
                 <WeekDays />
