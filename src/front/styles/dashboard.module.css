@@ -1,0 +1,111 @@
+.dashboard {
+    display: grid;
+    /* grid-template-columns: ; */
+}
+
+.dashboard button{
+    background-color: rgb(157 117 49);
+}
+
+.dashboard-bar{
+    
+}
+
+.cell{
+
+    width: 100%;
+    aspect-ratio: 1;
+    border : 1px solid white;
+    color : white;
+}
+
+.cell-bar {
+    width: 100%;
+    height: 0.3em;
+    border-radius: 0.3em;
+    background-color: black;
+}
+
+.cell-bar div{
+    height: 100%;
+    background-color: blanchedalmond;
+    border-radius: inherit;
+    
+}
+
+.year {
+    width: 100%;
+    max-width: 500px;
+    height: 50em;
+    overflow-y: scroll;
+    display: grid;
+    grid-template-columns:  minmax(2em, 1fr) minmax(14em, 7fr);
+    grid-template-rows:  min-content;
+    grid-template-areas: 
+    ". weekdays"
+    "weeknumbers days";
+    border: 1px solid white;
+
+}
+
+.days {
+    grid-area: days;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(54, 1fr);
+    background-image:
+      repeating-linear-gradient(#333 0 1px, transparent 1px 100%),
+      repeating-linear-gradient(90deg, #333 0 1px, transparent 1px 100%);
+    background-size: 14.2857143% 1.851851852%;
+}
+
+.day {
+    padding: 0.3em;
+    background-color: #666666;
+    overflow: hidden;
+    font-size: 0.7em;
+}
+
+.weekdays{
+    display: flex;
+    grid-area: weekdays;
+}
+
+.weekdays div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weeknumbers {
+    grid-area: weeknumbers;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(54, min-content);
+    height: 100%;
+    width: 100%;
+}
+.weeknumbers div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000099;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 1em;
+    gap: 1em;
+}
