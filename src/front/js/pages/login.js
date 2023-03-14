@@ -67,8 +67,9 @@ export const Login = () => {
 										Olvide mi contraseña
 									</button>
 								</div>
+								</form>
 								{/* <!-- Modal --> */}
-								<div className="modal fade" id="recoveryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div className="modal fade" id="recoveryModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 									<div className="modal-dialog modal-dialog-centered">
 										<div className="modal-content">
 											<div className="modal-header">
@@ -97,7 +98,6 @@ export const Login = () => {
 								{/* <!-- Modal --> */}
 
 
-							</form>
 					</div>
 
 					<div className="col m-0 d-none d-sm-none d-md-none d-lg-block">
