@@ -9,10 +9,12 @@ export const Userprofile = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (store.accessToken === '') {
+    if (store.accessToken === null) return
+    if (store.accessToken == '') {
       navigate('/')
+    } else{
+      actions.getUserInfo()
     }
-    actions.getUserInfo()
   }, [store.accessToken])
 
   console.log(store.userInfo)

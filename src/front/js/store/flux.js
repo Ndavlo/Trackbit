@@ -7,8 +7,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			accessToken: null
 		},
 		actions: {
-
-
 			loadTokens: () => {
 				console.log('loading tokens')
 				let accessToken = localStorage.getItem('accessToken') || ''
@@ -16,7 +14,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				// console.log(accessToken)
 				setStore({ refreshToken: refreshToken, accessToken: accessToken })
 			},
-
 
 			getUserInfo: async () => {
 				let response = await fetchProtected(`${apiUrl}/user`, {})
