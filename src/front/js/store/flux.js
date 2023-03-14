@@ -46,16 +46,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return true
 
 			},
-			
-		resetPassword: async (token, newPassword) => {
-			let resp = await fetch(apiUrl + "/api/resetpassword", {
-				method: "POST",
-				body: JSON.stringify({
-					password: newPassword
-				}),
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": "Bearer " + token
+
+
+			resetPassword: async (token, newPassword) => {
+				let resp = await fetch(apiUrl + "/api/resetpassword", {
+					method: "POST",
+					body: JSON.stringify({
+						password: newPassword
+					}),
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + token
+					}
+				})
+				if (!resp.ok) {
+					console.error(resp.statusText)
+					return "Error en la recuperacion"
 				}
 				return "ok"
 			},
@@ -76,7 +82,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				headers: {
 					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ email: email, password: password, name:name, last_name:lastName })
+				body: JSON.stringify({ email: email, password: password, name: name, last_name: lastName })
 			})
 			if (!resp.ok) {
 				console.error("There was an error: " + resp.statusText)
@@ -88,71 +94,72 @@ const getState = ({ getStore, getActions, setStore }) => {
 			console.log(data)
 			return true
 		},
-		
+
 		subscribeToNews: async (email) => {
 			const resp = await fetch(apiUrl + '/newslettersub', {
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ email: email})
+				body: JSON.stringify({ email: email })
 			})
 			if (!resp.ok) {
 				console.error("There was an error: " + resp.statusText)
 				const data = await resp.json()
 				console.log(data)
 				return true
-			},
-
-
-			getRegistries: () => {
-
-				let today = new Date()
-				const oneDay = 86400000
-				const oneWeek = oneDay * 7
-				today.setHours(0, 0, 0, 0)
-				let registries = []
-				for (let i = 0; i < 67; i++) {
-					registries.push(
-						{
-							date: new Date(today.getTime() - i * oneDay),
-							registries: [
-								{
-									time: Date.now(),
-									habit: 1,
-									level: 0.5,
-								}
-							]
-						}
-					)
-				}
-				console.log(registries)
-				setStore({ registries: registries })
-			},
-
-			addRegitry: () => {
-				getActions().fetchProtected(`${apiUrl}/activity`)
-
-			}, 
-
-			addHabit: (name) => {
-				console.log(JSON.stringify({name}))
-				fetchProtected(`${apiUrl}/habits`, {
-					method: 'POST',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({name})
-				})
-			},
-
-			getHabits: ()=>{
-				getActions().fetchProtected(`${apiUrl}/habits`)
 			}
+		},
+
+
+		getRegistries: () => {
+
+			let today = new Date()
+			const oneDay = 86400000
+			const oneWeek = oneDay * 7
+			today.setHours(0, 0, 0, 0)
+			let registries = []
+			for (let i = 0; i < 67; i++) {
+				registries.push(
+					{
+						date: new Date(today.getTime() - i * oneDay),
+						registries: [
+							{
+								time: Date.now(),
+								habit: 1,
+								level: 0.5,
+							}
+						]
+					}
+				)
+			}
+			console.log(registries)
+			setStore({ registries: registries })
+		},
+
+		addRegitry: () => {
+			getActions().fetchProtected(`${apiUrl}/activity`)
 
 		},
 
+		addHabit: (name) => {
+			console.log(JSON.stringify({ name }))
+			fetchProtected(`${apiUrl}/habits`, {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ name })
+			})
+		},
+
+		getHabits: () => {
+			getActions().fetchProtected(`${apiUrl}/habits`)
+		}
+
 	}
+
+
 
 	async function fetchProtected(resource = '', options = {}) {
 		console.log('fetching protected')
@@ -182,12 +189,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.setItem("refreshToken", data.refresh_token)
 				fetchProtected(resource, options)
 			}
-		}else{
+		} else {
 			return response
 		}
 	}
 }
-}
+
 
 
 
