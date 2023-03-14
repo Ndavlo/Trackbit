@@ -52,7 +52,7 @@ class Rutina (db.Model):
     nombre = db.Column(db.String)
     descripcion = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship("User", backref="rutina")
+    user = db.relationship("User", backref="rutinas")
 
 
     def __repr__(self):

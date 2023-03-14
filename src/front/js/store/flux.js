@@ -19,7 +19,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			getUserInfo: async () => {
-				let response = await getActions().fetchProtected(`${apiUrl}/user`, {})
+				let response = await fetchProtected(`${apiUrl}/user`, {})
 				let data = await response.json()
 				setStore({ userInfo: data })
 				return undefined
@@ -137,7 +137,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			addRegitry: () => {
-				getActions().fetchProtected(`${apiUrl}/activity`)
+				fetchProtected(`${apiUrl}/activity`)
 
 			},
 
@@ -153,7 +153,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getHabits: () => {
-				getActions().fetchProtected(`${apiUrl}/habits`)
+				fetchProtected(`${apiUrl}/habits`)
 			}
 
 		}
