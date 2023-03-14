@@ -37,57 +37,16 @@ export const Userprofile = () => {
           </div>
           <div className="col-md-8">
             <div className="card mb-3">
+                <div className="card-header"><h3>Mis rutinas</h3></div>
               <div className="card-body">
-                <div className="row">
-                  <div className="col-sm-3">
-                    <h6 className="mb-0">Name LastName</h6>
-                  </div>
-                  <div className="col-sm-9 text-secondary">
-                    {`${store.userInfo?.['name']} ${store.userInfo?.['last name']}`}
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-sm-3">
-                    <h6 className="mb-0">Email</h6>
-                  </div>
-                  <div className="col-sm-9 text-secondary">
-                    {store.userInfo?.['email']}
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-sm-3">
-                    <h6 className="mb-0">Phone</h6>
-                  </div>
-                  <div className="col-sm-9 text-secondary">
-                    {`${store.userInfo?.['phone']}`}
-                  </div>
-                </div>
-
-                <div className="row">
-
-                </div>
-
-                <div className="row">
-                  <div className="col-sm-3">
-                    <h6 className="mb-0">Address</h6>
-                  </div>
-                  <div className="col-sm-9 text-secondary">
-                    San Francisco, Panama, PA
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-sm-12">
-                    <a className="btn" target="" href="">Edit</a>
-                  </div>
-                </div>
+                <p>Rutina 1</p>
+                <p>Rutina 2</p>
+                <p>Rutina 3</p>
               </div>
             </div>
             <div className="card mb-3">
+                <div className="card-header text-center"> <h3>Subscribete a mis rutinas</h3></div>
               <div className="card-body">
-                <div className="card-header text-center"> <h2>Subscribete a mis rutinas</h2></div>
                 <div className="paypalBody">
               <PayPalScriptProvider options={{ "client-id": "AfYf4HLbfgYURu37d1Tis6_HugMlfZC3ashcDlp4ZBLDme44cLfL-wmR6rRjeVOcBmISi9lw2bUTRE2u" }}>
                     <PayPalButtons
