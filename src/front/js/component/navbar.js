@@ -12,6 +12,11 @@ export const Navbar = () => {
 			id: "buttonOne"
 		},
 		{
+			text: "Dashboard",
+			link: "/dashboard",
+			id: "buttonTwo"
+		},
+		{
 			text: "Blog",
 			link: "/blog",
 			id: "buttonTwo"
