@@ -49,10 +49,12 @@ class BlockedTokens(db.Model):
 class Rutina (db.Model):
     __tablename__="rutina"
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String)
-    descripcion = db.Column(db.String)
+    name = db.Column(db.String)
+    description = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref="rutina")
+
+    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='user_rutina_uc'),)
 
 
     def __repr__(self):
@@ -61,19 +63,19 @@ class Rutina (db.Model):
     def serialize (self):
         return {
             "id": self.id,
-            "nombre": self.nombre,
+            "nombre": self.name,
             "descripcion": self.descripcion,
         }
     def serialize_name (self):
         return {
-            "name": self.nombre
+            "name": self.name
         }
 
     def serialize2 (self):
         pasos = list(map(lambda r: r.serialize(), self.paso))
         return {
             "id": self.id,
-            "nombre": self.nombre,
+            "nombre": self.name,
             "descripcion": self.descripcion,
             "paso": pasos
         }
@@ -147,8 +149,8 @@ class Habit (db.Model):
     name = db.Column(db.String(120))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
-    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='user_habit_uc'),
-                     )
+    __table_args__ = db.UniqueConstraint('user_id', 'name', name='user_habit_uc'),
+                     
 
 
 

@@ -61,9 +61,9 @@ def mostrar_rutinas():
 @jwt_required()
 def crear_rutina():
     current_user_id = get_jwt_identity()
-    nombre = request.json.get('nombre')
-    descripcion = request.json.get('descripcion')
-    nueva_rutina = Rutina(nombre=nombre, descripcion=descripcion, user_id=current_user_id)
+    name = request.json.get('name')
+    descripcion = request.json.get('description')
+    nueva_rutina = Rutina(name=name, description=descripcion, user_id=current_user_id)
     db.session.add(nueva_rutina)
     db.session.commit()
     return jsonify({'msg': "Rutina creada!"})
@@ -187,8 +187,9 @@ def register_activity():
     '''fuction that handler for the register activity handler'''
     user = get_jwt_identity()
     name = request.json.get('name')
-    
     return(jsonify({'msg': name}))
+
+
 @api.route('/newslettersub', methods=['POST'])
 def subscribe_newsletter():
     email=request.json.get('email')

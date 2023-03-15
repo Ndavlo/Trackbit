@@ -19,7 +19,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			getUserInfo: async () => {
-				let response = await getActions().fetchProtected(`${apiUrl}/user`, {})
+				let response = await fetchProtected(`${apiUrl}/user`, {})
 				let data = await response.json()
 				setStore({ userInfo: data })
 				return undefined
@@ -142,14 +142,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			addHabit: (name) => {
+			addHabit: (name, description) => {
 				console.log(JSON.stringify({ name }))
-				fetchProtected(`${apiUrl}/habits`, {
+				fetchProtected(`${apiUrl}/nueva_rutina`, {
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ name })
+					body: JSON.stringify({ name , description})
 				})
 			},
 
