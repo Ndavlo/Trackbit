@@ -52,7 +52,7 @@ class Rutina (db.Model):
     name = db.Column(db.String)
     description = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship("User", backref="rutina")
+    user = db.relationship("User", backref="rutinas")
 
     __table_args__ = (db.UniqueConstraint('user_id', 'name', name='user_rutina_uc'),)
 

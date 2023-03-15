@@ -7,8 +7,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			accessToken: null
 		},
 		actions: {
-
-
 			loadTokens: () => {
 				console.log('loading tokens')
 				let accessToken = localStorage.getItem('accessToken') || ''
@@ -16,7 +14,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				// console.log(accessToken)
 				setStore({ refreshToken: refreshToken, accessToken: accessToken })
 			},
-
 
 			getUserInfo: async () => {
 				let response = await fetchProtected(`${apiUrl}/user`, {})
@@ -143,8 +140,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			addHabit: (name, description) => {
-				console.log(JSON.stringify({ name }))
-				fetchProtected(`${apiUrl}/nueva_rutina`, {
+				
+				fetchProtected(`${apiUrl}/habits`, {
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json"
@@ -154,7 +151,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getHabits: () => {
-				getActions().fetchProtected(`${apiUrl}/habits`)
+				fetchProtected(`${apiUrl}/habits`)
 			}
 
 		}
