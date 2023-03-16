@@ -7,6 +7,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     last_name = db.Column(db.String(120), nullable = False)
+    title = db.Column(db.String(150))
+    bio = db.Column(db.String(150))
     username = db.Column(db.String(), unique = True, nullable = True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
@@ -28,7 +30,9 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             "name": self.name,
-            "last_name": self.last_name
+            "last_name": self.last_name,
+            "title": self.title,
+            "bio": self.bio
         }
 
     def serialize_info(self):
@@ -38,6 +42,8 @@ class User(db.Model):
             "name":self.name,
             "last_name":self.last_name,
             "email":self.email,
+            "title": self.title,
+            "bio": self.bio,
             "rutinas": rutinas
         }
 

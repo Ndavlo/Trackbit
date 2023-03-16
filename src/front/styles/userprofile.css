@@ -22,10 +22,22 @@ height: 100%;
     border-radius: .25rem;
 }
 
+#updateForm{
+    color: black;
+}
+
+#userBio{
+    text-align: justify;
+    max-width: 100%;
+    text-overflow: clip;
+}
+
 .paypalBody {
     padding-top: 20px;
     margin: auto;
-    max-width: 350px;
+    max-width: 450px;
+    max-height: 250px;
+    overflow-y: scroll;
 }
 
 .card-body {
@@ -62,6 +74,6 @@ height: 100%;
     box-shadow: none !important;
 }
 
-#app {
+#app > * {
     background-color: #1b262a;
 }
