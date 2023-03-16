@@ -10,11 +10,11 @@ export const Userprofile = () => {
   const [title, setTitle] = useState('');
   const [bio, setBio] = useState('');
 
-function submitUpdate(e){
-  e.preventDefault()
-actions?.updateUserInfo(title, bio)
-return "ok"
-}
+  function submitUpdate(e) {
+    e.preventDefault()
+    actions?.updateUserInfo(title, bio)
+    return "ok"
+  }
 
 
   useEffect(() => {
@@ -23,10 +23,10 @@ return "ok"
       navigate('/')
     } else {
       actions.getUserInfo()
-      .then(()=> {
-        setTitle(store.userInfo?.['title'])
-        setBio(store.userInfo?.['bio'])
-      }) 
+        .then(() => {
+          setTitle(store.userInfo?.['title'])
+          setBio(store.userInfo?.['bio'])
+        })
 
     }
   }, [store.accessToken])
@@ -44,10 +44,10 @@ return "ok"
                   <img src="https://d3a7c97d5beed5ab2c49-7aac60cfdebb59ab39bebc5ac6e3d5b2.ssl.cf5.rackcdn.com/27640000/27642431/_xs959ce358e310887ed8d155f4558024e5.jpg" alt="Admin" className="rounded-circle" width="150" />
                   <div className="mt-3">
                     <div>
-                    <h4>{`${store.userInfo?.['name']} ${store.userInfo?.['last_name']}`}</h4>
-                    <p className="text-secondary">{`${store.userInfo?.['title'] || ''}`}</p>
-                    <p className="text-muted text-break" id="userBio">{`${store.userInfo?.['bio'] || ''}`}</p>
-                    <button className="btn" type="button" data-bs-toggle="modal" data-bs-target="#profileUpdateModal"><i className="bi bi-pencil-fill"></i></button>
+                      <h4>{`${store.userInfo?.['name']} ${store.userInfo?.['last_name']}`}</h4>
+                      <p className="text-secondary">{`${store.userInfo?.['title'] || ''}`}</p>
+                      <p className="text-muted text-break" id="userBio">{`${store.userInfo?.['bio'] || ''}`}</p>
+                      <button className="btn" type="button" data-bs-toggle="modal" data-bs-target="#profileUpdateModal"><i className="bi bi-pencil-fill"></i></button>
                     </div>
 
                     {/* MODAL */}
@@ -68,10 +68,10 @@ return "ok"
                                 <label htmlFor="name" className="form-label text-dark">Bio</label>
                                 <input type="text" className="form-control text-dark" maxlength="150" value={bio} id="inputText" aria-describedby="name" onChange={(e) => setBio(e.target.value)} />
                               </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn" onClick={(e) => submitUpdate(e)}>Actualizar</button>
-                          </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn" onClick={(e) => submitUpdate(e)}>Actualizar</button>
+                              </div>
                             </form>
                           </div>
                         </div>
@@ -87,10 +87,10 @@ return "ok"
           <div className="col-md-8">
             <div className="card mb-3">
               <div className="card-header"><h3>Mis rutinas</h3></div>
-              <div className="card-body">
-                <p>Rutina 1</p>
-                <p>Rutina 2</p>
-                <p>Rutina 3</p>
+              <div className="card-body gridRutinas">
+                <button class="rutinaGrid1">Aprender JS</button>
+                <button class="rutinaGrid2">Comer sano</button>
+                <button class="rutinaGrid3">Ejercicio mensual</button>
               </div>
             </div>
             <div className="card mb-3">
