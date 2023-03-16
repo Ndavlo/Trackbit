@@ -103,6 +103,11 @@
 }
 
 .panel {
+    background-color: white;
+    
+}
+
+.panel div{
     display: flex;
     flex-direction: column;
     background-color: #fff;

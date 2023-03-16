@@ -123,11 +123,15 @@ function HabitRegisterPanel({ closeHandler }) {
     >
       <div className={stl.panel}>
         <button onClick={() => closeHandler()}>X</button>
-        <label>Nombre</label>
-        <input type="text" onChange={(e) => setName(e.target.value)} />
-        <label>Decripción</label>
-        <textarea onChange={(e) => serDescription(e.target.value)} />
-
+        <div>
+          <label>Nombre</label>
+          <input type="text" onChange={(e) => setName(e.target.value)} />
+          <label>Decripción</label>
+          <textarea onChange={(e) => serDescription(e.target.value)} />
+        </div>
+        <div>
+          <h2>Pasos</h2>
+        </div>
         <button onClick={() => actions.addHabit(name, description)}>
           Registrar Habito
         </button>
@@ -183,9 +187,9 @@ export function Dashboard() {
         </button>
       </div>
       <div className={stl.year}>
-        <WeekDays/>
-        <WeekNumbers/>
-        <Days days={store.registries}/>
+        <WeekDays />
+        <WeekNumbers />
+        <Days days={store.registries} />
       </div>
     </div>
   );
