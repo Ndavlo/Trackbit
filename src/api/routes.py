@@ -65,10 +65,15 @@ def crear_rutina():
     descripcion = request.json.get('description')
     nueva_rutina = Rutina(name=name, description=descripcion, user_id=current_user_id)
     db.session.add(nueva_rutina)
-    db.session.commit()
-    return jsonify({'msg': "Rutina creada!"})
+    try:
+        db.session.commit()
+    except Exception as inst:
+        pass
+        # TODO check if there is a rutine with the same name, handle exception
+        return jsonify({'msg': 'There is a rutine with the same name'}), 409
+    return jsonify({'msg': "Rutina creada!", 'id': nueva_rutina.id})
 
-@api.route('/rutina/<rutina_id>/nuevo_paso', methods=['POST'])
+@api.route('/rutina/paso', methods=['POST'])
 @jwt_required()
 def crear_paso(rutina_id):
 ### buscar rutina, si existe continuar, sino, error

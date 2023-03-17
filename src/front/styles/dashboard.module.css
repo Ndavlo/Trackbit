@@ -107,7 +107,7 @@
     
 }
 
-.panel div{
+.panel > div{
     display: flex;
     flex-direction: column;
     background-color: #fff;

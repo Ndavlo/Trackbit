@@ -2,7 +2,9 @@ import { array } from "prop-types";
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import stl from "../../styles/dashboard.module.css";
+import stl2 from '../../styles/newhabitpanel.module.css'
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 let year = 2023;
 let firstDay = new Date(year, 0, 1);
@@ -110,34 +112,140 @@ function Days({ days }) {
   );
 }
 
+
+
+function Step({ setStep, index }) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [content, setContent] = useState("");
+  const [repetition, setRepetition] = useState(0);
+  const [time, setTime] = useState("day");
+  const [weekCheckboxes, setWeekCheckboxes] = useState([false, false, false, false, false, false, false]);
+  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+
+  const handleWeekCheckboxChange = (index) => {
+    const newWeekCheckboxes = [...weekCheckboxes];
+    newWeekCheckboxes[index] = !newWeekCheckboxes[index];
+    setWeekCheckboxes(newWeekCheckboxes);
+  };
+
+  const data = {
+    name,
+    description,
+    content,
+    repetition,
+    time,
+    weekCheckboxes,
+    startDate,
+    endDate
+  };
+
+
+  return (
+    <div className="paso">
+      <h3>Paso 1</h3>
+      <label>Nombre</label>
+      <input type="text" value={name} onChange={(e) => {
+        data.name = e.target.value
+        setStep(index, data)
+        setName(e.target.value)
+      }} />
+      <label>Descripción</label>
+      <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+      <label>Contenido</label>
+      <textarea value={content} onChange={(e) => setContent(e.target.value)} />
+
+      <div>
+        <h2>Recurrencia</h2>
+        <label>Se repite:</label>
+        <input type="number" value={repetition} onChange={(e) => setRepetition(parseInt(e.target.value))} />
+        <select name="time" id="time" value={time} onChange={(e) => setTime(e.target.value)}>
+          <option value="day">Dia</option>
+          <option value="week">Semana</option>
+          <option value="month">Mes</option>
+          <option value="year">Ano</option>
+        </select>
+        <label>Empieza en:</label>
+        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+      </div>
+
+      <div className={stl2.weekcheck}>
+        {weekCheckboxes.map((checked, index) => (
+          <input key={index} type="checkbox" checked={checked} onChange={() => handleWeekCheckboxChange(index)} />
+        ))}
+      </div>
+
+      <label>Termina en:</label>
+      <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+    </div>
+  );
+}
+
+
+
 function HabitRegisterPanel({ closeHandler }) {
   const { store, actions } = useContext(Context);
   const [name, setName] = useState("");
   const [description, serDescription] = useState("");
+  const [steps, setSteps] = useState([0,])
+
+  let stps = [{
+    name: 'Nombre',
+    description: 'Descripcion',
+    content: 'Contenitdo',
+    repetition: 'repeticion',
+    time: 'week',
+    weekCheckboxes: 'L',
+    startDate: '',
+    endDate: ''
+  }]
+
+
+
+  function test() {
+    console.log('Testing:')
+    console.log(stps)
+  }
+
+  function addPaso() {
+    setSteps([...steps+steps[steps.length-1]])
+
+  }
+
+  function setStepData(index, data) {
+    stps[index] = data
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className={stl.backdrop}
+
     >
-      <div className={stl.panel}>
+      <button onClick={e => test(e)}>TEST</button>
+      <div className={`${stl.panel} ${stl2.panel}`}>
         <button onClick={() => closeHandler()}>X</button>
-        <div>
+        <div className="habito">
           <label>Nombre</label>
           <input type="text" onChange={(e) => setName(e.target.value)} />
           <label>Decripción</label>
           <textarea onChange={(e) => serDescription(e.target.value)} />
         </div>
-        <div>
+        <div className="pasos">
+          <div></div>
           <h2>Pasos</h2>
+          <button onClick={addPaso}>Agregar Paso</button>
+          {steps.map((e, i) => {
+            return (<Step key={i} setStep={setStepData} index={i}/>)
+          })}
+
         </div>
         <button onClick={() => actions.addHabit(name, description)}>
           Registrar Habito
         </button>
-      </div>
-      <div>
-
       </div>
     </motion.div>
   );
@@ -147,6 +255,15 @@ export function Dashboard() {
   // const [registries, setRegitries] = useState(regist)
   const [showPanel, setShowPanel] = useState(false);
   const { store, actions } = useContext(Context);
+  const navigate = useNavigate()
+
+
+  useEffect(() => {
+    if (store.accessToken === null) return
+    if (store.accessToken == '') {
+      navigate('/')
+    }
+  }, [store.accessToken])
 
   useEffect(() => {
     actions.getRegistries();
@@ -162,7 +279,7 @@ export function Dashboard() {
   let panel = [];
   if (showPanel == "activity") {
     panel = <ActivityRegisterPanel closeHandler={closePanelHandler} />;
-  } else if (showPanel == "habit") {
+  } else if (/*showPanel == "habit"*/true) {
     panel = <HabitRegisterPanel closeHandler={closePanelHandler} />;
   }
 

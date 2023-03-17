@@ -139,14 +139,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			addHabit: (name, description) => {
-				
-				fetchProtected(`${apiUrl}/habits`, {
+			addHabit: (name, description, steps) => {
+				fetchProtected(`${apiUrl}/nueva_rutina`, {
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ name , description})
+					body: JSON.stringify({ name , description, steps})
 				})
 			},
 
