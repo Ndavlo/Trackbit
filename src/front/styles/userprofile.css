@@ -38,7 +38,7 @@
     margin: auto;
     max-width: 450px;
     max-height: 250px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .rutinaGrid1 {

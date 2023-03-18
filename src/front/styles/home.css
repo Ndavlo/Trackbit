@@ -53,10 +53,12 @@ main {
     text-shadow: 2px 2px 0 rgb(27, 38, 42), 2px -2px 0 rgb(27, 38, 42), -2px 2px 0 rgb(27, 38, 42), -2px -2px 0 rgb(27, 38, 42), 2px 0px 0 rgb(27, 38, 42), 0px 2px 0 rgb(27, 38, 42), -2px 0px 0 rgb(27, 38, 42), 0px -2px 0 rgb(27, 38, 42);
 }
 
+.homeCardContainer{
+    justify-content: center;
+}
 
 #homeCard {
-    width: 18rem;
-    height: 450px;
+    min-height: 450px;
 }
 
 #homeCard:hover {
