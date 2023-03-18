@@ -22,6 +22,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return undefined
 			},
 
+			updateUserInfo: async (title, bio) => {
+				let response = await fetchProtected(`${apiUrl}/user`, {
+					method: 'PATCH',
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({title: title, bio: bio})
+				})
+				if (!response.ok) {
+					console.error('No se pudo actualizar')
+					return false
+				} else{
+					let newUserInfo = {...getStore().userInfo}
+					newUserInfo.bio = bio
+					newUserInfo.title = title
+					setStore({userInfo: newUserInfo})
+					return "ok"
+				}
+
+			},
+
 			login: async (email, password) => {
 
 				let response = await fetch(apiUrl + '/login', {

@@ -1,27 +1,41 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/login.css";
 import { Context } from "../store/appContext";
 
 export const Signup = () => {
-	const { store, actions } = useContext(Context);
-	const [password, setPassword] = useState('');
-	const [confirmedPassword, setConfirmedPassword] = useState('');
-	const [email, setEmail] = useState('');
-	const [name, setName] = useState('');
-	const [lastName, setLastName] = useState('');
+  const { store, actions } = useContext(Context);
+  const [password, setPassword] = useState('');
+  const [confirmedPassword, setConfirmedPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const navigate = useNavigate();
 
-	function submitSignUp (e){
-		e.preventDefault();
-		if (email !== "" && password !== "" && confirmedPassword !== "" && name !== "" && lastName !== ""){
-			if (password === confirmedPassword) {
-				actions?.signUp(email, password, name, lastName);
-			} else {
-				alert("Las contraseñas no coinciden");
-			}
-		} else {
-			alert("Formulario incorrecto");
-		}
-	}
+  function submitSignUp (e){
+    e.preventDefault();
+    if (email !== "" && password !== "" && confirmedPassword !== "" && name !== "" && lastName !== ""){
+      if (password === confirmedPassword) {
+        actions?.signUp(email, password, name, lastName)
+        .then(() => {
+          actions?.login(email, password)
+          .then(() => {
+            navigate('/userprofile');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      } else {
+        alert("Las contraseñas no coinciden");
+      }
+    } else {
+      alert("Formulario incorrecto");
+    }
+  }
 
 	return (
 		<>
