@@ -4,11 +4,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			refreshToken: null,
-			accessToken: null
+			accessToken: null,
+			newSteps: []
 		},
 		actions: {
 			loadTokens: () => {
-				console.log('loading tokens')
 				let accessToken = localStorage.getItem('accessToken') || ''
 				let refreshToken = localStorage.getItem('refreshToken') || ''
 				// console.log(accessToken)
@@ -130,7 +130,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					)
 				}
-				console.log(registries)
 				setStore({ registries: registries })
 			},
 
@@ -145,17 +144,57 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ name , description, steps})
+					body: JSON.stringify({ name, description, steps })
 				})
 			},
 
 			getHabits: () => {
 				fetchProtected(`${apiUrl}/habits`)
-			}
+			},
 
-		}
+			setNewStepInStore: (index, data) => {
+				let newSteps = getStore().newSteps
+				newSteps[index] = data
+				setStore({ newSteps: newSteps })
+			},
+			pushNewStepInStore: () => {
+				let newSteps = getStore().newSteps
+				//default values for a new step
+				newSteps.push({
+					name: '',
+					description: '',
+					content: '',
+					repetition: '',
+					time: '',
+					weekCheckboxes: '',
+					startDate: '',
+					endDate: ''
+				})
+				setStore({ newSteps: newSteps })
+
+			},
+			setNewStepProperty: (index, propertyName, value) => {
+				console.log(`index:${index} property: ${propertyName} value: ${value}`)
+				let newSteps = [...getStore().newSteps]
+				let step = newSteps[index]
+				step[propertyName] = value
+				newSteps[index] = step
+				console.log([...newSteps])
+				setStore({ newSteps: [...newSteps] })
+
+			},
+			deleteNewStepFromStore: (index) => {
+				let newSteps = getStore().newSteps
+				newSteps.splice(index, 1)
+				actions.setNewStepInStore({ newSteps: newSteps })
+			},
+
+
+		},
+
+
+
 	}
-
 
 
 	async function fetchProtected(resource = '', options = {}) {
