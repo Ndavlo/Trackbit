@@ -5,7 +5,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			refreshToken: null,
 			accessToken: null,
-			newSteps: []
+			newSteps: [],
+			habits: [],
 		},
 		actions: {
 			loadTokens: () => {
@@ -138,8 +139,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			addHabit: (name, description, steps) => {
-				fetchProtected(`${apiUrl}/nueva_rutina`, {
+			addHabit: async(name, description, steps) => {
+				fetchProtected(`${apiUrl}/rutina`, {
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json"
@@ -148,8 +149,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 			},
 
-			getHabits: () => {
-				fetchProtected(`${apiUrl}/habits`)
+			getHabits: async() => {
+				const response  = await fetchProtected(`${apiUrl}/rutinas`)
+				const data = await response.json()
+				console.log(data)
+				setStore({habits:data})
+
 			},
 
 			setNewStepInStore: (index, data) => {
@@ -161,12 +166,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				let newSteps = getStore().newSteps
 				//default values for a new step
 				newSteps.push({
-					name: '',
+					name: 'Paso',
 					description: '',
 					content: '',
 					repetition: '',
 					time: '',
-					weekCheckboxes: '',
 					startDate: '',
 					endDate: ''
 				})
@@ -174,13 +178,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 			setNewStepProperty: (index, propertyName, value) => {
-				console.log(`index:${index} property: ${propertyName} value: ${value}`)
-				let newSteps = [...getStore().newSteps]
+				let newSteps = getStore().newSteps
 				let step = newSteps[index]
 				step[propertyName] = value
 				newSteps[index] = step
-				console.log([...newSteps])
-				setStore({ newSteps: [...newSteps] })
+				setStore({ newSteps: newSteps })
 
 			},
 			deleteNewStepFromStore: (index) => {
@@ -188,6 +190,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				newSteps.splice(index, 1)
 				actions.setNewStepInStore({ newSteps: newSteps })
 			},
+
+			clearNewsSteps : ()=>{
+				setStore({ newSteps: []})
+			}
 
 
 		},

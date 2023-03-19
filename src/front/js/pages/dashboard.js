@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { HabitRegisterPanel } from "../component/HabitRegiterPanel";
 import { ActivityGraph } from "../component/ActivityGraph";
+import { ActivityRegisterPanel } from "../component/activityRegisterPanel";
+import { HabitsPanel } from "../component/habitsPanel";
 
 export function Dashboard() {
   // const [registries, setRegitries] = useState(regist)
@@ -36,7 +38,7 @@ export function Dashboard() {
   let panel = [];
   if (showPanel == "activity") {
     panel = <ActivityRegisterPanel closeHandler={closePanelHandler} />;
-  } else if (/*showPanel == "habit"*/true) {
+  } else if (showPanel == "habit") {
     panel = <HabitRegisterPanel closeHandler={closePanelHandler} />;
   }
 
@@ -53,7 +55,7 @@ export function Dashboard() {
         </button>
 
         <button
-          onClick={() => {
+          onClick={() => {[]
             showPanelHandler("habit");
           }}
         >
@@ -61,6 +63,7 @@ export function Dashboard() {
         </button>
       </div>
       <ActivityGraph />
+      <HabitsPanel/>
     </div>
   );
 }

@@ -74,9 +74,8 @@ class Rutina (db.Model):
     def serialize2 (self):
         pasos = list(map(lambda r: r.serialize(), self.paso))
         return {
-            "id": self.id,
             "nombre": self.name,
-            "descripcion": self.descripcion,
+            "descripcion": self.description,
             "paso": pasos
         }
 
@@ -92,7 +91,7 @@ class Paso (db.Model):
     terminacion = db.Column(db.DateTime)
     meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
     temporalidad = db.Column(db.String) # Veces o minutos
-    periodo = db.Column(db.Integer)  # Al dia, a la semana, al mes.
+    periodo = db.Column(db.String)  # Al dia, a la semana, al mes.
     repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
     completada = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))

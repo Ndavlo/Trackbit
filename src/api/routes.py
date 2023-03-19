@@ -57,20 +57,39 @@ def mostrar_rutinas():
     return jsonify(response_body),200
 
 
-@api.route('/nueva_rutina', methods=['POST'])
+@api.route('/rutina', methods=['POST'])
 @jwt_required()
 def crear_rutina():
     current_user_id = get_jwt_identity()
     name = request.json.get('name')
-    descripcion = request.json.get('description')
-    nueva_rutina = Rutina(name=name, description=descripcion, user_id=current_user_id)
+    description = request.json.get('description')
+    steps = request.json.get('steps')
+   # print(steps)
+    nueva_rutina = Rutina(name=name, description=description, user_id=current_user_id)
     db.session.add(nueva_rutina)
     try:
         db.session.commit()
     except Exception as inst:
-        pass
         # TODO check if there is a rutine with the same name, handle exception
         return jsonify({'msg': 'There is a rutine with the same name'}), 409
+
+    for step in steps:
+        print(step)
+        print(step['name'])
+        db.session.add(#TODO parse the information to the correct data tipe or at least intialize the value with the right format
+            Paso(
+                rutina_id=nueva_rutina.id, 
+                nombre = step['name'], 
+                descripcion=step['description'], 
+                contenido=step['content'], 
+                inicio = step['startDate'], 
+                terminacion=step['endDate'], 
+                periodo=step['time'], 
+                repeticion = step['repetition']
+                )
+        )
+    db.session.commit()
+    
     return jsonify({'msg': "Rutina creada!", 'id': nueva_rutina.id})
 
 @api.route('/rutina/paso', methods=['POST'])

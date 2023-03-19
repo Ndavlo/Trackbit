@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8a02b1cb8781
+Revision ID: 530910de4bc3
 Revises: 
-Create Date: 2023-03-14 02:13:45.880952
+Create Date: 2023-03-19 00:29:13.085498
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8a02b1cb8781'
+revision = '530910de4bc3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -52,11 +52,12 @@ def upgrade():
     )
     op.create_table('rutina',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('nombre', sa.String(), nullable=True),
-    sa.Column('descripcion', sa.String(), nullable=True),
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('description', sa.String(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'name', name='user_rutina_uc')
     )
     op.create_table('paso',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -69,7 +70,7 @@ def upgrade():
     sa.Column('terminacion', sa.DateTime(), nullable=True),
     sa.Column('meta', sa.Integer(), nullable=True),
     sa.Column('temporalidad', sa.String(), nullable=True),
-    sa.Column('periodo', sa.Integer(), nullable=True),
+    sa.Column('periodo', sa.String(), nullable=True),
     sa.Column('repeticion', sa.String(), nullable=True),
     sa.Column('completada', sa.Boolean(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
