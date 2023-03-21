@@ -158,6 +158,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getHabits: async() => {
 				const response  = await fetchProtected(`${apiUrl}/rutinas`)
+				if(!response.ok) return
 				const data = await response.json()
 				console.log(data)
 				setStore({habits:data})

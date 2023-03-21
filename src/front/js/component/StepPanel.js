@@ -41,7 +41,7 @@ export function StepPanel({ index }) {
         animate={{ opacity: 1, height: "auto" }}
         exit={{ opacity: 0, height: 0 }}
         className={stl2.paso}>
-        <h3>Paso 1</h3>
+        <h3>Nuevo paso</h3>
         <button onClick={handleClose}>X</button>
         <label>Nombre</label>
         <input type="text" value={step?.name} onChange={(e) => {
