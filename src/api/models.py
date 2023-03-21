@@ -63,20 +63,21 @@ class Rutina (db.Model):
     def serialize (self):
         return {
             "id": self.id,
-            "nombre": self.name,
-            "descripcion": self.descripcion,
+            "name": self.name,
+            "description": self.description,
         }
     def serialize_name (self):
         return {
             "name": self.name
         }
 
-    def serialize2 (self):
-        pasos = list(map(lambda r: r.serialize(), self.paso))
+    def serialize_with_steps (self):
+        pasos = list(map(lambda r: r.serialize_step(), self.paso))
         return {
-            "nombre": self.name,
-            "descripcion": self.description,
-            "paso": pasos
+            "id" : self.id,
+            "name": self.name,
+            "description": self.description,
+            "steps": pasos
         }
 
 class Paso (db.Model):
@@ -94,13 +95,19 @@ class Paso (db.Model):
     periodo = db.Column(db.String)  # Al dia, a la semana, al mes.
     repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
     completada = db.Column(db.Boolean)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable = False)
     user = db.relationship("User")
     rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
     rutina = db.relationship("Rutina", backref='paso', lazy=True)
 
     def __repr__(self):
         return f'<Paso {self.nombre}>'
+
+    def serialize_step(self):
+        return{
+        "id": self.id,
+        "name": self.nombre,
+        }
     
     def serialize(self):
         return{
@@ -127,9 +134,9 @@ class Reportes (db.Model):  #Esta bien esto?
     user = db.relationship("User")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     paso = db.relationship("Paso")
-    paso_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
-    inicio = db.Column(db.DateTime)
-    terminacion = db.Column(db.DateTime)
+    step_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
+    report_time = db.Column(db.DateTime)
+    
 
     def __repr__(self):
         return f'<Reportes {self.id}>'

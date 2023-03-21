@@ -6,3 +6,7 @@
 .weekcheck {
     display: flex;
 }
+
+.paso{
+    overflow: hidden;
+}

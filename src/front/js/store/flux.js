@@ -7,6 +7,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			accessToken: null,
 			newSteps: [],
 			habits: [],
+			steps: [],
+			reports:[]
 		},
 		actions: {
 			loadTokens: () => {
@@ -134,9 +136,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ registries: registries })
 			},
 
-			addRegitry: () => {
-				getActions().fetchProtected(`${apiUrl}/activity`)
-
+			addReport: (reportTime, stepId) => {
+				fetchProtected(`${apiUrl}/report`,{
+					method: 'POST',
+					headers:{
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ reportTime, stepId})
+				})
 			},
 
 			addHabit: async(name, description, steps) => {
@@ -154,7 +161,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json()
 				console.log(data)
 				setStore({habits:data})
-
 			},
 
 			setNewStepInStore: (index, data) => {
@@ -162,15 +168,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				newSteps[index] = data
 				setStore({ newSteps: newSteps })
 			},
+			
 			pushNewStepInStore: () => {
 				let newSteps = getStore().newSteps
 				//default values for a new step
 				newSteps.push({
 					name: 'Paso',
-					description: '',
-					content: '',
-					repetition: '',
-					time: '',
+					description: 'Descripcion',
+					content: 'Contenido',
+					repetition: '1',
+					time: 'D',
 					startDate: '',
 					endDate: ''
 				})

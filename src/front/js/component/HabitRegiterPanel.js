@@ -19,7 +19,7 @@ export function HabitRegisterPanel({ closeHandler }) {
   
     return (
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={false}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className={stl.backdrop}
@@ -40,9 +40,14 @@ export function HabitRegisterPanel({ closeHandler }) {
             <div></div>
             <h2>Pasos</h2>
             <button onClick={actions.pushNewStepInStore}>Agregar Paso</button>
+            
+            <AnimatePresence >
             {store.newSteps.map((e, i) => {
-              return (<StepPanel key={i} index={i} />)
+              return (
+                  <StepPanel key={i} index={i} />
+              )
             })}
+            </AnimatePresence>
   
           </div>
           <button onClick={() => actions.addHabit(name, description, store.newSteps)}>

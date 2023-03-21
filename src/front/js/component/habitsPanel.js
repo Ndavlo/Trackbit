@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 
 export function HabitsPanel(){
@@ -13,7 +14,7 @@ export function HabitsPanel(){
         <div>
             {store.habits.map((e,i)=>{
                 return(
-                <div>
+                <div key={i}>
                     <h2>Habito</h2>
                 </div>
                 )
