@@ -128,25 +128,33 @@ class Paso (db.Model):
         "user": self.user.serialize()
         }
 
-class Reportes (db.Model):  #Esta bien esto?
+class Reportes (db.Model):  
     __tablename__="reportes"
     id = db.Column(db.Integer, primary_key=True)
     user = db.relationship("User")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     paso = db.relationship("Paso")
     step_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
-    report_time = db.Column(db.DateTime)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
     
+    # def get_month(self):
+    #     return self.report_time.month
+
+    # def get_year(self):
+    #     return self.report_time.get_year
+
+    # def get_day(self):
 
     def __repr__(self):
         return f'<Reportes {self.id}>'
     
     def serialize(self):
         return{
-        "user": self.user,
-        "paso": self.paso,
-        "inicio": self.inicio,
-        "terminacion": self.terminacion
+        'report_id': self.id,
+        "step_id": self.step_id,
+        'date':self.date.isoformat(),
+        "time": self.time.isoformat()
         }
             
 class Habit (db.Model):

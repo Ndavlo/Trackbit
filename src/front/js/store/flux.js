@@ -112,38 +112,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			getRegistries: () => {
-
-				let today = new Date()
-				const oneDay = 86400000
-				const oneWeek = oneDay * 7
-				today.setHours(0, 0, 0, 0)
-				let registries = []
-				for (let i = 0; i < 67; i++) {
-					registries.push(
-						{
-							date: new Date(today.getTime() - i * oneDay),
-							registries: [
-								{
-									time: Date.now(),
-									habit: 1,
-									level: 0.5,
-								}
-							]
-						}
-					)
-				}
-				setStore({ registries: registries })
+			getReports: async () => {
+				const response = await fetchProtected(`${apiUrl}/report`)
+				const data = await response.json()
+				setStore({ reports: data })
 			},
 
-			addReport: (reportTime, stepId) => {
-				fetchProtected(`${apiUrl}/report`,{
+			addReport: async(time, stepId) => {
+				await fetchProtected(`${apiUrl}/report`,{
 					method: 'POST',
 					headers:{
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ reportTime, stepId})
+					body: JSON.stringify({ time, stepId})
 				})
+				getActions().getReports()
 			},
 
 			addHabit: async(name, description, steps) => {
@@ -168,7 +151,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				newSteps[index] = data
 				setStore({ newSteps: newSteps })
 			},
-			
+
 			pushNewStepInStore: () => {
 				let newSteps = getStore().newSteps
 				//default values for a new step
@@ -211,7 +194,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 	async function fetchProtected(resource = '', options = {}) {
-		console.log('fetching protected')
 		const { headers, ...opt } = options
 		let response = await fetch(resource = resource, options = {
 			...opt,

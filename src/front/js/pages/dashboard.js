@@ -24,9 +24,6 @@ export function Dashboard() {
     }
   }, [store.accessToken])
 
-  useEffect(() => {
-    actions.getRegistries();
-  }, []);
 
   function showPanelHandler(panelName) {
     setShowPanel(panelName);
