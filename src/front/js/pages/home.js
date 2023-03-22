@@ -24,10 +24,10 @@ export const Home = () => {
 					<h1>Sé quién siempre has querido en 4 pasos.</h1>
 					<h4>Inicia una rutina, ejecuta las tareas, <br></br> gana experiencia y ¡logra tus metas!</h4>
 				</div>
-				<div id="cards" className="container mt-5 w-100% text-center ">
-					<div className="row d-flex">
+				<div id="cards" className="container mt-5 text-center ">
+					<div className="row d-flex justify-content-center">
 
-						<div className="col-sm-6 col-xl-3 ">
+						<div className="col-sm-6 col-xl-3">
 							<div id="homeCard" className="card border-0 mb-3 bg-transparent">
 								<img src={calendar} className="card-img-top" alt="..." />
 								<div className="card-body">
