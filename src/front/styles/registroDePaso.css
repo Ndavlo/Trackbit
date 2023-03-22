@@ -1,0 +1,32 @@
+.registroDePaso{
+    display: flex;
+    flex-direction: column;
+}
+
+.numberInput{
+text-align: center;
+    max-width: 60px;
+}
+
+.timeSelect{
+    max-width: 80px;
+    text-align: center;
+}
+
+.stepContainer{
+    overflow-y: auto;
+    max-height: 700px;
+}
+
+.habitContainer{
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.habitHeadDisplay{
+    display: flex;
+}
+
+.trashIcon{
+    float: right;
+}

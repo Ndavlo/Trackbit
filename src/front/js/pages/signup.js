@@ -55,7 +55,7 @@ export const Signup = () => {
 								</div>
 								<div className="mb-3">
 									<label htmlFor="inputEmail" className="form-label">Correo Electronico</label>
-									<input type="emailsdf" className="form-control text-dark" id="inputEmail1" aria-describedby="emailHelp" onChange={(e) => setEmail(e.target.value)} />
+									<input type="email" className="form-control text-dark" id="inputEmail1" aria-describedby="emailHelp" onChange={(e) => setEmail(e.target.value)} />
 								</div>
 								<div className="mb-3">
 									<label htmlFor="inputPassword" className="form-label">Contraseña</label>

@@ -5,9 +5,12 @@
 
 .dashboard button{
     background-color: rgb(157 117 49);
+
 }
 
 .dashboard-bar{
+    display: flex;
+gap: 10px;
     
 }
 
@@ -103,7 +106,6 @@
 
 .panel {
     background-color: white;
-    
 }
 
 .panel > div{

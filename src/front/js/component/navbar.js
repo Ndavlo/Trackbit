@@ -43,9 +43,14 @@ export const Navbar = () => {
 					id: "buttonTwo"
 				},
 				{
+					text: "Perfil",
+					link: "/userProfile",
+					id: "buttonThree"
+				},
+				{
 					text: "Blog",
 					link: "/blog",
-					id: "buttonTwo"
+					id: "buttonFour"
 				},
 				{
 					text: "Logout",
