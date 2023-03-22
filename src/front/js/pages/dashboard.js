@@ -44,11 +44,11 @@ export function Dashboard() {
 
   return (
     <div className={stl.dashboard}>
+      <AnimatePresence>{panel}</AnimatePresence>
       <div className="container pt-3 pb-5" id="dashContainer">
 
         <div className="row">
           <div className="col-12 col-md-6">
-          <AnimatePresence>{panel}</AnimatePresence>
           <div className={stl["dashboard-bar"]}>
           <button className="btn mb-3"
               onClick={() => {

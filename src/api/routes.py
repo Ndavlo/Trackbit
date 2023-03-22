@@ -93,6 +93,19 @@ def crear_rutina():
     
     return jsonify({'msg': "Rutina creada!", 'id': nueva_rutina.id})
 
+@api.route('/rutina/<int:rutina_id>', methods=['DELETE'])
+@jwt_required()
+def eliminar_rutina(rutina_id):
+    user_id = get_jwt_identity()
+    rutina = Rutina.query.filter_by(id=rutina_id, user_id=user_id).first()
+    if not rutina:
+        return jsonify({'msg': 'No existe esa rutina'}), 404
+    db.session.delete(rutina)
+    db.session.commit()
+    return jsonify({'msg': 'Rutina eliminada correctamente'})
+
+
+
 @api.route('/rutina/paso', methods=['POST'])
 @jwt_required()
 def crear_paso(rutina_id):
