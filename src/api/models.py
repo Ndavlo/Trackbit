@@ -143,6 +143,7 @@ class Reportes (db.Model):
     step_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
     date = db.Column(db.Date)
     time = db.Column(db.Time)
+    __table_args__ = (db.UniqueConstraint('step_id', 'date', name='step_id_date_uc'),)
     
     # def get_month(self):
     #     return self.report_time.month

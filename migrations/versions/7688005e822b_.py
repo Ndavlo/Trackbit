@@ -1,14 +1,8 @@
 """empty message
 
-<<<<<<<< HEAD:migrations/versions/e31696887831_.py
-Revision ID: e31696887831
+Revision ID: 7688005e822b
 Revises: 
-Create Date: 2023-03-22 20:21:16.178850
-========
-Revision ID: 14c36013c704
-Revises: 
-Create Date: 2023-03-18 00:17:09.955763
->>>>>>>> Desarrollo:migrations/versions/14c36013c704_.py
+Create Date: 2023-03-22 22:05:32.442541
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/e31696887831_.py
-revision = 'e31696887831'
-========
-revision = '14c36013c704'
->>>>>>>> Desarrollo:migrations/versions/14c36013c704_.py
+revision = '7688005e822b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -99,7 +89,8 @@ def upgrade():
     sa.Column('time', sa.Time(), nullable=True),
     sa.ForeignKeyConstraint(['step_id'], ['paso.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('step_id', 'date', name='step_id_date_uc')
     )
     # ### end Alembic commands ###
 
