@@ -160,8 +160,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 			},
 
+			deleteHabit: async(id) => {
+				await fetchProtected(`${apiUrl}/rutina/${id}`, {
+					method: 'DELETE'
+				})
+			},
+
 			getHabits: async() => {
 				const response  = await fetchProtected(`${apiUrl}/rutinas`)
+				if(!response.ok) return
 				const data = await response.json()
 				console.log(data)
 				setStore({habits:data})
