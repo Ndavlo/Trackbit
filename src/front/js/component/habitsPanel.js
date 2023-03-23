@@ -13,7 +13,6 @@ export function HabitsPanel() {
         if (store.accessToken === null) return
         actions.getHabits()
     }, [store.accessToken])
-    console.log(store.habits)
     return (
         <>
             <h1 className="text-light">Lista de Habitos</h1>

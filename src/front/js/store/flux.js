@@ -8,7 +8,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			newSteps: [],
 			habits: [],
 			steps: [],
-			reports:[]
+			reports: [],
+			days: []
+
 		},
 		actions: {
 			loadTokens: () => {
@@ -31,16 +33,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({title: title, bio: bio})
+					body: JSON.stringify({ title: title, bio: bio })
 				})
 				if (!response.ok) {
 					console.error('No se pudo actualizar')
 					return false
-				} else{
-					let newUserInfo = {...getStore().userInfo}
+				} else {
+					let newUserInfo = { ...getStore().userInfo }
 					newUserInfo.bio = bio
 					newUserInfo.title = title
-					setStore({userInfo: newUserInfo})
+					setStore({ userInfo: newUserInfo })
 					return "ok"
 				}
 
@@ -139,39 +141,84 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ reports: data })
 			},
 
-			addReport: async(time, stepId) => {
-				await fetchProtected(`${apiUrl}/report`,{
+			addReport: async (time, stepId) => {
+				await fetchProtected(`${apiUrl}/report`, {
 					method: 'POST',
-					headers:{
+					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ time, stepId})
+					body: JSON.stringify({ time, stepId })
 				})
 				getActions().getReports()
 			},
 
-			addHabit: async(name, description, steps) => {
-				fetchProtected(`${apiUrl}/rutina`, {
+			addHabit: async (name, description, steps) => {
+				await fetchProtected(`${apiUrl}/rutina`, {
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({ name, description, steps })
 				})
+				getActions().getHabits()
 			},
 
-			deleteHabit: async(id) => {
+			deleteHabit: async (id) => {
 				await fetchProtected(`${apiUrl}/rutina/${id}`, {
 					method: 'DELETE'
 				})
+				getActions().getHabits()
 			},
 
-			getHabits: async() => {
-				const response  = await fetchProtected(`${apiUrl}/rutinas`)
-				if(!response.ok) return
+			getHabits: async () => {
+				const response = await fetchProtected(`${apiUrl}/rutinas`)
+				if (!response.ok) return
 				const data = await response.json()
-				console.log(data)
-				setStore({habits:data})
+				setStore({ habits: data })
+				getActions().getSteps()
+			},
+
+			getSteps: async () => {
+				const response = await fetchProtected(`${apiUrl}/steps`)
+				const data = await response.json()
+				setStore({ steps: data })
+				getActions().setDays()
+			},
+
+			setDays: () => {
+
+				let days = getStore().days
+				
+				for (const step of getStore().steps) {
+					let startDate = new Date(step.inicio)
+					let endDate = new Date(step.terminacion)
+					let periodo = step.periodo
+					
+					switch (periodo[0]) {
+						case 'D':
+							while (startDate.getTime() < endDate.getTime()) {
+								console.log('while')
+								let dayIndex = days.findIndex((e) => startDate.toDateString() == e.date)
+								if (dayIndex>-1) {
+									console.log('pushing in: '+ days[dayIndex].date)
+									days[dayIndex].steps.push(step)
+								} else {
+									days.push({ date: startDate.toDateString(), steps: [step] })
+								}
+								startDate = new Date(startDate.getTime() + 86400 * 1000 * step.repeticion)
+							}
+							break
+						case 'W':
+							break
+						case 'M':
+							break
+						case 'Y':
+							break
+					}
+				}
+				setStore({ days: days })
+
+
 			},
 
 			setNewStepInStore: (index, data) => {
@@ -209,8 +256,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				actions.setNewStepInStore({ newSteps: newSteps })
 			},
 
-			clearNewsSteps : ()=>{
-				setStore({ newSteps: []})
+			clearNewsSteps: () => {
+				setStore({ newSteps: [] })
 			}
 
 

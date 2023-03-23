@@ -94,8 +94,8 @@ class Paso (db.Model):
     objetivo = db.Column(db.String)
     instrucciones = db.Column(db.String)
     contenido = db.Column(db.String)
-    inicio = db.Column(db.DateTime)
-    terminacion = db.Column(db.DateTime)
+    inicio = db.Column(db.Date)
+    terminacion = db.Column(db.Date)
     meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
     temporalidad = db.Column(db.String) # Veces o minutos
     periodo = db.Column(db.String)  # Al dia, a la semana, al mes.
@@ -119,19 +119,19 @@ class Paso (db.Model):
         return{
         "id": self.id,
         "nombre": self.nombre,
-        "descripcion": self.descripcion,
-        "objetivo": self.objetivo,
-        "instrucciones": self.instrucciones,
-        "contenido": self.contenido,
-        "meta": self.meta,
+        # "descripcion": self.descripcion,
+        # "objetivo": self.objetivo,
+        # "instrucciones": self.instrucciones,
+        # "contenido": self.contenido,
+        # "meta": self.meta,
         "temporalidad": self.temporalidad,
         "periodo": self.periodo,
         "repeticion": self.repeticion,
         "inicio": self.inicio,
         "terminacion": self.terminacion,
-        "completada": self.completada,
-        "rutina": self.rutina.serialize(),
-        "user": self.user.serialize()
+        # "completada": self.completada,
+        # "rutina": self.rutina.serialize(),
+        # "user": self.user.serialize()
         }
 
 class Reportes (db.Model):  

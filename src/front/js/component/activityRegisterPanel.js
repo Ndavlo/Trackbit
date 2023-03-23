@@ -32,15 +32,20 @@ export function ActivityRegisterPanel({ closeHandler }) {
     const [habitIndex, setHabitIndex] = useState(0)
     const [stepIndex, setStepIndex] = useState(0)
     const [time, setTime] = useState('NOW')
-    
 
-    function submmitHandler() {
-        let reportTime = new Date(time)
-        //Getting date as string in ISO 8601 format for transmitting the data
-        reportTime = reportTime.toISOString()
+
+    async function submmitHandler() {
+        if (time == 'NOW') { 
+            var reportTime = 'NOW'
+        } else {
+            var reportTime = new Date(time)
+            //Getting date as string in ISO 8601 format for transmitting the data
+            reportTime = reportTime.toISOString()
+        }
+
         let stepId = store.habits[habitIndex].steps[stepIndex].id
-        actions.addReport(reportTime, stepId)
-        // closeHandler()
+        await actions.addReport(reportTime, stepId)
+        closeHandler()
     }
 
     return (
@@ -92,7 +97,7 @@ export function ActivityRegisterPanel({ closeHandler }) {
                     </select>
                     {(time == 'NOW') ?
                         '' :
-                        <input type='datetime-local' value={time} onChange={(e) => {
+                        <input key={1} type='datetime-local' value={time} onChange={(e) => {
                             setTime(e.target.value)
                         }} />
                     }

@@ -75,8 +75,6 @@ def crear_rutina():
         return jsonify({'msg': 'There is a rutine with the same name'}), 409
 
     for step in steps:
-        print(step)
-        print(step['name'])
         db.session.add(#TODO parse the information to the correct data tipe or at least intialize the value with the right format
             Paso(
                 rutina_id=nueva_rutina.id, 
@@ -138,7 +136,6 @@ def crear_paso(rutina_id):
 def get_user_info():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    print (user.__repr__)
     return jsonify(user.serialize_info())
 
 #### Ruta para cambiear la informacion del usuario
@@ -263,3 +260,12 @@ def get_reports():
             }
         )
     return jsonify(date_collection), 200
+
+@api.route('/steps')
+@jwt_required()
+def get_steps():
+    user_id = get_jwt_identity()
+    pasos = Paso.query.filter_by(user_id=user_id).all()
+    print(pasos)
+    pasos = [paso.serialize() for paso in pasos]
+    return jsonify(pasos), 200

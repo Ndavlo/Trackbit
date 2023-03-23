@@ -71,10 +71,12 @@ function CellBar({ percentage }) {
 }
 
 
-function Days({ days }) {
+function Days() {
+    const { store, actions } = useContext(Context);
+
     return (
         <div className={stl.days}>
-            {days?.map((e, i) => {
+            {store.days?.map((e, i) => {
                 const time = new Date(e.date)
                 return (
                     <Day
