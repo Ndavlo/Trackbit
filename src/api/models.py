@@ -55,10 +55,12 @@ class BlockedTokens(db.Model):
 class Rutina (db.Model):
     __tablename__="rutina"
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String)
-    descripcion = db.Column(db.String)
+    name = db.Column(db.String)
+    description = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref="rutinas")
+
+    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='user_rutina_uc'),)
 
 
     def __repr__(self):
@@ -67,21 +69,21 @@ class Rutina (db.Model):
     def serialize (self):
         return {
             "id": self.id,
-            "nombre": self.nombre,
-            "descripcion": self.descripcion,
+            "name": self.name,
+            "description": self.description,
         }
     def serialize_name (self):
         return {
-            "name": self.nombre
+            "name": self.name
         }
 
-    def serialize2 (self):
-        pasos = list(map(lambda r: r.serialize(), self.paso))
+    def serialize_with_steps (self):
+        pasos = list(map(lambda r: r.serialize_step(), self.paso))
         return {
-            "id": self.id,
-            "nombre": self.nombre,
-            "descripcion": self.descripcion,
-            "paso": pasos
+            "id" : self.id,
+            "name": self.name,
+            "description": self.description,
+            "steps": pasos
         }
 
 class Paso (db.Model):
@@ -96,16 +98,22 @@ class Paso (db.Model):
     terminacion = db.Column(db.DateTime)
     meta = db.Column(db.Integer) # Cuantas veces? Ej. 5
     temporalidad = db.Column(db.String) # Veces o minutos
-    periodo = db.Column(db.Integer)  # Al dia, a la semana, al mes.
+    periodo = db.Column(db.String)  # Al dia, a la semana, al mes.
     repeticion = db.Column(db.String) # Todos los dias? Tres dias? Cada mes? 
     completada = db.Column(db.Boolean)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable = False)
     user = db.relationship("User")
     rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
     rutina = db.relationship("Rutina", backref='paso', lazy=True)
 
     def __repr__(self):
         return f'<Paso {self.nombre}>'
+
+    def serialize_step(self):
+        return{
+        "id": self.id,
+        "name": self.nombre,
+        }
     
     def serialize(self):
         return{
@@ -126,25 +134,34 @@ class Paso (db.Model):
         "user": self.user.serialize()
         }
 
-class Reportes (db.Model):  #Esta bien esto?
+class Reportes (db.Model):  
     __tablename__="reportes"
     id = db.Column(db.Integer, primary_key=True)
     user = db.relationship("User")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     paso = db.relationship("Paso")
-    paso_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
-    inicio = db.Column(db.DateTime)
-    terminacion = db.Column(db.DateTime)
+    step_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
+    __table_args__ = (db.UniqueConstraint('step_id', 'date', name='step_id_date_uc'),)
+    
+    # def get_month(self):
+    #     return self.report_time.month
+
+    # def get_year(self):
+    #     return self.report_time.get_year
+
+    # def get_day(self):
 
     def __repr__(self):
         return f'<Reportes {self.id}>'
     
     def serialize(self):
         return{
-        "user": self.user,
-        "paso": self.paso,
-        "inicio": self.inicio,
-        "terminacion": self.terminacion
+        'report_id': self.id,
+        "step_id": self.step_id,
+        'date':self.date.isoformat(),
+        "time": self.time.isoformat()
         }
             
 class Habit (db.Model):
@@ -153,8 +170,8 @@ class Habit (db.Model):
     name = db.Column(db.String(120))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
-    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='user_habit_uc'),
-                     )
+    __table_args__ = db.UniqueConstraint('user_id', 'name', name='user_habit_uc'),
+                     
 
 
 

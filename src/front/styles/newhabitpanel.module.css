@@ -1,0 +1,12 @@
+.recurrencia {
+    display: flex;
+    flex-direction: column;
+}
+
+.weekcheck {
+    display: flex;
+}
+
+.paso{
+    overflow: hidden;
+}

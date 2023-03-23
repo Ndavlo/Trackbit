@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Rutina, Paso, BlockedTokens, Newsletter_emails
+from api.models import db, User, Rutina, Paso, BlockedTokens, Newsletter_emails, Reportes
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, get_jwt, get_jti
 from flask_bcrypt import Bcrypt
@@ -10,6 +10,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import date, time, datetime, timezone, timedelta
 from .sendrecovery import recovery_password_email
 import os
+from sqlalchemy import func
 
 api = Blueprint('api', __name__)
 app = Flask(__name__)
@@ -53,22 +54,47 @@ def user_login():
 def mostrar_rutinas():
     user = get_jwt_identity()
     rutinas = Rutina.query.filter_by(user_id=user).all()
-    response_body = list(map(lambda r: r.serialize2(), rutinas))
+    response_body = list(map(lambda r: r.serialize_with_steps(), rutinas))
     return jsonify(response_body),200
 
 
-@api.route('/nueva_rutina', methods=['POST'])
+@api.route('/rutina', methods=['POST'])
 @jwt_required()
 def crear_rutina():
-    current_user_id = get_jwt_identity()
-    nombre = request.json.get('nombre')
-    descripcion = request.json.get('descripcion')
-    nueva_rutina = Rutina(nombre=nombre, descripcion=descripcion, user_id=current_user_id)
+    user_id = get_jwt_identity()
+    name = request.json.get('name')
+    description = request.json.get('description')
+    steps = request.json.get('steps')
+   # print(steps)
+    nueva_rutina = Rutina(name=name, description=description, user_id=user_id)
     db.session.add(nueva_rutina)
-    db.session.commit()
-    return jsonify({'msg': "Rutina creada!"})
+    try:
+        db.session.commit()
+    except Exception as inst:
+        # TODO check if there is a rutine with the same name, handle exception
+        return jsonify({'msg': 'There is a rutine with the same name'}), 409
 
-@api.route('/rutina/<rutina_id>/nuevo_paso', methods=['POST'])
+    for step in steps:
+        print(step)
+        print(step['name'])
+        db.session.add(#TODO parse the information to the correct data tipe or at least intialize the value with the right format
+            Paso(
+                rutina_id=nueva_rutina.id, 
+                nombre = step['name'], 
+                descripcion=step['description'], 
+                contenido=step['content'], 
+                inicio = step['startDate'], 
+                terminacion=step['endDate'], 
+                periodo=step['time'], 
+                repeticion = step['repetition'],
+                user_id = user_id 
+                )
+        )
+    db.session.commit()
+    
+    return jsonify({'msg': "Rutina creada!", 'id': nueva_rutina.id})
+
+@api.route('/rutina/paso', methods=['POST'])
 @jwt_required()
 def crear_paso(rutina_id):
 ### buscar rutina, si existe continuar, sino, error
@@ -179,16 +205,8 @@ def reset_password():
     user_id=get_jwt_identity()
     user=User.query.get(user_id)
     user.password=crypto.generate_password_hash(new_password).decode("utf-8")
-    
-    
-@api.route('/habits', methods=['POST'])
-@jwt_required()
-def register_activity():
-    '''fuction that handler for the register activity handler'''
-    user = get_jwt_identity()
-    name = request.json.get('name')
-    
-    return(jsonify({'msg': name}))
+
+
 @api.route('/newslettersub', methods=['POST'])
 def subscribe_newsletter():
     email=request.json.get('email')
@@ -201,3 +219,34 @@ def subscribe_newsletter():
     except IntegrityError:
         db.session.rollback()
         return jsonify({'msg':"You are already subscribed"}), 400
+
+@api.route('/report', methods = ['POST'])
+@jwt_required()
+def report():
+    user_id = get_jwt_identity()
+    step_id = request.json.get('stepId')
+    time = request.json.get('time')
+    if time == 'NOW':
+        time = datetime.now()
+    else:
+        time = datetime.strptime(time, '%Y-%m-%dT%H:%M:%S.%f%z') 
+    reporte = Reportes(user_id = user_id, step_id = step_id, time=time.time() , date = time.date())
+    db.session.add(reporte)
+    db.session.commit()
+    return (jsonify({'msg':'report registered'})),200
+
+@api.route('/report')
+@jwt_required()
+def get_reports():
+    user_id = get_jwt_identity()
+
+    dates = db.session.query(Reportes.date).group_by(Reportes.date).all()
+    date_collection = []
+    for date in dates:
+        date_collection.append(
+            {
+                'date': date[0].isoformat(),
+                'reports': [reporte.serialize() for reporte in Reportes.query.filter_by(user_id=user_id, date = date[0]).all()]
+            }
+        )
+    return jsonify(date_collection), 200

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 14c36013c704
+Revision ID: 7688005e822b
 Revises: 
-Create Date: 2023-03-18 00:17:09.955763
+Create Date: 2023-03-22 22:05:32.442541
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '14c36013c704'
+revision = '7688005e822b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -54,11 +54,12 @@ def upgrade():
     )
     op.create_table('rutina',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('nombre', sa.String(), nullable=True),
-    sa.Column('descripcion', sa.String(), nullable=True),
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('description', sa.String(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'name', name='user_rutina_uc')
     )
     op.create_table('paso',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -71,10 +72,10 @@ def upgrade():
     sa.Column('terminacion', sa.DateTime(), nullable=True),
     sa.Column('meta', sa.Integer(), nullable=True),
     sa.Column('temporalidad', sa.String(), nullable=True),
-    sa.Column('periodo', sa.Integer(), nullable=True),
+    sa.Column('periodo', sa.String(), nullable=True),
     sa.Column('repeticion', sa.String(), nullable=True),
     sa.Column('completada', sa.Boolean(), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('rutina_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['rutina_id'], ['rutina.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
@@ -83,12 +84,13 @@ def upgrade():
     op.create_table('reportes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('paso_id', sa.Integer(), nullable=True),
-    sa.Column('inicio', sa.DateTime(), nullable=True),
-    sa.Column('terminacion', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['paso_id'], ['paso.id'], ),
+    sa.Column('step_id', sa.Integer(), nullable=True),
+    sa.Column('date', sa.Date(), nullable=True),
+    sa.Column('time', sa.Time(), nullable=True),
+    sa.ForeignKeyConstraint(['step_id'], ['paso.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('step_id', 'date', name='step_id_date_uc')
     )
     # ### end Alembic commands ###
 

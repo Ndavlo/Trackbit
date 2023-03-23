@@ -27,15 +27,58 @@ export const Navbar = () => {
 			link: "/login",
 			id: "buttonFour"
 		},
-		{
-			text: "Logout",
-			action: () => actions.logOut(),
-			id: "buttonFive"
-		}
 	])
-	useEffect(() => {
 
-	}, [])
+	useEffect(() => {
+		if (store.accessToken) {
+			setMenuOptions([
+				{
+					text: <i className="bi bi-houses"></i>,
+					link: "/",
+					id: "buttonOne"
+				},
+				{
+					text: "Dashboard",
+					link: "/dashboard",
+					id: "buttonTwo"
+				},
+				{
+					text: "Blog",
+					link: "/blog",
+					id: "buttonTwo"
+				},
+				{
+					text: "Logout",
+					action: () => actions.logOut(),
+					id: "buttonFive"
+				}]
+			)
+		}else{
+			setMenuOptions([
+				{
+					text: <i className="bi bi-houses"></i>,
+					link: "/",
+					id: "buttonOne"
+				},
+				{
+					text: "Blog",
+					link: "/blog",
+					id: "buttonTwo"
+				},
+				{
+					text: "Sign Up",
+					link: "/signup",
+					id: "buttonThree"
+		
+				},
+				{
+					text: "Login",
+					link: "/login",
+					id: "buttonFour"
+				},
+			])
+		}
+	}, [store.accessToken])
 
 	// Ahora aparece el boton del menu del navbar y los navbuttons al mismo tiempo, como logras hacer dos menus? Por que no aparecen los botones del nav al final, si tiene justify end??
 

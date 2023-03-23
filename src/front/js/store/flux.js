@@ -4,11 +4,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			refreshToken: null,
-			accessToken: null
+			accessToken: null,
+			newSteps: [],
+			habits: [],
+			steps: [],
+			reports:[]
 		},
 		actions: {
 			loadTokens: () => {
-				console.log('loading tokens')
 				let accessToken = localStorage.getItem('accessToken') || ''
 				let refreshToken = localStorage.getItem('refreshToken') || ''
 				// console.log(accessToken)
@@ -93,6 +96,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
+
 			signUp: async (email, password, name, lastName) => {
 				const resp = await fetch(apiUrl + '/signup', {
 					method: 'POST',
@@ -129,58 +133,88 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			getRegistries: () => {
-
-				let today = new Date()
-				const oneDay = 86400000
-				const oneWeek = oneDay * 7
-				today.setHours(0, 0, 0, 0)
-				let registries = []
-				for (let i = 0; i < 67; i++) {
-					registries.push(
-						{
-							date: new Date(today.getTime() - i * oneDay),
-							registries: [
-								{
-									time: Date.now(),
-									habit: 1,
-									level: 0.5,
-								}
-							]
-						}
-					)
-				}
-				console.log(registries)
-				setStore({ registries: registries })
+			getReports: async () => {
+				const response = await fetchProtected(`${apiUrl}/report`)
+				const data = await response.json()
+				setStore({ reports: data })
 			},
 
-			addRegitry: () => {
-				fetchProtected(`${apiUrl}/activity`)
-
+			addReport: async(time, stepId) => {
+				await fetchProtected(`${apiUrl}/report`,{
+					method: 'POST',
+					headers:{
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ time, stepId})
+				})
+				getActions().getReports()
 			},
 
-			addHabit: (name) => {
-				console.log(JSON.stringify({ name }))
-				fetchProtected(`${apiUrl}/habits`, {
+			addHabit: async(name, description, steps) => {
+				fetchProtected(`${apiUrl}/rutina`, {
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ name })
+					body: JSON.stringify({ name, description, steps })
 				})
 			},
 
-			getHabits: () => {
-				fetchProtected(`${apiUrl}/habits`)
+			getHabits: async() => {
+				const response  = await fetchProtected(`${apiUrl}/rutinas`)
+				const data = await response.json()
+				console.log(data)
+				setStore({habits:data})
+			},
+
+			setNewStepInStore: (index, data) => {
+				let newSteps = getStore().newSteps
+				newSteps[index] = data
+				setStore({ newSteps: newSteps })
+			},
+
+			pushNewStepInStore: () => {
+				let newSteps = getStore().newSteps
+				//default values for a new step
+				newSteps.push({
+					name: 'Paso',
+					description: 'Descripcion',
+					content: 'Contenido',
+					repetition: '1',
+					time: 'D',
+					startDate: '',
+					endDate: ''
+				})
+				setStore({ newSteps: newSteps })
+
+			},
+			setNewStepProperty: (index, propertyName, value) => {
+				let newSteps = getStore().newSteps
+				let step = newSteps[index]
+				step[propertyName] = value
+				newSteps[index] = step
+				setStore({ newSteps: newSteps })
+
+			},
+			deleteNewStepFromStore: (index) => {
+				let newSteps = getStore().newSteps
+				newSteps.splice(index, 1)
+				actions.setNewStepInStore({ newSteps: newSteps })
+			},
+
+			clearNewsSteps : ()=>{
+				setStore({ newSteps: []})
 			}
 
-		}
+
+		},
+
+
+
 	}
 
 
-
 	async function fetchProtected(resource = '', options = {}) {
-		console.log('fetching protected')
 		const { headers, ...opt } = options
 		let response = await fetch(resource = resource, options = {
 			...opt,
