@@ -79,6 +79,7 @@
 		"framer-motion": "^10.2.3",
 		"prop-types": "^15.6.1",
 		"react": "^18.0.0",
+		"react-avatar-editor": "^13.0.0",
 		"react-dom": "^18.0.0",
 		"react-polyfills": "0.0.1",
 		"react-router-dom": "^6.3.0"

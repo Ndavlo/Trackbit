@@ -8,39 +8,39 @@ import { motion, AnimatePresence } from "framer-motion";
 
 function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
-  }
+}
 
 function formatDate(date) {
     return (
-      [
-        date.getFullYear(),
-        padTo2Digits(date.getMonth() + 1),
-        padTo2Digits(date.getDate()),
-      ].join('-') +
-      ' ' +
-      [
-        padTo2Digits(date.getHours()),
-        padTo2Digits(date.getMinutes()),
-        // padTo2Digits(date.getSeconds()),  // 👈️ can also add seconds
-      ].join(':')
+        [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+        ].join('-') +
+        ' ' +
+        [
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+            // padTo2Digits(date.getSeconds()),  // 👈️ can also add seconds
+        ].join(':')
     );
-  }
+}
 
 export function ActivityRegisterPanel({ closeHandler }) {
 
-    const { store, actions } = useContext(Context);
-    const [habitIndex, setHabitIndex] = useState(0);
+    const { store, actions } = useContext(Context)
+    const [habitIndex, setHabitIndex] = useState(0)
     const [stepIndex, setStepIndex] = useState(0)
     const [time, setTime] = useState('NOW')
+    
 
     function submmitHandler() {
-        // actions.addReport()
-        console.log(`habit i: ${habitIndex} step_i: ${stepIndex}`)
-        let habitid = store.habits[habitIndex].id
-        let pasoid = store.habits[habitIndex].steps[stepIndex].id
-        console.log(`habit id: ${habitid} step_id: ${pasoid}`)
-        console.log('Time: '+time)
-        actions.addReport(time, pasoid)
+        let reportTime = new Date(time)
+        //Getting date as string in ISO 8601 format for transmitting the data
+        reportTime = reportTime.toISOString()
+        let stepId = store.habits[habitIndex].steps[stepIndex].id
+        actions.addReport(reportTime, stepId)
+        // closeHandler()
     }
 
     return (
@@ -73,28 +73,28 @@ export function ActivityRegisterPanel({ closeHandler }) {
                         }}>
                         {store.habits[habitIndex]?.steps.map((e, i) => {
                             return (<>
-                                <option value={i} key={'s'+i}>{e.name}</option>
+                                <option value={i} key={i}>{e.name}</option>
                             </>)
                         })}
                     </select>
                     <label>Fecha y hora:</label>
-                    <select onChange={(e)=>{
-                        if(e.target.value == 'NOW'){
+                    <select onChange={(e) => {
+                        if (e.target.value == 'NOW') {
                             setTime('NOW')
-                        }else{
+                        } else {
                             const [date, time] = formatDate(new Date()).split(' ');
                             setTime(date + 'T' + time)
                         }
-                        
+
                     }}>
                         <option value={'NOW'}>Ahora!</option>
                         <option value='datetime'>Fecha y hora</option>
                     </select>
-                    {(time == 'NOW')?
-                    '':
-                    <input type='datetime-local' value={time} onChange={(e)=>{
-                        setTime(e.target.value)
-                    }}/>
+                    {(time == 'NOW') ?
+                        '' :
+                        <input type='datetime-local' value={time} onChange={(e) => {
+                            setTime(e.target.value)
+                        }} />
                     }
 
                     <button onClick={submmitHandler}>Registrar Actividad</button>

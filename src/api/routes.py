@@ -10,6 +10,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import date, time, datetime, timezone, timedelta
 from .sendrecovery import recovery_password_email
 import os
+from sqlalchemy import func
 
 api = Blueprint('api', __name__)
 app = Flask(__name__)
@@ -237,11 +238,28 @@ def subscribe_newsletter():
 def report():
     user_id = get_jwt_identity()
     step_id = request.json.get('stepId')
-    report_time = request.json.get('reportTime')
-    if report_time == 'NOW':
-        report_time = datetime.now()
-    reporte = Reportes(user_id = user_id, step_id = step_id, report_time=report_time )
+    time = request.json.get('time')
+    if time == 'NOW':
+        time = datetime.now()
+    else:
+        time = datetime.strptime(time, '%Y-%m-%dT%H:%M:%S.%f%z') 
+    reporte = Reportes(user_id = user_id, step_id = step_id, time=time.time() , date = time.date())
     db.session.add(reporte)
     db.session.commit()
-    print(report_time)
     return (jsonify({'msg':'report registered'})),200
+
+@api.route('/report')
+@jwt_required()
+def get_reports():
+    user_id = get_jwt_identity()
+
+    dates = db.session.query(Reportes.date).group_by(Reportes.date).all()
+    date_collection = []
+    for date in dates:
+        date_collection.append(
+            {
+                'date': date[0].isoformat(),
+                'reports': [reporte.serialize() for reporte in Reportes.query.filter_by(user_id=user_id, date = date[0]).all()]
+            }
+        )
+    return jsonify(date_collection), 200

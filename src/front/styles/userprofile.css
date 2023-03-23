@@ -5,8 +5,9 @@
 .card {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
 }
-.profileCard{
-height: 100%;
+
+.profileCard {
+    height: 100%;
 }
 
 
@@ -22,16 +23,58 @@ height: 100%;
     border-radius: .25rem;
 }
 
+#updateForm {
+    color: black;
+}
+
+#userBio {
+    text-align: justify;
+    max-width: 100%;
+    text-overflow: clip;
+}
+
 .paypalBody {
     padding-top: 20px;
     margin: auto;
-    max-width: 350px;
+    max-width: 450px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.rutinaGrid1 {
+    
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.rutinaGrid2 {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.rutinaGrid3 {
+    grid-area: 1 / 3 / 2 / 4;
 }
 
 .card-body {
     flex: 1 1 auto;
     min-height: 1px;
     padding: 1rem;
+}
+
+.gridRutinas > * {
+    min-width: 50px;
+    min-height: 80px;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+
+.gridRutinas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
 }
 
 .gutters-sm {
@@ -62,6 +105,6 @@ height: 100%;
     box-shadow: none !important;
 }
 
-#app {
+#app>* {
     background-color: #1b262a;
 }

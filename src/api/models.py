@@ -7,6 +7,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     last_name = db.Column(db.String(120), nullable = False)
+    title = db.Column(db.String(150))
+    bio = db.Column(db.String(150))
     username = db.Column(db.String(), unique = True, nullable = True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
@@ -28,7 +30,9 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             "name": self.name,
-            "last_name": self.last_name
+            "last_name": self.last_name,
+            "title": self.title,
+            "bio": self.bio
         }
 
     def serialize_info(self):
@@ -38,6 +42,8 @@ class User(db.Model):
             "name":self.name,
             "last_name":self.last_name,
             "email":self.email,
+            "title": self.title,
+            "bio": self.bio,
             "rutinas": rutinas
         }
 
@@ -128,25 +134,34 @@ class Paso (db.Model):
         "user": self.user.serialize()
         }
 
-class Reportes (db.Model):  #Esta bien esto?
+class Reportes (db.Model):  
     __tablename__="reportes"
     id = db.Column(db.Integer, primary_key=True)
     user = db.relationship("User")
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     paso = db.relationship("Paso")
     step_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
-    report_time = db.Column(db.DateTime)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
+    __table_args__ = (db.UniqueConstraint('step_id', 'date', name='step_id_date_uc'),)
     
+    # def get_month(self):
+    #     return self.report_time.month
+
+    # def get_year(self):
+    #     return self.report_time.get_year
+
+    # def get_day(self):
 
     def __repr__(self):
         return f'<Reportes {self.id}>'
     
     def serialize(self):
         return{
-        "user": self.user,
-        "paso": self.paso,
-        "inicio": self.inicio,
-        "terminacion": self.terminacion
+        'report_id': self.id,
+        "step_id": self.step_id,
+        'date':self.date.isoformat(),
+        "time": self.time.isoformat()
         }
             
 class Habit (db.Model):

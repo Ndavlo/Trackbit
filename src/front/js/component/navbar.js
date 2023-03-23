@@ -58,6 +58,30 @@ export const Navbar = () => {
 					id: "buttonFive"
 				}]
 			)
+		}else{
+			setMenuOptions([
+				{
+					text: <i className="bi bi-houses"></i>,
+					link: "/",
+					id: "buttonOne"
+				},
+				{
+					text: "Blog",
+					link: "/blog",
+					id: "buttonTwo"
+				},
+				{
+					text: "Sign Up",
+					link: "/signup",
+					id: "buttonThree"
+		
+				},
+				{
+					text: "Login",
+					link: "/login",
+					id: "buttonFour"
+				},
+			])
 		}
 	}, [store.accessToken])
 
