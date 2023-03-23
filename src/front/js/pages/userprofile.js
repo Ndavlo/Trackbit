@@ -123,7 +123,7 @@ export const Userprofile = () => {
               </div>
             </div>
             <div className="card mb-3">
-              <div className="card-header text-center"> <h3>Subscribete a mis rutinas</h3></div>
+              <div className="card-header text-center"> <h3>Donaciones</h3></div>
               <div className="card-body">
                 <div className="paypalBody">
                   <PayPalScriptProvider options={{ "client-id": "AfYf4HLbfgYURu37d1Tis6_HugMlfZC3ashcDlp4ZBLDme44cLfL-wmR6rRjeVOcBmISi9lw2bUTRE2u" }}>
