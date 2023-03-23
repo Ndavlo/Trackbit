@@ -28,10 +28,42 @@ export function HabitsPanel() {
                                         <p>{`${e.description}`}</p>
                                     </div>
                                     <div className="habitButton justify-content-between">
-                                        <button className="btn">Ver mas</button>
+                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target={"#"+String(e.id)}>Ver mas</button>
                                         <button className="btn trashIcon"><i onClick={() => deleteHabit(e.id)} className="bi bi-trash3-fill"></i></button>
                                     </div>
                                 </div>
+
+
+                                {/* <!-- Modal --> */}
+                                <div className="modal fade" id={String(e.id)} tabIndex="-1" aria-labelledby="whatever" aria-hidden="true">
+                                    <div className="modal-dialog">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title" id={e.id +"idModalLabel"}>Modal title</h5>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div className="modal-body">
+                                                ...
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" className="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
                             </>
                         )
                     })}
@@ -55,7 +87,7 @@ export function HabitsPanel() {
 
 
 
-            
+
         </>
     )
 }
