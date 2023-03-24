@@ -10,8 +10,6 @@ import { HabitRegisterPanel } from "../component/HabitRegiterPanel";
 
 let year = 2023;
 let firstDay = new Date(year, 0, 1);
-let regist = [];
-let today = new Date();
 const oneDay = 86400000;
 const oneWeek = oneDay * 7;
 const thisWeekNumber = Math.ceil(
@@ -48,19 +46,22 @@ function WeekNumbers() {
     );
 }
 
-function Day({ day, week, date }) {
+function Day({ date, data }) {
     const weekDays = ["D", "L", "M", "M", "J", "V", "S"];
-    return (
-        <div
-            className={`${stl.cell} ${stl.day}`}
-            style={{ gridArea: `${week}/${day + 1}/${week}/${day + 1}` }}
-        >
-            <CellBar percentage={50} />
-            <span>{`${weekDays[day]}-${new Intl.DateTimeFormat("en-US", {
-                month: "short",
-            }).format(date)}-${date.getDate()}`}</span>
-        </div>
-    );
+    const time = new Date(date)
+    const day =  time.getDay() 
+    const week = thisWeekNumber - Math.floor(  (time.getTime() - firstDay.getTime()) / 1000 / 86400 / 7)
+
+return (
+    <div
+        className={`${stl.cell} ${stl.day}`}
+        style={{ gridArea: `${week}/${day + 1}/${week}/${day + 1}` }}
+    >
+        {data.map((e,i)=><CellBar key={i} percentage={50} />)}
+        
+        
+    </div>
+);
 }
 function CellBar({ percentage }) {
     return (
@@ -76,19 +77,12 @@ function Days() {
 
     return (
         <div className={stl.days}>
-            {store.days?.map((e, i) => {
-                const time = new Date(e.date)
+            {store.events?.map((e, i) => {
                 return (
                     <Day
                         key={i}
-                        date={time}
-                        day={time.getDay()}
-                        week={
-                            thisWeekNumber -
-                            Math.floor(
-                                (time.getTime() - firstDay.getTime()) / 1000 / 86400 / 7
-                            )
-                        }
+                        date={e.date}
+                        data = {e.events}
                     />
                 )
             })}
@@ -101,14 +95,14 @@ export function ActivityGraph() {
 
     useEffect(() => {
         if (!store.accessToken) return
-        actions.getReports()
+        actions.getEvents()
     }, [store.accessToken])
 
     return (
         <div className={stl.year}>
             <WeekDays />
             <WeekNumbers />
-            <Days days={store.reports} />
+            <Days />
         </div>
     )
 }

@@ -4,5 +4,7 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.python"
   },
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "workbench.editor.showTabs": false,
+  "zenMode.hideLineNumbers": false
 }

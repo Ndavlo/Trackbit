@@ -10,7 +10,7 @@ from api.models import (
     BlockedTokens,
     Newsletter_emails,
     Reportes,
-    Event
+    Event,
 )
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import (
@@ -111,7 +111,7 @@ def crear_rutina():
                 periodo=step["interval"],
                 repeticion=step["repetition"],
                 user_id=user_id,
-                time = step['time']
+                time=step["time"],
             )
         )
     db.session.commit()
@@ -330,14 +330,35 @@ def get_steps():
     pasos = [paso.serialize() for paso in pasos]
     return jsonify(pasos), 200
 
-@api.route('/events', methods=["POST"])
+
+@api.route("/events", methods=["POST"])
 @jwt_required()
 def get_events():
     user_id = get_jwt_identity()
-    beginning_date =  date.fromisoformat(request.json.get('beginning_date'))
-    ending_date = date.fromisoformat(request.json.get('ending_date'))
-    events = Event.query.filter(Event.scheduled_date.between(beginning_date, ending_date)).all()
-    return jsonify([e.serialize() for e in events]), 200
+    beginning_date = date.fromisoformat(request.json.get("beginning_date"))
+    ending_date = date.fromisoformat(request.json.get("ending_date"))
+    
+    # events = Event.query.filter(
+    #     Event.scheduled_date.between(beginning_date, ending_date)
+    # ).all()
+
+    dates = db.session.query(Event.scheduled_date).group_by(Event.scheduled_date).all()
+    date_collection = [
+        (
+            {
+                "date": d[0].isoformat(),
+                "events": [
+                    event.serialize()
+                    for event in Event.query.filter_by(
+                        user_id=user_id, scheduled_date=d[0]
+                    ).all()
+                ],
+            }
+        )
+        for d in dates
+    ]
+
+    return jsonify(date_collection), 200
 
 
 @api.route("/days_calc", methods=["POST"])
@@ -346,7 +367,7 @@ def get_days():
     """Returns days between two dates that have a setp assignated and its steps"""
 
     user_id = get_jwt_identity()
-    events = Event.query.filter_by(user_id = user_id).delete()
+    events = Event.query.filter_by(user_id=user_id).delete()
     db.session.commit()
     steps = Paso.query.filter(Paso.user_id == user_id).all()
 
@@ -354,36 +375,64 @@ def get_days():
         print(step.nombre)
         start_date = step.inicio
         match step.periodo[0]:
-            case 'D':
+            case "D":
                 # print('It is Day')
                 while start_date <= step.terminacion:
-                    db.session.add(Event(user_id=user_id, step_source=step.id, scheduled_date = start_date, scheduled_time= step.time, done = False))
-                    start_date = start_date + timedelta(days = int(step.repeticion))
+                    db.session.add(
+                        Event(
+                            user_id=user_id,
+                            step_source=step.id,
+                            scheduled_date=start_date,
+                            scheduled_time=step.time,
+                            done=False,
+                        )
+                    )
+                    start_date = start_date + timedelta(days=int(step.repeticion))
                 db.session.commit()
-                    
-            case 'W':
-                print('It is Week')
+
+            case "W":
+                print("It is Week")
                 print(step.periodo)
                 start_date_weekday = step.inicio.weekday()
-                print(f's_d_w {start_date_weekday}')
+                print(f"s_d_w {start_date_weekday}")
 
                 # convert from notation W####### and start date to the first days of the step
                 w_days = step.periodo
-                w_days = list(filter(lambda d : d != None, [ i-1 if d == '1' else None for i,d in enumerate(w_days)])) # DON'T ASK!!
-                w_days = list(map(lambda d : d +7 - start_date_weekday if ((d - start_date_weekday) < 0) else d - start_date_weekday, w_days))
-                w_days = list(map(lambda d : start_date + timedelta(days=d), w_days))
-                print(f'w days: {w_days}')
+                w_days = list(
+                    filter(
+                        lambda d: d != None,
+                        [i - 1 if d == "1" else None for i, d in enumerate(w_days)],
+                    )
+                )  # DON'T ASK!!
+                w_days = list(
+                    map(
+                        lambda d: d + 7 - start_date_weekday
+                        if ((d - start_date_weekday) < 0)
+                        else d - start_date_weekday,
+                        w_days,
+                    )
+                )
+                w_days = list(map(lambda d: start_date + timedelta(days=d), w_days))
+                print(f"w days: {w_days}")
                 for d in w_days:
-                    while(d < step.terminacion):
-                        db.session.add(Event(user_id=user_id, step_source=step.id, scheduled_date = d, scheduled_time= step.time, done = False))
+                    while d < step.terminacion:
+                        db.session.add(
+                            Event(
+                                user_id=user_id,
+                                step_source=step.id,
+                                scheduled_date=d,
+                                scheduled_time=step.time,
+                                done=False,
+                            )
+                        )
                         d += timedelta(weeks=1)
                 db.session.commit()
-                    
-            case 'M':
-                print('It is Month')
 
-            case 'Y':
-                print('It is Year')
+            case "M":
+                print("It is Month")
+
+            case "Y":
+                print("It is Year")
     print(
         f"""PRINTTING:
     user id: {user_id}

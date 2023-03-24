@@ -135,10 +135,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			getReports: async () => {
-				const response = await fetchProtected(`${apiUrl}/report`)
-				const data = await response.json()
-				setStore({ reports: data })
+			getEvents: async () => {
+				const resp = await fetchProtected(`${apiUrl}/events`,
+					{
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							beginning_date: "2022-12-31",
+							ending_date: "2023-12-31"
+						})
+					}
+				)
+
+				if (!resp.ok) {
+					console.error("Algo paso fetching the resource")
+					return
+				}
+
+				const data = await resp.json()
+				setStore({ events: data })
 			},
 
 			addReport: async (time, stepId) => {
@@ -182,43 +199,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const response = await fetchProtected(`${apiUrl}/steps`)
 				const data = await response.json()
 				setStore({ steps: data })
-				getActions().setDays()
-			},
-
-			setDays: () => {
-
-				let days = getStore().days
-				
-				for (const step of getStore().steps) {
-					let startDate = new Date(step.inicio)
-					let endDate = new Date(step.terminacion)
-					let periodo = step.periodo
-					
-					switch (periodo[0]) {
-						case 'D':
-							while (startDate.getTime() < endDate.getTime()) {
-								console.log('while')
-								let dayIndex = days.findIndex((e) => startDate.toDateString() == e.date)
-								if (dayIndex>-1) {
-									console.log('pushing in: '+ days[dayIndex].date)
-									days[dayIndex].steps.push(step)
-								} else {
-									days.push({ date: startDate.toDateString(), steps: [step] })
-								}
-								startDate = new Date(startDate.getTime() + 86400 * 1000 * step.repeticion)
-							}
-							break
-						case 'W':
-							break
-						case 'M':
-							break
-						case 'Y':
-							break
-					}
-				}
-				setStore({ days: days })
-
-
 			},
 
 			setNewStepInStore: (index, data) => {
@@ -238,7 +218,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					interval: 'D',
 					startDate: '',
 					endDate: '',
-					time : '00:00:00'
+					time: '00:00:00'
 				})
 				setStore({ newSteps: newSteps })
 
