@@ -235,9 +235,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					description: 'Descripcion',
 					content: 'Contenido',
 					repetition: '1',
-					time: 'D',
+					interval: 'D',
 					startDate: '',
-					endDate: ''
+					endDate: '',
+					time : '00:00:00'
 				})
 				setStore({ newSteps: newSteps })
 

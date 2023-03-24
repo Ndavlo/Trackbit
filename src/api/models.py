@@ -103,9 +103,9 @@ class Paso (db.Model):
     completada = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable = False)
     user = db.relationship("User")
-    rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"))
+    rutina_id = db.Column(db.Integer, db.ForeignKey("rutina.id"), nullable = False)
     rutina = db.relationship("Rutina", backref='paso', lazy=True)
-
+    time = db.Column(db.Time)
     def __repr__(self):
         return f'<Paso {self.nombre}>'
 
@@ -187,4 +187,23 @@ class Newsletter_emails (db.Model):
         return{
         "id": self.id,
         "email": self.email,
+        }
+
+class Event (db.Model):
+    __tablename__= 'events'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user = db.relationship("User")
+    step_source = db.Column(db.Integer, db.ForeignKey("paso.id"))
+    step = db.relationship("Paso")
+    done = db.Column(db.Boolean,)
+    scheduled_date = db.Column(db.Date)
+    scheduled_time = db.Column(db.Time)
+
+    def serialize(self):
+        return {
+            'step_source': self.step_source,
+            'done': self.done,
+            'scheduled_date': str(self.scheduled_date),
+            'scheduled_time': str(self.scheduled_time)
         }

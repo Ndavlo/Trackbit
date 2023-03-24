@@ -22,11 +22,11 @@ export function StepPanel({ index }) {
     const weekDays = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
     return (<div className={stl2.weekcheck}>
       {weekDays.map((e, i) => {
-        let checked = (store.newSteps[index].time[i + 1] == '0') ? false : true
+        let checked = (store.newSteps[index].interval[i + 1] == '0') ? false : true
         return (<input key={i} type='checkbox' checked={checked} onChange={(e) => {
-          let time = store.newSteps[index].time
-          time = time.replaceAt(i + 1, e.target.checked ? '1' : '0')
-          actions.setNewStepProperty(index, 'time', time)
+          let interval = store.newSteps[index].interval
+          interval = interval.replaceAt(i + 1, e.target.checked ? '1' : '0')
+          actions.setNewStepProperty(index, 'interval', interval)
         }} />)
       }
       )}
@@ -64,12 +64,12 @@ export function StepPanel({ index }) {
           <input className="numberInput" type="number" value={step?.repetition} onChange={(e) => {
             actions.setNewStepProperty(index, 'repetition', e.target.value)
           }} />
-          <select className="timeSelect" name="time" id="time" value={step?.time[0]} onChange={(e) => {
+          <select className="timeSelect" name="interval" id="interval" value={step?.interval[0]} onChange={(e) => {
             console.log(e.target.value)
             if (e.target.value == 'W') {
-              actions.setNewStepProperty(index, 'time', 'W0000000')
+              actions.setNewStepProperty(index, 'interval', 'W0000000')
             } else {
-              actions.setNewStepProperty(index, 'time', e.target.value)
+              actions.setNewStepProperty(index, 'interval', e.target.value)
             }
           }}>
             <option value="D">Dia</option>
@@ -77,7 +77,7 @@ export function StepPanel({ index }) {
             <option value="M">Mes</option>
             <option value="Y">Ano</option>
           </select>
-          {(store.newSteps[index]?.time.length > 1) ? <WeekDays /> : ''}
+          {(store.newSteps[index]?.interval.length > 1) ? <WeekDays /> : ''}
         </div>
 
 
