@@ -1,6 +1,9 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
+import os
+import tempfile
+from .sendrecovery import recovery_password_email
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Rutina, Paso, BlockedTokens, Newsletter_emails, Reportes
 from api.utils import generate_sitemap, APIException
@@ -8,8 +11,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
 from datetime import date, time, datetime, timezone, timedelta
-from .sendrecovery import recovery_password_email
-import os
+from firebase_admin import storage
 from sqlalchemy import func
 
 api = Blueprint('api', __name__)
@@ -139,7 +141,7 @@ def get_user_info():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     print (user.__repr__)
-    return jsonify(user.serialize_info())
+    return jsonify(user.serialize_with_pic)
 
 #### Ruta para cambiear la informacion del usuario
 @api.route('/user', methods = ['PATCH'])
@@ -165,11 +167,28 @@ def patch_user_info():
     db.session.commit()
     return jsonify({'msg':'ok'}), 200
 
-@api.route('/uploadpic')
+@api.route('/uploadpic', methods = ['POST'])
 @jwt_required()
 def upload_pic():
     user_id = get_jwt_identity()
-    user = db.query.get(user_id)
+    user = User.query.get(user_id)
+    file = request.files['file']
+    #Extract extension file
+    extension = file.filename.split('.')[1]
+    if extension.lower() == 'gif':
+        return jsonify({'msg': 'Archivos .gif no permitidos'}), 400
+    temp = tempfile.NamedTemporaryFile(delete=False)
+    file.save(temp)
+    bucket = storage.bucket(name = 'trackbit-4cb19.appspot.com')
+    filename = f'profilepics/{str(user_id)}.{extension}'
+    resource = bucket.blob(filename)
+    resource.upload_from_filename(temp.name, content_type = f'image/{extension}')
+    resource.make_public()
+    resource.public_url
+    user.profile_pic = filename
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'msg':'image uploaded'}), 200
 
 @api.route('/refresh')
 @jwt_required(refresh=True)

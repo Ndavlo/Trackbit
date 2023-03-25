@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from firebase_admin import storage
+from datetime import timedelta
 
 db = SQLAlchemy()
 
@@ -12,10 +14,25 @@ class User(db.Model):
     username = db.Column(db.String(), unique = True, nullable = True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
+    profile_pic = db.Column(db.String(500))
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
         return f'<User {self.email}>'
+
+    def serialize_with_pic(self):
+        bucket = storage.bucket(name = 'trackbit-4cb19.appspot.com')
+        resource = bucket.blob(self.profile_pic)
+        profile_pic_url = resource.generate_signed_url(version="v4", expiration =timedelta(minutes=10), method='GET')
+        return {
+            "id": self.id,
+            "email": self.email,
+            "name": self.name,
+            "last_name": self.last_name,
+            "title": self.title,
+            "bio": self.bio,
+            "profile_pic": profile_pic_url
+            }
     
     #making model atributes subscriptable
     def __getitem__(self, key):
@@ -32,7 +49,8 @@ class User(db.Model):
             "name": self.name,
             "last_name": self.last_name,
             "title": self.title,
-            "bio": self.bio
+            "bio": self.bio,
+            "profile_pic": self.profile_pic
         }
 
     def serialize_info(self):

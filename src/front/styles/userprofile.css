@@ -53,8 +53,9 @@
     justify-content: center;
     align-items: center;
     gap: 5px;
-    height: 60px;
-    background-color: black;
+    height: 90px;
+    background-color: rgba(0, 0, 0, 0.644);
+    border-radius: 5px;
 }
 
 .perfilBoton{
