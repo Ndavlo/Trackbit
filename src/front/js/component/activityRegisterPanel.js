@@ -52,11 +52,10 @@ export function ActivityRegisterPanel({ closeHandler }) {
 
         >
             <div className={`${stl.panel} ${stl2.panel}`}>
-                <button onClick={() => closeHandler()}>X</button>
+                <button className="btn" onClick={() => closeHandler()}><i class="bi bi-x-circle"></i></button>
                 <div className="habito">
                     <label>Habito:</label>
                     <select
-
                         onChange={(e) => {
                             setHabitIndex(e.target.value)
                         }}>
@@ -97,7 +96,7 @@ export function ActivityRegisterPanel({ closeHandler }) {
                         }} />
                     }
 
-                    <button onClick={submmitHandler}>Registrar Actividad</button>
+                    <button className="btn" onClick={submmitHandler}>Registrar Actividad</button>
                 </div>
             </div>
         </motion.div>

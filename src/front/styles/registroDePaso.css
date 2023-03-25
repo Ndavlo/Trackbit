@@ -23,10 +23,23 @@ text-align: center;
     overflow-y: auto;
 }
 
-.habitHeadDisplay{
-    display: flex;
+#habitsDisplay{
+
+    background-color: rgb(49, 48, 48);
+    border-radius: 5px;
+    background-clip: border-box;
+    word-break: break-word;
+    max-width: 80%;
 }
 
-.trashIcon{
-    float: right;
+.habitButton{
+    display: flex;
+    float: inline-end;
+    gap: 10px;
 }
+
+.habitTitle{
+    text-transform: capitalize;
+}
+
+

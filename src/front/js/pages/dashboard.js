@@ -40,36 +40,38 @@ export function Dashboard() {
   }
 
   return (
+    <>
     <div className={stl.dashboard}>
       <AnimatePresence>{panel}</AnimatePresence>
       <div className="container pt-3 pb-5" id="dashContainer">
 
         <div className="row">
           <div className="col-12 col-md-6">
-          <div className={stl["dashboard-bar"]}>
-          <button className="btn mb-3"
-              onClick={() => {
-                []
-                showPanelHandler("habit");
-              }}
-            >
-              Crear nuevo habito
-            </button>
-            <button className="btn mb-3"
-              onClick={() => {
-                showPanelHandler("activity");
-              }}
-            >
-              Registrar Actividad
-            </button>
-          </div>
-        <ActivityGraph />
+            <div className={stl["dashboard-bar"]}>
+              <button className="btn mb-3"
+                onClick={() => {
+                  []
+                  showPanelHandler("habit");
+                }}
+              >
+                Crear nuevo habito
+              </button>
+              <button className="btn mb-3"
+                onClick={() => {
+                  showPanelHandler("activity");
+                }}
+              >
+                Registrar Actividad
+              </button>
+            </div>
+            <ActivityGraph />
           </div>
           <div className="col-12 col-md-6">
-        <HabitsPanel />
-          </div>
+            <HabitsPanel />
           </div>
         </div>
       </div>
-      );
+    </div>
+    </>
+  );
 }

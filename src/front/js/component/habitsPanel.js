@@ -16,26 +16,83 @@ export function HabitsPanel() {
     console.log(store.habits)
     return (
         <>
-            <h1 className="text-light">Lista de Habitos</h1>
+            <h1 className="text-light pt-3 text-center">Lista de Habitos</h1>
             <div className="container habitContainer">
-                <div className="row text-light row p-0 g-3">
+                <div className="row text-light justify-content-center">
                     {store.habits.map((e, i) => {
                         return (
                             <>
-                                <div className="col-12 p-3" id="habitsDisplay">
-                                    <div key={i}>
-                                        <div className="habitHeadDisplay">
-                                            <h5>{`${e.name}`}</h5>
-                                            <button className="btn trashIcon"><i onClick={() => deleteHabit(e.id)} className="bi bi-trash3-fill"></i></button>
-                                        </div>
+                                <div key={i} className="p-3 g-3" id="habitsDisplay">
+                                    <div className="habitHeadDisplay">
+                                        <h5 className="habitTitle">{`${e.name}`}</h5>
                                         <p>{`${e.description}`}</p>
                                     </div>
+                                    <div className="habitButton justify-content-between">
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target={"#modal" + e.id}>Ver pasos</button>
+                                        <button className="btn trashIcon"><i onClick={() => deleteHabit(e.id)} className="bi bi-trash3-fill"></i></button>
+                                    </div>
                                 </div>
+
+
+                                {/* <!-- Modal --> */}
+                                <div className="modal fade" key={i} id={"modal" + e.id} tabIndex="-1" aria-labelledby="whatever" aria-hidden="true">
+                                    <div className="modal-dialog modal-dialog-centered">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                            <h5 className="modal-title text-dark" id={e.id + "idModalLabel"}>{`${e.name}`}</h5>
+                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div className="modal-body">
+                                            <ul class="list-group">
+                                                    {e.steps.map((step, ind)=>{
+                                                        return (
+                                                            <li class="list-group-item" key={ind}>{`${step.name}`}</li>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button type="button" className="btn" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
                             </>
                         )
                     })}
                 </div>
             </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </>
     )
 }
