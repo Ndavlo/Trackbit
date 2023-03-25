@@ -28,26 +28,31 @@ export function HabitsPanel() {
                                         <p>{`${e.description}`}</p>
                                     </div>
                                     <div className="habitButton justify-content-between">
-                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target={"#"+String(e.id)}>Ver mas</button>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target={"#modal" + e.id}>Ver pasos</button>
                                         <button className="btn trashIcon"><i onClick={() => deleteHabit(e.id)} className="bi bi-trash3-fill"></i></button>
                                     </div>
                                 </div>
 
 
                                 {/* <!-- Modal --> */}
-                                <div className="modal fade" id={String(e.id)} tabIndex="-1" aria-labelledby="whatever" aria-hidden="true">
-                                    <div className="modal-dialog">
+                                <div className="modal fade" key={i} id={"modal" + e.id} tabIndex="-1" aria-labelledby="whatever" aria-hidden="true">
+                                    <div className="modal-dialog modal-dialog-centered">
                                         <div className="modal-content">
                                             <div className="modal-header">
-                                                <h5 className="modal-title" id={e.id +"idModalLabel"}>Modal title</h5>
+                                            <h5 className="modal-title text-dark" id={e.id + "idModalLabel"}>{`${e.name}`}</h5>
                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div className="modal-body">
-                                                ...
+                                            <ul class="list-group">
+                                                    {e.steps.map((step, ind)=>{
+                                                        return (
+                                                            <li class="list-group-item" key={ind}>{`${step.name}`}</li>
+                                                        )
+                                                    })}
+                                                </ul>
                                             </div>
                                             <div className="modal-footer">
-                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="button" className="btn btn-primary">Save changes</button>
+                                                <button type="button" className="btn" data-bs-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>
