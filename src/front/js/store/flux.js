@@ -8,9 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			newSteps: [],
 			habits: [],
 			steps: [],
-			reports: [],
-			days: []
-
+			reports: []
 		},
 		actions: {
 			loadTokens: () => {

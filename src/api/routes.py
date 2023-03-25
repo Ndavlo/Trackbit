@@ -33,7 +33,7 @@ app = Flask(__name__)
 crypto = Bcrypt(app)
 
 
-def calculate_event_for_step (step_id):
+def calculate_event_for_step (step_id, user_id):
     #delete previusly created events for given step id
     events = Event.query.filter_by(step_source = step_id).delete()
     db.session.commit()
@@ -162,7 +162,6 @@ def crear_rutina():
     name = request.json.get("name")
     description = request.json.get("description")
     steps = request.json.get("steps")
-    # print(steps)
     nueva_rutina = Rutina(name=name, description=description, user_id=user_id)
     db.session.add(nueva_rutina)
     try:
@@ -171,9 +170,9 @@ def crear_rutina():
         # TODO check if there is a rutine with the same name, handle exception
         return jsonify({"msg": "There is a rutine with the same name"}), 409
 
+    
     for step in steps:
-        db.session.add(  # TODO parse the information to the correct data tipe or at least intialize the value with the right format
-            Paso(
+        step = Paso(
                 rutina_id=nueva_rutina.id,
                 nombre=step["name"],
                 descripcion=step["description"],
@@ -185,8 +184,10 @@ def crear_rutina():
                 user_id=user_id,
                 time=step["time"],
             )
-        )
-    db.session.commit()
+        db.session.add(step)  
+        db.session.commit()
+        calculate_event_for_step(step_id=step.id, user_id=user_id)    
+        
 
     return jsonify({"msg": "Rutina creada!", "id": nueva_rutina.id})
 
@@ -398,7 +399,6 @@ def get_reports():
 def get_steps():
     user_id = get_jwt_identity()
     pasos = Paso.query.filter_by(user_id=user_id).all()
-    print(pasos)
     pasos = [paso.serialize() for paso in pasos]
     return jsonify(pasos), 200
 

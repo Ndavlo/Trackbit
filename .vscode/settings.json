@@ -5,6 +5,6 @@
     "editor.defaultFormatter": "ms-python.python"
   },
   "python.formatting.provider": "black",
-  "workbench.editor.showTabs": false,
+  "workbench.editor.showTabs": true,
   "zenMode.hideLineNumbers": false
 }

@@ -100,4 +100,14 @@ nav {
     word-break: break-word;
 }
 
-
+.h-bar{
+    display: flex;
+    gap:2px;
+}
+.h-bar div {
+    background-color: black;
+    height: 8px;
+    border-radius: 3px;
+    flex-grow: 1;
+    border: 1px solid rgb(163, 163, 163);
+}

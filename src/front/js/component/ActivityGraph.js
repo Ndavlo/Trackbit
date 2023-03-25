@@ -49,19 +49,32 @@ function WeekNumbers() {
 function Day({ date, data }) {
     const weekDays = ["D", "L", "M", "M", "J", "V", "S"];
     const time = new Date(date)
-    const day =  time.getDay() 
-    const week = thisWeekNumber - Math.floor(  (time.getTime() - firstDay.getTime()) / 1000 / 86400 / 7)
+    const day = time.getDay()
+    const week = thisWeekNumber - Math.floor((time.getTime() - firstDay.getTime()) / 1000 / 86400 / 7)
 
-return (
-    <div
-        className={`${stl.cell} ${stl.day}`}
-        style={{ gridArea: `${week}/${day + 1}/${week}/${day + 1}` }}
-    >
-        {data.map((e,i)=><CellBar key={i} percentage={50} />)}
-        
-        
-    </div>
-);
+    let bars = data.reduce((a, e) => {
+        a[e.habit_id] = a[e.habit_id] ? [...a[e.habit_id], e] : [e]
+        return a
+    },
+        {})
+
+    let bars_sections= []
+    for (let x in bars) {
+        bars_sections.push(<div className="h-bar">
+            {bars[x].map((e, i)=><div key={i} className="h-bar-section"></div>)}
+            </div>)
+    }
+
+    return (
+        <div
+            className={`${stl.cell} ${stl.day}`}
+            style={{ gridArea: `${week}/${day + 1}/${week}/${day + 1}` }}
+        >
+            {bars_sections}
+
+
+        </div>
+    );
 }
 function CellBar({ percentage }) {
     return (
@@ -82,7 +95,7 @@ function Days() {
                     <Day
                         key={i}
                         date={e.date}
-                        data = {e.events}
+                        data={e.events}
                     />
                 )
             })}

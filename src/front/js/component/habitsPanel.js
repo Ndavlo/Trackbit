@@ -20,9 +20,9 @@ export function HabitsPanel() {
                 <div className="row text-light row p-0 g-3">
                     {store.habits.map((e, i) => {
                         return (
-                            <>
-                                <div className="col-12 p-3" id="habitsDisplay">
-                                    <div key={i}>
+                            
+                                <div key = {i}className="col-12 p-3" id="habitsDisplay">
+                                    <div >
                                         <div className="habitHeadDisplay">
                                             <h5>{`${e.name}`}</h5>
                                             <button className="btn trashIcon"><i onClick={() => deleteHabit(e.id)} className="bi bi-trash3-fill"></i></button>
@@ -30,7 +30,7 @@ export function HabitsPanel() {
                                         <p>{`${e.description}`}</p>
                                     </div>
                                 </div>
-                            </>
+                            
                         )
                     })}
                 </div>

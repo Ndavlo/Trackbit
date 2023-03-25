@@ -18,7 +18,7 @@ gap: 10px;
 
     width: 100%;
     aspect-ratio: 1;
-    border : 1px solid white;
+    border : 1px solid rgb(105, 105, 105);
     color : white;
 }
 
@@ -56,17 +56,28 @@ gap: 10px;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(54, 1fr);
+    gap: 4px;
+    padding: 2px;
     background-image:
-      repeating-linear-gradient(#333 0 1px, transparent 1px 100%),
+      repeating-linear-gradient(#333 0 0.5px, transparent 0.5px 100%),
       repeating-linear-gradient(90deg, #333 0 1px, transparent 1px 100%);
     background-size: 14.2857143% 1.851851852%;
 }
 
 .day {
     padding: 0.3em;
-    background-color: #666666;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background-color: #949494;
     overflow: hidden;
     font-size: 0.7em;
+    border-radius: 3px;
+    transition: transform 1s ease;
+}
+
+.day:hover {
+    transform: scale(1.2);
 }
 
 .weekdays{
