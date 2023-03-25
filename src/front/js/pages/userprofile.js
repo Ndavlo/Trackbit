@@ -93,7 +93,7 @@ export const Userprofile = () => {
               </div>
 
               <div className="card-footer">
-                <a className="float-end bg-transparent text-dark" type="button" data-bs-toggle="modal" data-bs-target="#profileUpdateModal"><i className="bi bi-pencil-fill"></i></a>
+                <a className="float-end bg-transparent text-light" type="button" data-bs-toggle="modal" data-bs-target="#profileUpdateModal"><i className="bi bi-pencil-fill"></i></a>
               </div>
 
 
