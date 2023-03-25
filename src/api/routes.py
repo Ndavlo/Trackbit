@@ -33,6 +33,78 @@ app = Flask(__name__)
 crypto = Bcrypt(app)
 
 
+def calculate_event_for_step (step_id):
+    #delete previusly created events for given step id
+    events = Event.query.filter_by(step_source = step_id).delete()
+    db.session.commit()
+    
+    step = Paso.query.get(step_id)
+    
+    print(step.nombre)
+    start_date = step.inicio
+    match step.periodo[0]:
+        case "D":
+            # print('It is Day')
+            while start_date <= step.terminacion:
+                db.session.add(
+                    Event(
+                        user_id=user_id,
+                        step_source=step.id,
+                        scheduled_date=start_date,
+                        scheduled_time=step.time,
+                        done=False,
+                    )
+                )
+                start_date = start_date + timedelta(days=int(step.repeticion))
+            db.session.commit()
+
+        case "W":
+            print("It is Week")
+            print(step.periodo)
+            start_date_weekday = step.inicio.weekday()
+            print(f"s_d_w {start_date_weekday}")
+
+            # convert from notation W####### and start date to the first days of the step
+            w_days = step.periodo
+            w_days = list(
+                filter(
+                    lambda d: d != None,
+                    [i - 1 if d == "1" else None for i, d in enumerate(w_days)],
+                )
+            )  # DON'T ASK!!
+            w_days = list(
+                map(
+                    lambda d: d + 7 - start_date_weekday
+                    if ((d - start_date_weekday) < 0)
+                    else d - start_date_weekday,
+                    w_days,
+                )
+            )
+            w_days = list(map(lambda d: start_date + timedelta(days=d), w_days))
+            print(f"w days: {w_days}")
+            for d in w_days:
+                while d < step.terminacion:
+                    db.session.add(
+                        Event(
+                            user_id=user_id,
+                            step_source=step.id,
+                            scheduled_date=d,
+                            scheduled_time=step.time,
+                            done=False,
+                        )
+                    )
+                    d += timedelta(weeks=1)
+            db.session.commit()
+
+        case "M":
+            print("It is Month")
+
+        case "Y":
+            print("It is Year")
+
+    pass
+
+
 @api.route("/signup", methods=["POST"])
 def create_user():
     email = request.json.get("email")
