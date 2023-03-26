@@ -10,6 +10,7 @@ export const Userprofile = () => {
   const navigate = useNavigate()
   const [title, setTitle] = useState('');
   const [bio, setBio] = useState('');
+  const [profilePic, setProfilePic] = useState('');
 
 
   function submitUpdate(e) {
@@ -17,6 +18,14 @@ export const Userprofile = () => {
     actions?.updateUserInfo(title, bio)
     return "ok"
   }
+  function actualizaImagen(e) {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', profilePic);
+    actions?.updateProfilePic(formData)
+    return "ok"
+  }
+
 
 
   useEffect(() => {
@@ -29,6 +38,7 @@ export const Userprofile = () => {
         .then(() => {
           setTitle(store.userInfo?.['title'])
           setBio(store.userInfo?.['bio'])
+          setProfilePic(store.userInfo?.['profile_pic'])
         })
 
     }
@@ -43,7 +53,7 @@ export const Userprofile = () => {
             <div className="card profileCard">
               <div className="card-body">
                 <div className="d-flex flex-column align-items-center text-center">
-                  <img src="https://d3a7c97d5beed5ab2c49-7aac60cfdebb59ab39bebc5ac6e3d5b2.ssl.cf5.rackcdn.com/27640000/27642431/_xs959ce358e310887ed8d155f4558024e5.jpg" alt="profilepicture" className="rounded-circle" width="150" />
+                  <img src={store.userInfo?.["profile_pic"]} alt="profilepicture" className="rounded-circle" width="150" />
                   <div className="mt-3">
                     <div>
                       <h4>{`${store.userInfo?.['name']} ${store.userInfo?.['last_name']}`}</h4>
@@ -62,8 +72,15 @@ export const Userprofile = () => {
                           <div className="modal-body">
                             <form id="updateForm">
                               <div className="mb-3">
-                                <label htmlFor="name" className="form-label text-dark">Titulo</label>
-                                <input type="text" className="form-control text-dark" maxLength="80" value={title} id="inputText" aria-describedby="name" onChange={(e) => setTitle(e.target.value)} />
+                                <div className="picUpdate">
+                                <label for="avatar">Sube tu foto de perfil</label>
+                                <input type="file"
+                                  id="avatar" name='file'
+                                  accept="image/png, image/jpeg, image/jpg" onChange={(e)=> setProfilePic(e.target.files[0])}/>
+                                  <button className="btn" onClick={(e) => actualizaImagen(e)}>Actualiza foto de perfil</button>
+                                </div>
+                                  <label htmlFor="name" className="form-label text-dark">Titulo</label>
+                                  <input type="text" className="form-control text-dark" maxLength="80" value={title} id="inputText" aria-describedby="name" onChange={(e) => setTitle(e.target.value)} />
                               </div>
                               <div className="mb-3">
                                 <label htmlFor="name" className="form-label text-dark">Bio</label>
@@ -93,7 +110,7 @@ export const Userprofile = () => {
               </div>
 
               <div className="card-footer">
-                <a className="float-end bg-transparent text-dark" type="button" data-bs-toggle="modal" data-bs-target="#profileUpdateModal"><i className="bi bi-pencil-fill"></i></a>
+                <a className="float-end bg-transparent text-light" type="button" data-bs-toggle="modal" data-bs-target="#profileUpdateModal"><i className="bi bi-pencil-fill"></i></a>
               </div>
 
 
@@ -105,21 +122,21 @@ export const Userprofile = () => {
               <div className="card-body">
                 <div className="row">
 
-                {store.habits.map((e,i) =>{
-                  return (<>
-                  <div className="col">
-                  <Link className="rutinaLink" key={i} to="/dashboard">
-                    <div className="rutinasPerfil">
-                    <div className="perfilBoton" >{`${e.name}`}</div>
-                    </div>
-                    </Link>
-                  </div>
-                  
-                  
-                  </>
-                  )
-                })}
-              </div>
+                  {store.habits.map((e, i) => {
+                    return (<>
+                      <div className="col">
+                        <Link className="rutinaLink" key={i} to="/dashboard">
+                          <div className="rutinasPerfil">
+                            <div className="perfilBoton" >{`${e.name}`}</div>
+                          </div>
+                        </Link>
+                      </div>
+
+
+                    </>
+                    )
+                  })}
+                </div>
               </div>
             </div>
             <div className="card mb-3">

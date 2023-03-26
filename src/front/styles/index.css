@@ -2,6 +2,10 @@
     font-family: 'Patua One';
 }
 
+.h-100{
+    background-color: rgb(27, 38, 42);
+}
+
 nav {
     color: #FFFFFF;
     text-shadow: 2px 2px 0 rgb(27, 38, 42), 2px -2px 0 rgb(27, 38, 42), -2px 2px 0 rgb(27, 38, 42), -2px -2px 0 rgb(27, 38, 42), 2px 0px 0 rgb(27, 38, 42), 0px 2px 0 rgb(27, 38, 42), -2px 0px 0 rgb(27, 38, 42), 0px -2px 0 rgb(27, 38, 42);

@@ -29,6 +29,8 @@ from sqlalchemy.exc import IntegrityError
 from datetime import date, time, datetime, timezone, timedelta
 from firebase_admin import storage
 from sqlalchemy import func
+from firebase_admin import storage
+import tempfile
 
 api = Blueprint("api", __name__)
 app = Flask(__name__)
@@ -276,8 +278,15 @@ def crear_paso(rutina_id):
 def get_user_info():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    return jsonify(user.serialize_with_pic())
-
+    print(user.__repr__)
+    response_data = user.serialize_info()
+    print(response_data)
+    bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
+    profile_pic = user.profile_pic
+    resource = bucket.blob(profile_pic)
+    profile_pic_url = resource.generate_signed_url(version="v4", expiration=timedelta(minutes=10), method="GET")
+    response_data["profile_pic"] = profile_pic_url
+    return jsonify(response_data)
 
 #### Ruta para cambiear la informacion del usuario
 @api.route("/user", methods=["PATCH"])
@@ -303,28 +312,24 @@ def patch_user_info():
     db.session.commit()
     return jsonify({"msg": "ok"}), 200
 
-@api.route('/uploadpic', methods = ['POST'])
+@api.route('/setprofilepic', methods=['POST'])
 @jwt_required()
 def upload_pic():
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    file = request.files['file']
-    #Extract extension file
-    extension = file.filename.split('.')[1]
-    if extension.lower() == 'gif':
-        return jsonify({'msg': 'Archivos .gif no permitidos'}), 400
-    temp = tempfile.NamedTemporaryFile(delete=False)
+    file=request.files['file']
+    extension=file.filename.split('.')[1]
+    temp=tempfile.NamedTemporaryFile(delete=False)
     file.save(temp)
-    bucket = storage.bucket(name = 'trackbit-4cb19.appspot.com')
-    filename = f'profilepics/{str(user_id)}.{extension}'
+    bucket=storage.bucket(name="trackbit-4cb19.appspot.com")
+    filename="profile_pics/"+str(user_id)+"."+extension
     resource = bucket.blob(filename)
-    resource.upload_from_filename(temp.name, content_type = f'image/{extension}')
-    resource.make_public()
-    resource.public_url
-    user.profile_pic = filename
+    resource.upload_from_filename(temp.name, content_type="image/"+extension)
+    user = User.query.get(user_id)
+    user.profile_pic=filename
     db.session.add(user)
     db.session.commit()
-    return jsonify({'msg':'image uploaded'}), 200
+    return jsonify({"msg": "se subio la imagen"})
+
 
 
 @api.route("/refresh")
