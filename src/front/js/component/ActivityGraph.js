@@ -47,43 +47,58 @@ function WeekNumbers() {
 }
 
 function Day({ date, data }) {
+    const { store, actions } = useContext(Context);
     const weekDays = ["D", "L", "M", "M", "J", "V", "S"];
     const time = new Date(date)
     const day = time.getDay()
     const week = thisWeekNumber - Math.floor((time.getTime() - firstDay.getTime()) / 1000 / 86400 / 7)
 
+    const [expanded, setExpanded] = useState(false)
+
     let bars = data.reduce((a, e) => {
-        a[e.habit_id] = a[e.habit_id] ? [...a[e.habit_id], e] : [e]
+        let index = a.findIndex((ele) => ele.habitId == e.habit_id)
+        if (index != -1) {
+            a[index].events.push(e)
+        } else {
+            a.push({
+                habitId: e.habit_id,
+                habitName: e.habit_name,
+                events: [e]
+            })
+        }
         return a
     },
-        {})
-
-    let bars_sections= []
-    for (let x in bars) {
-        bars_sections.push(<div className="h-bar">
-            {bars[x].map((e, i)=><div key={i} className="h-bar-section"></div>)}
-            </div>)
-    }
+        [])
 
     return (
         <div
-            className={`${stl.cell} ${stl.day}`}
+            className={expanded ? `expanded-day` : `${stl.cell} ${stl.day}`}
             style={{ gridArea: `${week}/${day + 1}/${week}/${day + 1}` }}
+            onClick={!expanded ? (e) => {
+                setExpanded(!expanded)
+            } : null}
         >
-            {bars_sections}
-
+            <span>{time.toLocaleString('es-US', { month: "short", day: 'numeric', weekday: 'short' })}</span>
+            <span className="close-x" onClick={expanded ? (e) => {
+                setExpanded(!expanded)
+            } : null}>X</span>
+            {bars.map((e, i) => {
+                return (<>
+                    <span>{e.habitName}</span>
+                    <div className='h-bar' key={i}>
+                        {e.events.map((ele) => {
+                            return (<div style={(ele.done)?{backgroundColor : `#${ele.habit_color}`}:{}}
+                                onClick={
+                                    expanded ? (e) => { actions.setTaskDone(ele.id, !ele.done) } : null
+                                }></div>)
+                        })}
+                    </div>
+                </>)
+            })}
 
         </div>
     );
 }
-function CellBar({ percentage }) {
-    return (
-        <div className={stl["cell-bar"]}>
-            <div style={{ width: `${percentage}%` }}></div>
-        </div>
-    );
-}
-
 
 function Days() {
     const { store, actions } = useContext(Context);

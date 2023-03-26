@@ -1,3 +1,5 @@
+import { json } from "react-router-dom"
+
 const apiUrl = process.env.BACKEND_URL + "/api"
 
 const getState = ({ getStore, getActions, setStore }) => {
@@ -8,7 +10,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			newSteps: [],
 			habits: [],
 			steps: [],
-			reports: []
 		},
 		actions: {
 			loadTokens: () => {
@@ -237,7 +238,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			clearNewsSteps: () => {
 				setStore({ newSteps: [] })
-			}
+			},
+
+			setTaskDone: async (taskId, value) => {
+				await fetchProtected(`${apiUrl}/task`, {
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						task_id: taskId,
+						value: value
+					})
+				})
+				getActions().getEvents()
+			},
+
+			setHAbitColor: async (habitId, color) => {
+				const response = await fetchProtected(`${apiUrl}/habit`, {
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(
+						{
+							'color': color,
+							'habit_id': habitId
+						}
+					)
+
+				})
+
+			},
+
+
 
 
 		},

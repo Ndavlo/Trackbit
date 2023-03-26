@@ -102,6 +102,8 @@ nav {
 
 .h-bar{
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap:2px;
 }
 .h-bar div {
@@ -110,4 +112,47 @@ nav {
     border-radius: 3px;
     flex-grow: 1;
     border: 1px solid rgb(163, 163, 163);
+}
+
+.h-bar div:hover {
+    cursor: pointer;
+}
+
+.today{
+    border: yellow;
+}
+
+.expanded-day {
+    padding: 1em;
+    position: absolute;
+    display: grid;
+    background-color: aliceblue;
+    right: 50%;
+    transform: translate(50%);
+    width: 15em !important;
+    border: 1px solid yellow !important;
+    transition: position 1s ease;
+    
+}
+.expanded-day span {
+    display: initial;
+    width: 50%;
+}
+.expanded-day>span:first-child{
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+}
+.expanded-day .e-bar{
+    height: 1.5em !important;
+    border-radius: 0.3em !important;
+}
+
+
+.tb-close-x:hover {
+    cursor: pointer;
+}
+
+.done {
+    background-color: green !important;
 }

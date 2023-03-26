@@ -156,6 +156,31 @@ def mostrar_rutinas():
     response_body = list(map(lambda r: r.serialize_with_steps(), rutinas))
     return jsonify(response_body), 200
 
+@api.route('/habit', methods= ['PATCH'])
+@jwt_required()
+def patch_habit():
+    user_id = get_jwt_identity()
+    habit_id = request.json.get('habit_id')
+    habit = Rutina.query.filter_by(user_id=user_id, id = habit_id).first()
+    body = request.get_json()
+    msg = ""
+    for key, value in body.items():
+        if key == 'habit_id': continue
+        try:
+            habit[key] = value
+            print(f'Habit "{key}" field updated to : {value}')
+        except AttributeError:
+            print('Habit does not have field "' + key + '", it will not be updated')
+    db.session.add(habit)
+    db.session.commit()
+    return jsonify({"msg": "ok"}), 200
+
+    
+
+
+
+    return jsonify({'msg':"habit updated"}), 200
+
 
 @api.route("/rutina", methods=["POST"])
 @jwt_required()
@@ -251,8 +276,7 @@ def crear_paso(rutina_id):
 def get_user_info():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    print (user.__repr__)
-    return jsonify(user.serialize_with_pic)
+    return jsonify(user.serialize_with_pic())
 
 
 #### Ruta para cambiear la informacion del usuario
@@ -452,82 +476,12 @@ def get_events():
     return jsonify(date_collection), 200
 
 
-@api.route("/days_calc", methods=["POST"])
+@api.route('/task', methods=['PATCH'])
 @jwt_required()
-def get_days():
-    """Returns days between two dates that have a setp assignated and its steps"""
-
-    user_id = get_jwt_identity()
-    events = Event.query.filter_by(user_id=user_id).delete()
+def set_task_done():
+    task_id = request.json.get('task_id')
+    task = Event.query.get(task_id)
+    task.done = request.json.get('value')
+    db.session.add(task)
     db.session.commit()
-    steps = Paso.query.filter(Paso.user_id == user_id).all()
-
-    for step in steps:
-        print(step.nombre)
-        start_date = step.inicio
-        match step.periodo[0]:
-            case "D":
-                # print('It is Day')
-                while start_date <= step.terminacion:
-                    db.session.add(
-                        Event(
-                            user_id=user_id,
-                            step_source=step.id,
-                            scheduled_date=start_date,
-                            scheduled_time=step.time,
-                            done=False,
-                        )
-                    )
-                    start_date = start_date + timedelta(days=int(step.repeticion))
-                db.session.commit()
-
-            case "W":
-                print("It is Week")
-                print(step.periodo)
-                start_date_weekday = step.inicio.weekday()
-                print(f"s_d_w {start_date_weekday}")
-
-                # convert from notation W####### and start date to the first days of the step
-                w_days = step.periodo
-                w_days = list(
-                    filter(
-                        lambda d: d != None,
-                        [i - 1 if d == "1" else None for i, d in enumerate(w_days)],
-                    )
-                )  # DON'T ASK!!
-                w_days = list(
-                    map(
-                        lambda d: d + 7 - start_date_weekday
-                        if ((d - start_date_weekday) < 0)
-                        else d - start_date_weekday,
-                        w_days,
-                    )
-                )
-                w_days = list(map(lambda d: start_date + timedelta(days=d), w_days))
-                print(f"w days: {w_days}")
-                for d in w_days:
-                    while d < step.terminacion:
-                        db.session.add(
-                            Event(
-                                user_id=user_id,
-                                step_source=step.id,
-                                scheduled_date=d,
-                                scheduled_time=step.time,
-                                done=False,
-                            )
-                        )
-                        d += timedelta(weeks=1)
-                db.session.commit()
-
-            case "M":
-                print("It is Month")
-
-            case "Y":
-                print("It is Year")
-    print(
-        f"""PRINTTING:
-    user id: {user_id}
-    steps: {steps}
-    """
-    )
-    return jsonify({"msg": "OK"}), 200
+    return jsonify({'msg': 'task updated'}), 200

@@ -80,6 +80,7 @@ class Rutina(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.String)
+    color = db.Column(db.String(10))
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref="rutinas")
 
@@ -87,6 +88,16 @@ class Rutina(db.Model):
 
     def __repr__(self):
         return f"<Rutina {self.id}>"
+
+    def __getitem__(self, key):
+        return getattr(self, key)
+
+    # make model atributes assignable
+    def __setitem__(self, key, value):
+        getattr(
+            self, key
+        )  # this will throw a AttributeError if the attribute does not exist
+        setattr(self, key, value)
 
     def serialize(self):
         return {
@@ -104,6 +115,7 @@ class Rutina(db.Model):
             "id": self.id,
             "name": self.name,
             "description": self.description,
+            'color':self.color,
             "steps": pasos,
         }
 
@@ -228,9 +240,12 @@ class Event(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "step_source": self.step_source,
             "done": self.done,
             "scheduled_date": str(self.scheduled_date),
             "scheduled_time": str(self.scheduled_time),
             "habit_id": self.step.rutina_id,
+            "habit_name": self.step.rutina.name,
+            "habit_color":self.step.rutina.color
         }

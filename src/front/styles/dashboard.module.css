@@ -66,7 +66,7 @@ gap: 10px;
 
 .day {
     padding: 0.3em;
-    display: flex;
+    display: grid;
     flex-direction: column;
     gap: 2px;
     background-color: #949494;
@@ -74,10 +74,21 @@ gap: 10px;
     font-size: 0.7em;
     border-radius: 3px;
     transition: transform 1s ease;
+    transition: position 1s ease;
+}
+
+.day span{
+    display: none;
 }
 
 .day:hover {
     transform: scale(1.2);
+    transition: transform 1s ease;
+}
+
+.day:active {
+    transition: transform 50ms ease;
+    transform: scale(1.12);
 }
 
 .weekdays{
