@@ -10,11 +10,19 @@ export const Userprofile = () => {
   const navigate = useNavigate()
   const [title, setTitle] = useState('');
   const [bio, setBio] = useState('');
+  const [profilePic, setProfilePic] = useState('');
 
 
   function submitUpdate(e) {
     e.preventDefault()
     actions?.updateUserInfo(title, bio)
+    return "ok"
+  }
+  function actualizaImagen(e) {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', profilePic);
+    actions?.updateProfilePic(formData)
     return "ok"
   }
 
@@ -67,8 +75,9 @@ export const Userprofile = () => {
                                 <div className="picUpdate">
                                 <label for="avatar">Sube tu foto de perfil</label>
                                 <input type="file"
-                                  id="avatar" name="avatar"
-                                  accept="image/png, image/jpeg, image/jpg"/>
+                                  id="avatar" name='file'
+                                  accept="image/png, image/jpeg, image/jpg" onChange={(e)=> setProfilePic(e.target.files[0])}/>
+                                  <button className="btn" onClick={(e) => actualizaImagen(e)}>Actualiza foto de perfil</button>
                                 </div>
                                   <label htmlFor="name" className="form-label text-dark">Titulo</label>
                                   <input type="text" className="form-control text-dark" maxLength="80" value={title} id="inputText" aria-describedby="name" onChange={(e) => setTitle(e.target.value)} />

@@ -46,6 +46,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 				
 				
 			},
+
+			updateProfilePic: async (formData) => {
+				const response = await fetchProtected(`${apiUrl}/setprofilepic`, {
+				  method: 'POST',
+				  body: formData
+				});
+			  
+				if (!response.ok) {
+				  console.error('No se pudo actualizar');
+				  return false;
+				} else {
+				  return "Imagen actualizada";
+				}
+			  },
 			
 			
 			login: async (email, password) => {
