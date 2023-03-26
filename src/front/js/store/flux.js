@@ -43,9 +43,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({userInfo: newUserInfo})
 					return "ok"
 				}
-
+				
+				
 			},
-
+			
+			
 			login: async (email, password) => {
 
 				let response = await fetch(apiUrl + '/login', {
