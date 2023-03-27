@@ -56,13 +56,6 @@ export function Dashboard() {
               >
                 Crear nuevo habito
               </button>
-              <button className="btn mb-3"
-                onClick={() => {
-                  showPanelHandler("activity");
-                }}
-              >
-                Registrar Actividad
-              </button>
             </div>
             <ActivityGraph />
           </div>

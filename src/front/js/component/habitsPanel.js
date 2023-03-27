@@ -1,11 +1,131 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { TBMenu } from "./menu";
+import stl from '../../styles/dashboard.module.css'
 
+export function DeleteHabitConfirmationPanel({ closeHandler, habitName, habitId }) {
+    const { store, actions } = useContext(Context);
+
+    console.log(habitId)
+
+    return (
+        <motion.div
+            initial={false}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={stl.backdrop}
+        >
+            <div className="stepContainer">
+                <button onClick={() => closeHandler()}>x</button>
+                <span> Realmente quieres borrar el habito {habitName}</span>
+                <button onClick={() => {
+                    actions.deleteHabit(habitId)
+                    closeHandler()}}>Si</button>
+                <button onClick={() => closeHandler()}>No</button>
+            </div>
+        </motion.div>
+    );
+}
+
+function HabitContaitner() {
+    const { store, actions } = useContext(Context);
+    const [active, setActive] = useState(-1)
+    const [deleteConfirmation, setDeleteConfirmation] = useState(-1)
+
+
+    
+
+    const variants = {
+        open: {
+            height: 'auto',
+            transition: {
+                type: "spring",
+                damping: 10,
+                stiffness: 100
+            },
+        },
+        closed: {
+            height: 0,
+            transition: {
+                type: "spring",
+                damping: 10,
+                stiffness: 100
+            },
+
+        }
+    }
+
+    return (
+        <div>
+            {store.habits.map((e, i) => {
+                return (<div key={i}>
+                    <AnimatePresence>
+                        {(deleteConfirmation == i) ?
+                            <DeleteHabitConfirmationPanel closeHandler={() => setDeleteConfirmation(-1)} habitName={e.name} habitId={e.id} />
+                            :
+                            ''
+                        }
+                    </AnimatePresence>
+
+                    <div className="tb-habit-header"
+                        onClick={(e) => setActive(active == i ? -1 : i)}>
+                        <h2>{e.name}</h2>
+                        <div>
+                            <div className="tb-habit-color"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    actions.setHAbitColor(
+                                        e.id,
+                                        '#' + Math.floor(Math.random() * 256 * 256 * 256).toString(16))
+                                }
+                                }
+                                style={{ backgroundColor: `${e.color}` }}></div>
+                            <TBMenu menuTitle='...' options={[{
+                                option: 'Borrar Habito',
+                                action: () => { setDeleteConfirmation(i) }
+                            },
+                            {
+                                option: 'Modificar Habito',
+                                action: () => { }
+                            }]} />
+                        </div>
+                    </div>
+
+                    <motion.div
+                        animate={active == i ? "open" : "closed"}
+                        variants={variants}
+                        className="tb-habit-info">
+                        <h3>Descripcion:</h3>
+                        <p>{e.Descripcion}</p>
+                        <h3>Pasos:</h3>
+                        {e.steps.map((e) => (
+                            <div>
+                                <h4>{e.name}</h4>
+
+                            </div>
+                        )
+                        )}
+                    </motion.div>
+                </div>)
+            }
+            )
+
+
+
+            }
+        </div>
+    )
+
+
+}
 
 
 export function HabitsPanel() {
     const { store, actions } = useContext(Context);
+
+
+
     function deleteHabit(id) {
         actions.deleteHabit(id)
     }
@@ -15,82 +135,11 @@ export function HabitsPanel() {
     }, [store.accessToken])
 
     return (
-        <>
-            <h1 className="text-light pt-3 text-center">Lista de Habitos</h1>
-            <div className="container habitContainer">
-                <div className="row text-light justify-content-center">
-                    {store.habits.map((e, i) => {
-                        return (
-                            <>
-                                <div key={i} className="p-3 g-3" id="habitsDisplay">
-                                    <div className="habitHeadDisplay">
-                                        <h5 className="habitTitle">{`${e.name}`}</h5>
-                                        <p>{`${e.description}`}</p>
-                                    </div>
-                                    <div className="habitButton justify-content-between">
-                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target={"#modal" + e.id}>Ver pasos</button>
-                                        <button className="btn trashIcon"><i onClick={() => deleteHabit(e.id)} className="bi bi-trash3-fill"></i></button>
-                                    </div>
-                                    <div
-                                        style={{
-                                            backgroundColor: `#${e.color}`,
-                                            width: '20px',
-                                            aspectRatio: 1
-                                        }}
-                                        onClick={() => {
-                                            actions.setHAbitColor(e.id, (Math.floor(Math.random() * (256 * 256 * 256))).toString(16))
-                                        }}
-                                    >{`#${e.color}`}</div>
-                                </div>
+        <div className="tb-habits-container">
+            <h1>Tus Habitos:</h1>
 
+            <HabitContaitner />
 
-                                {/* <!-- Modal --> */}
-                                <div className="modal fade" key={i} id={"modal" + e.id} tabIndex="-1" aria-labelledby="whatever" aria-hidden="true">
-                                    <div className="modal-dialog modal-dialog-centered">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                            <h5 className="modal-title text-dark" id={e.id + "idModalLabel"}>{`${e.name}`}</h5>
-                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div className="modal-body">
-                                            <ul class="list-group">
-                                                    {e.steps.map((step, ind)=>{
-                                                        return (
-                                                            <li class="list-group-item" key={ind}>{`${step.name}`}</li>
-                                                        )
-                                                    })}
-                                                </ul>
-                                            </div>
-                                            <div className="modal-footer">
-                                                <button type="button" className="btn" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        )
-                    })}
-                </div>
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </>
+        </div>
     )
 }

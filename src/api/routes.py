@@ -457,11 +457,6 @@ def get_events():
     user_id = get_jwt_identity()
     beginning_date = date.fromisoformat(request.json.get("beginning_date"))
     ending_date = date.fromisoformat(request.json.get("ending_date"))
-    
-    # events = Event.query.filter(
-    #     Event.scheduled_date.between(beginning_date, ending_date)
-    # ).all()
-
     dates = db.session.query(Event.scheduled_date).group_by(Event.scheduled_date).all()
     date_collection = [
         (

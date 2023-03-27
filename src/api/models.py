@@ -13,19 +13,21 @@ class User(db.Model):
     title = db.Column(db.String(150))
     bio = db.Column(db.String(250))
     profile_pic = db.Column(db.String(500), unique=False, default="No Profile Photo")
-    username = db.Column(db.String(), unique = True, nullable = True)
+    username = db.Column(db.String(), unique=True, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     profile_pic = db.Column(db.String(500))
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f"<User {self.email}>"
 
     def serialize_with_pic(self):
-        bucket = storage.bucket(name = 'trackbit-4cb19.appspot.com')
+        bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
         resource = bucket.blob(self.profile_pic)
-        profile_pic_url = resource.generate_signed_url(version="v4", expiration =timedelta(minutes=10), method='GET')
+        profile_pic_url = resource.generate_signed_url(
+            version="v4", expiration=timedelta(minutes=10), method="GET"
+        )
         return {
             "id": self.id,
             "email": self.email,
@@ -33,10 +35,10 @@ class User(db.Model):
             "last_name": self.last_name,
             "title": self.title,
             "bio": self.bio,
-            "profile_pic": profile_pic_url
-            }
-    
-    #making model atributes subscriptable
+            "profile_pic": profile_pic_url,
+        }
+
+    # making model atributes subscriptable
     def __getitem__(self, key):
         return getattr(self, key)
 
@@ -55,7 +57,7 @@ class User(db.Model):
             "last_name": self.last_name,
             "title": self.title,
             "bio": self.bio,
-            "profile_pic": self.profile_pic
+            "profile_pic": self.profile_pic,
         }
 
     def serialize_info(self):
@@ -68,7 +70,7 @@ class User(db.Model):
             "title": self.title,
             "bio": self.bio,
             "profile_pic": self.profile_pic,
-            "rutinas": rutinas
+            "rutinas": rutinas,
         }
 
 
@@ -83,10 +85,14 @@ class Rutina(db.Model):
     name = db.Column(db.String)
     description = db.Column(db.String)
     color = db.Column(db.String(10))
+    order = db.Column(db.Integer)  # order in wich will displayed on the fornt end
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref="rutinas")
 
-    __table_args__ = (db.UniqueConstraint("user_id", "name", name="user_rutina_uc"),)
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "name", name="user_rutina_uc"),
+        db.UniqueConstraint("user_id", "order", name="user_order_uc"),
+    )
 
     def __repr__(self):
         return f"<Rutina {self.id}>"
@@ -117,7 +123,8 @@ class Rutina(db.Model):
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            'color':self.color,
+            "color": self.color,
+            "order": self.order,
             "steps": pasos,
         }
 
@@ -249,5 +256,6 @@ class Event(db.Model):
             "scheduled_time": str(self.scheduled_time),
             "habit_id": self.step.rutina_id,
             "habit_name": self.step.rutina.name,
-            "habit_color":self.step.rutina.color
+            "habit_color": self.step.rutina.color,
+            "habit_order": self.step.rutina.order
         }

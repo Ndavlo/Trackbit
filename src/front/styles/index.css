@@ -160,3 +160,54 @@ nav {
 .done {
     background-color: green !important;
 }
+.tb-habits-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.tb-habit-header {
+    background-color: gray;
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+    border-radius: 1em;
+}
+.tb-habit-header div {
+    display: flex;
+}
+
+.tb-habit-info {
+    overflow: hidden;
+}
+
+.tb-menu{
+    position: relative;
+}
+.tb-menu nav{
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    padding: 1em;
+    right: 0;
+    border-radius: 0.5em;
+    width: max-content;
+}
+.tb-menu button{
+    background-color: transparent !important;
+    border: none;
+    align-self: flex-start;
+    color: black;
+}
+.tb-habit-color {
+    background-color: black;
+    width: 0.7em;
+    height: initial !important;
+    aspect-ratio: 1;
+}
+
+.tb-habit-info{
+    background-color: white;
+    border-radius: 1em;
+}
+

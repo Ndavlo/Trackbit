@@ -1,11 +1,7 @@
-import { array } from "prop-types";
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import stl from "../../styles/dashboard.module.css";
-import stl2 from '../../styles/newhabitpanel.module.css'
-import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { HabitRegisterPanel } from "../component/HabitRegiterPanel";
+
 
 
 let year = 2023;
@@ -63,6 +59,7 @@ function Day({ date, data }) {
             a.push({
                 habitId: e.habit_id,
                 habitName: e.habit_name,
+                habitOrder : e.habit_order,
                 events: [e]
             })
         }
@@ -82,18 +79,18 @@ function Day({ date, data }) {
             <span className="close-x" onClick={expanded ? (e) => {
                 setExpanded(!expanded)
             } : null}>X</span>
-            {bars.map((e, i) => {
-                return (<>
-                    <span>{e.habitName}</span>
+            {bars.sort((a,b)=>(a.habitId>b.habitId)?1:-1).map((e, i) => {
+                return (
                     <div className='h-bar' key={i}>
-                        {e.events.map((ele) => {
-                            return (<div style={(ele.done)?{backgroundColor : `#${ele.habit_color}`}:{}}
+                    <span>{e.habitName}</span>
+                        {e.events.sort((a,b)=>(a.id>b.id)?1:-1).map((ele, ind) => {
+                            return (<div key={ind}style={(ele.done)?{backgroundColor : ele.habit_color}:{}}
                                 onClick={
                                     expanded ? (e) => { actions.setTaskDone(ele.id, !ele.done) } : null
                                 }></div>)
                         })}
                     </div>
-                </>)
+                )
             })}
 
         </div>
