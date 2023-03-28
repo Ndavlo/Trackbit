@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { HabitRegisterPanel } from "../component/HabitRegiterPanel";
 import { ActivityGraph } from "../component/ActivityGraph";
-import { ActivityRegisterPanel } from "../component/activityRegisterPanel";
 import { HabitsPanel } from "../component/habitsPanel";
 
 export function Dashboard() {

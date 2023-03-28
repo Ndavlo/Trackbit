@@ -442,7 +442,7 @@ def get_events():
     user_id = get_jwt_identity()
     beginning_date = date.fromisoformat(request.json.get("beginning_date"))
     ending_date = date.fromisoformat(request.json.get("ending_date"))
-    dates = db.session.query(Event.scheduled_date).filter_by(user_id = user_id).group_by(Event.scheduled_date).all()
+    dates = db.session.query(Event.scheduled_date).filter_by(user_id = user_id).group_by(Event.scheduled_date).order_by(Event.scheduled_date).all()
     date_collection = [
         (
             {
