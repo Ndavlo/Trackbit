@@ -20,6 +20,7 @@ export function DeleteHabitConfirmationPanel({ closeHandler, habitName, habitId 
                 <button onClick={() => closeHandler()}>x</button>
                 <span> Realmente quieres borrar el habito {habitName}</span>
                 <button onClick={() => {
+                    console.log(habitId)
                     actions.deleteHabit(habitId)
                     closeHandler()}}>Si</button>
                 <button onClick={() => closeHandler()}>No</button>

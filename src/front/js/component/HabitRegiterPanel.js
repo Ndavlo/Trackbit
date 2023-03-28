@@ -57,7 +57,7 @@ export function HabitRegisterPanel({ closeHandler }) {
           <button className="btn" onClick={() => { 
             actions.addHabit(name, description, store.newSteps)
             closeHandler()
-            }}>false
+            }}>
             Registrar Habito
           </button>
         </div>

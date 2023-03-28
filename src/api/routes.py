@@ -230,15 +230,13 @@ def eliminar_rutina(rutina_id):
         return jsonify({"msg": "No existe esa rutina"}), 404
 
     #hay que cambiar esto para que se borre en cascada aprovechando la BD
-    steps = Paso.query.filter_by(rutina_id=rutina.id)
+    steps = Paso.query.filter_by(rutina_id=rutina.id).all()
 
     for step in steps:
-        Event.query.filter_by(step_source = step.id).delete()
-        db.session.commit()
+        print(step.id)
+        events = Event.query.filter_by(step_source = step.id).delete()
 
-        
-
-    db.session.delete(steps)
+    Paso.query.filter_by(rutina_id=rutina.id).delete()    
     db.session.delete(rutina)
     db.session.commit()
     return jsonify({"msg": "Rutina eliminada correctamente"})
@@ -416,46 +414,6 @@ def subscribe_newsletter():
     except IntegrityError:
         db.session.rollback()
         return jsonify({"msg": "You are already subscribed"}), 400
-
-
-@api.route("/report", methods=["POST"])
-@jwt_required()
-def report():
-    user_id = get_jwt_identity()
-    step_id = request.json.get("stepId")
-    time = request.json.get("time")
-    if time == "NOW":
-        time = datetime.now()
-    else:
-        time = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f%z")
-    reporte = Reportes(
-        user_id=user_id, step_id=step_id, time=time.time(), date=time.date()
-    )
-    db.session.add(reporte)
-    db.session.commit()
-    return (jsonify({"msg": "report registered"})), 200
-
-
-@api.route("/report")
-@jwt_required()
-def get_reports():
-    user_id = get_jwt_identity()
-
-    dates = db.session.query(Reportes.date).group_by(Reportes.date).all()
-    date_collection = []
-    for date in dates:
-        date_collection.append(
-            {
-                "date": date[0].isoformat(),
-                "reports": [
-                    reporte.serialize()
-                    for reporte in Reportes.query.filter_by(
-                        user_id=user_id, date=date[0]
-                    ).all()
-                ],
-            }
-        )
-    return jsonify(date_collection), 200
 
 
 @api.route("/steps")

@@ -44,25 +44,25 @@ const getState = ({ getStore, getActions, setStore }) => {
 					setStore({ userInfo: newUserInfo })
 					return "ok"
 				}
-				
-				
+
+
 			},
 
 			updateProfilePic: async (formData) => {
 				const response = await fetchProtected(`${apiUrl}/setprofilepic`, {
-				  method: 'POST',
-				  body: formData
+					method: 'POST',
+					body: formData
 				});
-			  
+
 				if (!response.ok) {
-				  console.error('No se pudo actualizar');
-				  return false;
+					console.error('No se pudo actualizar');
+					return false;
 				}
 				getActions().getUserInfo()
 				return "Imagen actualizada";
-			  },
-			
-			
+			},
+
+
 			login: async (email, password) => {
 
 				let response = await fetch(apiUrl + '/login', {
@@ -151,10 +151,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			getEvents: async () => {
-				const daysToAdd = 6-new Date().getUTCDay()
+				const daysToAdd = 6 - new Date().getDay()
 				let enddate = new Date()
-				enddate = enddate.setDate(enddate.getDate() + daysToAdd)
-				
+				enddate = new Date(enddate.setDate(enddate.getDate() + daysToAdd))
+				console.log(enddate.toISOString())
 				const resp = await fetchProtected(`${apiUrl}/events`,
 					{
 						method: 'POST',
@@ -163,7 +163,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({
 							beginning_date: "2022-12-31",
-							ending_date: enddate.toISOString()
+							ending_date: `${enddate.toISOString().slice(0,10)}`
 						})
 					}
 				)
