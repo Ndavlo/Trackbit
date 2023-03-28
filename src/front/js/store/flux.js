@@ -295,6 +295,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
+			showModal: (modal, data)=>{
+				setStore({modal :{
+					modal: modal,
+					data : data 
+				}})
+			},
+
+			closeModal: ()=>{
+				setStore({modal : false})
+			}
+
 
 
 

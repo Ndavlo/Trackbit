@@ -22,7 +22,7 @@ const Layout = () => {
 
     return (
         <div>
-            <ModalDisplay></ModalDisplay>
+            <ModalDisplay/>
             <BrowserRouter basename={basename}>
                     <Navbar />
                     <Routes>

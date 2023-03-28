@@ -23,10 +23,6 @@ export function Dashboard() {
     }
   }, [store.accessToken])
 
-
-  function showPanelHandler(panelName) {
-    setShowPanel(panelName);
-  }
   function closePanelHandler() {
     setShowPanel(false);
   }
@@ -49,8 +45,7 @@ export function Dashboard() {
             <div className={stl["dashboard-bar"]}>
               <button className="btn mb-3"
                 onClick={() => {
-                  []
-                  showPanelHandler("habit");
+                  actions.showModal('newHabit');
                 }}
               >
                 Crear nuevo habito

@@ -19,13 +19,6 @@ export function HabitRegisterPanel({ closeHandler }) {
 
 
   return (
-    <motion.div
-        initial={false}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className={stl.backdrop}
-
-      >
     <div className="stepContainer">
         <div className={`${stl.panel} ${stl2.panel}`}>
           <button className="btn" onClick={() => {
@@ -62,6 +55,5 @@ export function HabitRegisterPanel({ closeHandler }) {
           </button>
         </div>
     </div>
-      </motion.div>
   );
 }

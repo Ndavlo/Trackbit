@@ -6,55 +6,12 @@ import stl from '../../styles/dashboard.module.css'
 
 export function DeleteHabitConfirmationPanel({ closeHandler, habitName, habitId }) {
     const { store, actions } = useContext(Context);
-
-    return (
-        <motion.div
-            initial={false}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={stl.backdrop}
-        >
-            <div className="stepContainer">
-                <button onClick={() => closeHandler()}>x</button>
-                <span> Realmente quieres borrar el habito {habitName}</span>
-                <button onClick={() => {
-                    console.log(habitId)
-                    actions.deleteHabit(habitId)
-                    closeHandler()
-                }}>Si</button>
-                <button onClick={() => closeHandler()}>No</button>
-            </div>
-        </motion.div>
-    );
 }
 
 function HabitContaitner() {
     const { store, actions } = useContext(Context);
     const [active, setActive] = useState(-1)
     const [deleteConfirmation, setDeleteConfirmation] = useState(-1)
-
-
-
-
-    const variants = {
-        open: {
-            height: 'auto',
-            transition: {
-                type: "spring",
-                damping: 10,
-                stiffness: 100
-            },
-        },
-        closed: {
-            height: 0,
-            transition: {
-                type: "spring",
-                damping: 10,
-                stiffness: 100
-            },
-
-        }
-    }
 
     return (
         <div className="tb-habits-container">
