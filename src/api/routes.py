@@ -231,12 +231,11 @@ def eliminar_rutina(rutina_id):
 
     #hay que cambiar esto para que se borre en cascada aprovechando la BD
     steps = Paso.query.filter_by(rutina_id=rutina.id).all()
-
+    
     for step in steps:
-        print(step.id)
-        events = Event.query.filter_by(step_source = step.id).delete()
+        Event.query.filter_by(step_source = step.id).delete()        
 
-    Paso.query.filter_by(rutina_id=rutina.id).delete()    
+    Paso.query.filter_by(rutina_id=rutina.id).delete()
     db.session.delete(rutina)
     db.session.commit()
     return jsonify({"msg": "Rutina eliminada correctamente"})
@@ -290,13 +289,8 @@ def get_user_info():
     print(user.__repr__)
     response_data = user.serialize_info()
     print(response_data)
-    profile_pic = user.profile_pic
-    
-    if profile_pic is None:
-        response_data["profile_pic"] = 'https://firebasestorage.googleapis.com/v0/b/trackbit-4cb19.appspot.com/o/istockphoto-1209654046-612x612.jpg?alt=media&token=10f3621d-7295-4374-8d7e-53c72f100ccd'
-        return jsonify(response_data)
-
     bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
+    profile_pic = user.profile_pic
     resource = bucket.blob(profile_pic)
     profile_pic_url = resource.generate_signed_url(version="v4", expiration=timedelta(minutes=10), method="GET")
     response_data["profile_pic"] = profile_pic_url
@@ -416,6 +410,23 @@ def subscribe_newsletter():
         return jsonify({"msg": "You are already subscribed"}), 400
 
 
+@api.route("/report", methods=["POST"])
+@jwt_required()
+def report():
+    user_id = get_jwt_identity()
+    step_id = request.json.get("stepId")
+    time = request.json.get("time")
+    if time == "NOW":
+        time = datetime.now()
+    else:
+        time = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f%z")
+    reporte = Reportes(
+        user_id=user_id, step_id=step_id, time=time.time(), date=time.date()
+    )
+    db.session.add(reporte)
+    db.session.commit()
+    return (jsonify({"msg": "report registered"})), 200
+
 @api.route("/steps")
 @jwt_required()
 def get_steps():
@@ -431,7 +442,7 @@ def get_events():
     user_id = get_jwt_identity()
     beginning_date = date.fromisoformat(request.json.get("beginning_date"))
     ending_date = date.fromisoformat(request.json.get("ending_date"))
-    dates = db.session.query(Event.scheduled_date).group_by(Event.scheduled_date).order_by(Event.scheduled_date).all()
+    dates = db.session.query(Event.scheduled_date).filter_by(user_id = user_id).group_by(Event.scheduled_date).all()
     date_collection = [
         (
             {

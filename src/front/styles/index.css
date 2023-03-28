@@ -161,7 +161,6 @@ nav {
     background-color: green !important;
 }
 .tb-habits-container {
-    
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -213,5 +212,6 @@ nav {
 .tb-habit-info{
     background-color: white;
     border-radius: 1em;
+    padding: 1em;
 }
 

@@ -7,8 +7,6 @@ import stl from '../../styles/dashboard.module.css'
 export function DeleteHabitConfirmationPanel({ closeHandler, habitName, habitId }) {
     const { store, actions } = useContext(Context);
 
-    console.log(habitId)
-
     return (
         <motion.div
             initial={false}
@@ -22,7 +20,8 @@ export function DeleteHabitConfirmationPanel({ closeHandler, habitName, habitId 
                 <button onClick={() => {
                     console.log(habitId)
                     actions.deleteHabit(habitId)
-                    closeHandler()}}>Si</button>
+                    closeHandler()
+                }}>Si</button>
                 <button onClick={() => closeHandler()}>No</button>
             </div>
         </motion.div>
@@ -35,7 +34,7 @@ function HabitContaitner() {
     const [deleteConfirmation, setDeleteConfirmation] = useState(-1)
 
 
-    
+
 
     const variants = {
         open: {
@@ -58,9 +57,10 @@ function HabitContaitner() {
     }
 
     return (
-        <div>
+        <div className="tb-habits-container">
             {store.habits.map((e, i) => {
-                return (<div key={i}>
+                return (
+                <div key={i}>
                     <AnimatePresence>
                         {(deleteConfirmation == i) ?
                             <DeleteHabitConfirmationPanel closeHandler={() => setDeleteConfirmation(-1)} habitName={e.name} habitId={e.id} />
@@ -68,7 +68,6 @@ function HabitContaitner() {
                             ''
                         }
                     </AnimatePresence>
-
                     <div className="tb-habit-header"
                         onClick={(e) => setActive(active == i ? -1 : i)}>
                         <h2>{e.name}</h2>
@@ -88,22 +87,29 @@ function HabitContaitner() {
                             }]} />
                         </div>
                     </div>
+                    <AnimatePresence>
+                        {active == i ?
+                            <motion.div
+                                initial={{ height: 0 }}
+                                animate={{ height: 'auto' }}
+                                exit={{ height: 0 }}
+                                style={{ overflow: 'hidden' }}
+                            >
+                                <div className="tb-habit-info">
+                                    <h3>Descripcion:</h3>
+                                    <p>{e.description}</p>
+                                    <h3>Pasos:</h3>
+                                    {e.steps.map((e) => (
+                                        <div>
+                                            <h4>{e.name}</h4>
 
-                    <motion.div
-                        animate={active == i ? "open" : "closed"}
-                        variants={variants}
-                        className="tb-habit-info">
-                        <h3>Descripcion:</h3>
-                        <p>{e.Descripcion}</p>
-                        <h3>Pasos:</h3>
-                        {e.steps.map((e) => (
-                            <div>
-                                <h4>{e.name}</h4>
+                                        </div>
+                                    )
+                                    )}
+                                </div>
+                            </motion.div> : null}
 
-                            </div>
-                        )
-                        )}
-                    </motion.div>
+                    </AnimatePresence>
                 </div>)
             }
             )
@@ -132,7 +138,7 @@ export function HabitsPanel() {
     }, [store.accessToken])
 
     return (
-        <div className="tb-habits-container">
+        <div>
             <h1>Tus Habitos:</h1>
 
             <HabitContaitner />
