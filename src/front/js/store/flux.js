@@ -151,6 +151,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			getEvents: async () => {
+				console.log(Date.today().getUTCDay())
 				const resp = await fetchProtected(`${apiUrl}/events`,
 					{
 						method: 'POST',
@@ -159,7 +160,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify({
 							beginning_date: "2022-12-31",
-							ending_date: "2023-12-31"
+							ending_date: Date.today()
 						})
 					}
 				)
