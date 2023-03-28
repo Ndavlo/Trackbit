@@ -77,7 +77,7 @@ export const Userprofile = () => {
                                 <input type="file"
                                   id="avatar" name='file'
                                   accept="image/png, image/jpeg, image/jpg" onChange={(e)=> setProfilePic(e.target.files[0])}/>
-                                  <button className="btn" onClick={(e) => actualizaImagen(e)}>Actualiza foto de perfil</button>
+                                  <button className="btn" data-bs-dismiss="modal" aria-label="Close" onClick={(e) => {actualizaImagen(e)}}>Actualiza foto de perfil</button>
                                 </div>
                                   <label htmlFor="name" className="form-label text-dark">Titulo</label>
                                   <input type="text" className="form-control text-dark" maxLength="80" value={title} id="inputText" aria-describedby="name" onChange={(e) => setTitle(e.target.value)} />
@@ -96,7 +96,7 @@ export const Userprofile = () => {
                                 />
                               </div>
                               <div className="modal-footer">
-                                <button type="submit" className="btn" onClick={(e) => submitUpdate(e)}>Actualizar</button>
+                                <button type="submit" className="btn" data-bs-dismiss="modal" aria-label="Close" onClick={(e) => submitUpdate(e)}>Actualizar</button>
                               </div>
                             </form>
                           </div>

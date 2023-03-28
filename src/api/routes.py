@@ -292,9 +292,13 @@ def get_user_info():
     print(user.__repr__)
     response_data = user.serialize_info()
     print(response_data)
-    bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
     profile_pic = user.profile_pic
-    print(profile_pic)
+    
+    if profile_pic is None:
+        response_data["profile_pic"] = 'https://firebasestorage.googleapis.com/v0/b/trackbit-4cb19.appspot.com/o/istockphoto-1209654046-612x612.jpg?alt=media&token=10f3621d-7295-4374-8d7e-53c72f100ccd'
+        return jsonify(response_data)
+
+    bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
     resource = bucket.blob(profile_pic)
     profile_pic_url = resource.generate_signed_url(version="v4", expiration=timedelta(minutes=10), method="GET")
     response_data["profile_pic"] = profile_pic_url
