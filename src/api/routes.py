@@ -37,13 +37,13 @@ app = Flask(__name__)
 crypto = Bcrypt(app)
 
 
-def calculate_event_for_step (step_id, user_id):
-    #delete previusly created events for given step id
-    events = Event.query.filter_by(step_source = step_id).delete()
+def calculate_event_for_step(step_id, user_id):
+    # delete previusly created events for given step id
+    events = Event.query.filter_by(step_source=step_id).delete()
     db.session.commit()
-    
+
     step = Paso.query.get(step_id)
-    
+
     print(step.nombre)
     start_date = step.inicio
     match step.periodo[0]:
@@ -158,16 +158,18 @@ def mostrar_rutinas():
     response_body = list(map(lambda r: r.serialize_with_steps(), rutinas))
     return jsonify(response_body), 200
 
-@api.route('/habit', methods= ['PATCH'])
+
+@api.route("/habit", methods=["PATCH"])
 @jwt_required()
 def patch_habit():
     user_id = get_jwt_identity()
-    habit_id = request.json.get('habit_id')
-    habit = Rutina.query.filter_by(user_id=user_id, id = habit_id).first()
+    habit_id = request.json.get("habit_id")
+    habit = Rutina.query.filter_by(user_id=user_id, id=habit_id).first()
     body = request.get_json()
     msg = ""
     for key, value in body.items():
-        if key == 'habit_id': continue
+        if key == "habit_id":
+            continue
         try:
             habit[key] = value
             print(f'Habit "{key}" field updated to : {value}')
@@ -177,11 +179,7 @@ def patch_habit():
     db.session.commit()
     return jsonify({"msg": "ok"}), 200
 
-    
-
-
-
-    return jsonify({'msg':"habit updated"}), 200
+    return jsonify({"msg": "habit updated"}), 200
 
 
 @api.route("/rutina", methods=["POST"])
@@ -199,24 +197,22 @@ def crear_rutina():
         # TODO check if there is a rutine with the same name, handle exception
         return jsonify({"msg": "There is a rutine with the same name"}), 409
 
-    
     for step in steps:
         step = Paso(
-                rutina_id=nueva_rutina.id,
-                nombre=step["name"],
-                descripcion=step["description"],
-                contenido=step["content"],
-                inicio=step["startDate"],
-                terminacion=step["endDate"],
-                periodo=step["interval"],
-                repeticion=step["repetition"],
-                user_id=user_id,
-                time=step["time"],
-            )
-        db.session.add(step)  
+            rutina_id=nueva_rutina.id,
+            nombre=step["name"],
+            descripcion=step["description"],
+            contenido=step["content"],
+            inicio=step["startDate"],
+            terminacion=step["endDate"],
+            periodo=step["interval"],
+            repeticion=step["repetition"],
+            user_id=user_id,
+            time=step["time"],
+        )
+        db.session.add(step)
         db.session.commit()
-        calculate_event_for_step(step_id=step.id, user_id=user_id)    
-        
+        calculate_event_for_step(step_id=step.id, user_id=user_id)
 
     return jsonify({"msg": "Rutina creada!", "id": nueva_rutina.id})
 
@@ -229,11 +225,11 @@ def eliminar_rutina(rutina_id):
     if not rutina:
         return jsonify({"msg": "No existe esa rutina"}), 404
 
-    #hay que cambiar esto para que se borre en cascada aprovechando la BD
+    # hay que cambiar esto para que se borre en cascada aprovechando la BD
     steps = Paso.query.filter_by(rutina_id=rutina.id).all()
-    
+
     for step in steps:
-        Event.query.filter_by(step_source = step.id).delete()        
+        Event.query.filter_by(step_source=step.id).delete()
 
     Paso.query.filter_by(rutina_id=rutina.id).delete()
     db.session.delete(rutina)
@@ -292,9 +288,12 @@ def get_user_info():
     bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
     profile_pic = user.profile_pic
     resource = bucket.blob(profile_pic)
-    profile_pic_url = resource.generate_signed_url(version="v4", expiration=timedelta(minutes=10), method="GET")
+    profile_pic_url = resource.generate_signed_url(
+        version="v4", expiration=timedelta(minutes=10), method="GET"
+    )
     response_data["profile_pic"] = profile_pic_url
     return jsonify(response_data)
+
 
 #### Ruta para cambiear la informacion del usuario
 @api.route("/user", methods=["PATCH"])
@@ -320,24 +319,24 @@ def patch_user_info():
     db.session.commit()
     return jsonify({"msg": "ok"}), 200
 
-@api.route('/setprofilepic', methods=['POST'])
+
+@api.route("/setprofilepic", methods=["POST"])
 @jwt_required()
 def upload_pic():
     user_id = get_jwt_identity()
-    file=request.files['file']
-    extension=file.filename.split('.')[1]
-    temp=tempfile.NamedTemporaryFile(delete=False)
+    file = request.files["file"]
+    extension = file.filename.split(".")[1]
+    temp = tempfile.NamedTemporaryFile(delete=False)
     file.save(temp)
-    bucket=storage.bucket(name="trackbit-4cb19.appspot.com")
-    filename="profile_pics/"+str(user_id)+"."+extension
+    bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
+    filename = "profile_pics/" + str(user_id) + "." + extension
     resource = bucket.blob(filename)
-    resource.upload_from_filename(temp.name, content_type="image/"+extension)
+    resource.upload_from_filename(temp.name, content_type="image/" + extension)
     user = User.query.get(user_id)
-    user.profile_pic=filename
+    user.profile_pic = filename
     db.session.add(user)
     db.session.commit()
     return jsonify({"msg": "se subio la imagen"})
-
 
 
 @api.route("/refresh")
@@ -427,6 +426,7 @@ def report():
     db.session.commit()
     return (jsonify({"msg": "report registered"})), 200
 
+
 @api.route("/steps")
 @jwt_required()
 def get_steps():
@@ -442,7 +442,12 @@ def get_events():
     user_id = get_jwt_identity()
     beginning_date = date.fromisoformat(request.json.get("beginning_date"))
     ending_date = date.fromisoformat(request.json.get("ending_date"))
-    dates = db.session.query(Event.scheduled_date).filter_by(user_id = user_id).group_by(Event.scheduled_date).order_by(Event.scheduled_date).all()
+    dates = (
+        db.session.query(Event.scheduled_date)
+        .filter(Event.user_id == user_id,Event.scheduled_date.between(beginning_date, ending_date))
+       .group_by(Event.scheduled_date).order_by(Event.scheduled_date).all()
+    )
+
     date_collection = [
         (
             {
@@ -461,12 +466,12 @@ def get_events():
     return jsonify(date_collection), 200
 
 
-@api.route('/task', methods=['PATCH'])
+@api.route("/task", methods=["PATCH"])
 @jwt_required()
 def set_task_done():
-    task_id = request.json.get('task_id')
+    task_id = request.json.get("task_id")
     task = Event.query.get(task_id)
-    task.done = request.json.get('value')
+    task.done = request.json.get("value")
     db.session.add(task)
     db.session.commit()
-    return jsonify({'msg': 'task updated'}), 200
+    return jsonify({"msg": "task updated"}), 200

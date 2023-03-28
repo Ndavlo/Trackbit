@@ -26,7 +26,7 @@ function HabitContaitner() {
                         }
                     </AnimatePresence>
                     <div className="tb-habit-header"
-                        onClick={(e) => setActive(active == i ? -1 : i)}>
+                        onClick={() => setActive(active == i ? -1 : i)}>
                         <h2>{e.name}</h2>
                         <div>
                             <div className="tb-habit-color"
@@ -40,7 +40,7 @@ function HabitContaitner() {
                                 style={{ backgroundColor: `${e.color}` }}></div>
                             <TBMenu menuTitle='...' options={[{
                                 option: 'Borrar Habito',
-                                action: () => { setDeleteConfirmation(i) }
+                                action: () => { actions.showModal('deleteHabit', {id: e.id, name: e.name})  }
                             }]} />
                         </div>
                     </div>

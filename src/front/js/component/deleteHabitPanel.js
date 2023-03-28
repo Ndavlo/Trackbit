@@ -1,28 +1,23 @@
 import React, {useContext} from "react";
 import { Context } from "../store/appContext";
+import { motion, AnimatePresence } from "framer-motion";
 
-export function DeleteHabitModal() {
+export function DeleteHabitPanel({closeHandler, data}) {
     const { store, actions } = useContext(Context);
     
 
     return (
-        <motion.div
-            initial={false}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={stl.backdrop}
-        >
             <div className="stepContainer">
                 <button onClick={() => closeHandler()}>x</button>
-                <span> Realmente quieres borrar el habito {habitName}</span>
+                <span> Realmente quieres borrar el habito {data.name}</span>
                 <button onClick={() => {
-                    console.log(habitId)
-                    actions.deleteHabit(habitId)
+                    console.log(data)
+                    actions.deleteHabit(data.id)
                     closeHandler()
                 }}>Si</button>
                 <button onClick={() => closeHandler()}>No</button>
             </div>
-        </motion.div>
+        
     )
 
 }

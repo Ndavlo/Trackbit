@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
 import { HabitRegisterPanel } from "./HabitRegiterPanel";
+import { DeleteHabitPanel } from "./deleteHabitPanel";
+
 
 
 export function ModalDisplay() {
@@ -9,7 +11,7 @@ export function ModalDisplay() {
 
     const modals = {
         newHabit: <HabitRegisterPanel data={store.modal?.data} closeHandler={closeHandler} />,
-        deleteHabit: ';'
+        deleteHabit: <DeleteHabitPanel data={store.modal?.data} closeHandler={closeHandler}/>
     }
 
     function closeHandler() {
