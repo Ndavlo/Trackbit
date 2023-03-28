@@ -73,8 +73,8 @@ function HabitContaitner() {
                         <h2>{e.name}</h2>
                         <div>
                             <div className="tb-habit-color"
-                                onClick={(e) => {
-                                    e.stopPropagation()
+                                onClick={(ele) => {
+                                    ele.stopPropagation()
                                     actions.setHAbitColor(
                                         e.id,
                                         '#' + Math.floor(Math.random() * 256 * 256 * 256).toString(16))
@@ -84,10 +84,6 @@ function HabitContaitner() {
                             <TBMenu menuTitle='...' options={[{
                                 option: 'Borrar Habito',
                                 action: () => { setDeleteConfirmation(i) }
-                            },
-                            {
-                                option: 'Modificar Habito',
-                                action: () => { }
                             }]} />
                         </div>
                     </div>

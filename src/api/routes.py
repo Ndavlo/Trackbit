@@ -228,6 +228,17 @@ def eliminar_rutina(rutina_id):
     rutina = Rutina.query.filter_by(id=rutina_id, user_id=user_id).first()
     if not rutina:
         return jsonify({"msg": "No existe esa rutina"}), 404
+
+    #hay que cambiar esto para que se borre en cascada aprovechando la BD
+    steps = Paso.query.filter_by(rutina_id=rutina.id)
+    
+    for step in steps:
+        Event.query.filter_by(step_source = step.id).delete()
+        db.session.commit()
+
+        
+
+    db.session.delete(steps)
     db.session.delete(rutina)
     db.session.commit()
     return jsonify({"msg": "Rutina eliminada correctamente"})

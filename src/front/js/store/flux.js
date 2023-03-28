@@ -57,9 +57,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (!response.ok) {
 				  console.error('No se pudo actualizar');
 				  return false;
-				} else {
-				  return "Imagen actualizada";
 				}
+				getActions().getUserInfo()
+				return "Imagen actualizada";
 			  },
 			
 			
@@ -200,6 +200,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					method: 'DELETE'
 				})
 				getActions().getHabits()
+				getActions().getEvents()
 			},
 
 			getHabits: async () => {
@@ -271,6 +272,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			setHAbitColor: async (habitId, color) => {
+				console.log(habitId)
 				const response = await fetchProtected(`${apiUrl}/habit`, {
 					method: 'PATCH',
 					headers: {
@@ -284,6 +286,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					)
 
 				})
+				getActions().getHabits()
+				getActions().getEvents()
 
 			},
 

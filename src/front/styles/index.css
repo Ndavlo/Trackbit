@@ -161,9 +161,13 @@ nav {
     background-color: green !important;
 }
 .tb-habits-container {
+    
     display: flex;
     flex-direction: column;
     gap: 1em;
+}
+.tb-habits-container>h1{
+    color: white;
 }
 .tb-habit-header {
     background-color: gray;
