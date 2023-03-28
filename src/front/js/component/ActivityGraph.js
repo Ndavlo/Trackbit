@@ -34,7 +34,7 @@ function WeekNumbers() {
             {arr.map((e, i) => {
                 return (
                     <div key={i} className={stl.cell}>
-                        <span>{thisWeekNumber - i}</span>
+                        <span>{(thisWeekNumber - i < 1)?thisWeekNumber + 53 - i:thisWeekNumber - i}</span>
                     </div>
                 );
             })}
