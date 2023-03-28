@@ -231,7 +231,7 @@ def eliminar_rutina(rutina_id):
 
     #hay que cambiar esto para que se borre en cascada aprovechando la BD
     steps = Paso.query.filter_by(rutina_id=rutina.id)
-    
+
     for step in steps:
         Event.query.filter_by(step_source = step.id).delete()
         db.session.commit()
@@ -294,6 +294,7 @@ def get_user_info():
     print(response_data)
     bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
     profile_pic = user.profile_pic
+    print(profile_pic)
     resource = bucket.blob(profile_pic)
     profile_pic_url = resource.generate_signed_url(version="v4", expiration=timedelta(minutes=10), method="GET")
     response_data["profile_pic"] = profile_pic_url
