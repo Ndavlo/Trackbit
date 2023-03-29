@@ -151,7 +151,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			getEvents: async () => {
-				const daysToAdd = 6 - new Date().getDay()
+				const daysToAdd = 7 - new Date().getDay()
 				let enddate = new Date()
 				enddate.setDate(enddate.getDate() + daysToAdd)
 				const startDate = new Date(enddate.getDate()-371)
