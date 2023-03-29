@@ -38,7 +38,7 @@ export function StepPanel({ index }) {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, height: 0 }}
+        initial={false}
         animate={{ opacity: 1, height: "auto" }}
         exit={{ opacity: 0, height: 0 }}
         className={stl2.paso}>
@@ -60,7 +60,7 @@ export function StepPanel({ index }) {
 
         <div>
           <h2>Recurrencia</h2>
-          <label>Se repite:</label>
+          <label>Se repite cada:</label>
           <input className="numberInput" type="number" value={step?.repetition} onChange={(e) => {
             actions.setNewStepProperty(index, 'repetition', e.target.value)
           }} />
@@ -72,15 +72,13 @@ export function StepPanel({ index }) {
               actions.setNewStepProperty(index, 'interval', e.target.value)
             }
           }}>
-            <option value="D">Dia</option>
-            <option value='W'>Semana</option>
-            <option value="M">Mes</option>
-            <option value="Y">Ano</option>
+            <option value="D">Dias</option>
+            <option value='W'>Semanas</option>
+            <option value="M">Meses</option>
+            <option value="Y">Anos</option>
           </select>
           {(store.newSteps[index]?.interval.length > 1) ? <WeekDays /> : ''}
         </div>
-
-
 
         <label>Empieza en:</label>
         <input type="date" value={step?.startDate} onChange={(e) => {

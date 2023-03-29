@@ -28,11 +28,7 @@ export function ModalDisplay() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{
-                            type: "spring",
-                            damping: 10,
-                            stiffness: 100
-                        }}
+                        
                         className='tb-backdrop'
                     >
 

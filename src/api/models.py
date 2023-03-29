@@ -118,7 +118,7 @@ class Rutina(db.Model):
         return {"name": self.name}
 
     def serialize_with_steps(self):
-        pasos = list(map(lambda r: r.serialize_step(), self.paso))
+        pasos = [r.serialize_step() for r in self.paso]
         return {
             "id": self.id,
             "name": self.name,
@@ -154,9 +154,15 @@ class Paso(db.Model):
         return f"<Paso {self.nombre}>"
 
     def serialize_step(self):
+        total_events = len(list(self.events))
+        done_count = 0
+        for event in self.events:
+            done_count += 1 if event.done else 0
         return {
             "id": self.id,
             "name": self.nombre,
+            'total_events': total_events,
+            'done_count': done_count
         }
 
     def serialize(self):
@@ -177,38 +183,6 @@ class Paso(db.Model):
             # "rutina": self.rutina.serialize(),
             # "user": self.user.serialize()
         }
-
-
-class Reportes(db.Model):
-    __tablename__ = "reportes"
-    id = db.Column(db.Integer, primary_key=True)
-    user = db.relationship("User")
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    paso = db.relationship("Paso")
-    step_id = db.Column(db.Integer, db.ForeignKey("paso.id"))
-    date = db.Column(db.Date)
-    time = db.Column(db.Time)
-    __table_args__ = (db.UniqueConstraint("step_id", "date", name="step_id_date_uc"),)
-
-    # def get_month(self):
-    #     return self.report_time.month
-
-    # def get_year(self):
-    #     return self.report_time.get_year
-
-    # def get_day(self):
-
-    def __repr__(self):
-        return f"<Reportes {self.id}>"
-
-    def serialize(self):
-        return {
-            "report_id": self.id,
-            "step_id": self.step_id,
-            "date": self.date.isoformat(),
-            "time": self.time.isoformat(),
-        }
-
 
 class Habit(db.Model):
     __tablename__ = "habitos"
@@ -240,12 +214,13 @@ class Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User")
     step_source = db.Column(db.Integer, db.ForeignKey("paso.id"))
-    step = db.relationship("Paso")
+    step = db.relationship("Paso", backref="events", lazy=True)
     done = db.Column(
         db.Boolean,
     )
     scheduled_date = db.Column(db.Date)
     scheduled_time = db.Column(db.Time)
+
 
     def serialize(self):
         return {

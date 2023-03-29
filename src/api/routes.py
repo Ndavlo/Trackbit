@@ -12,7 +12,6 @@ from api.models import (
     Paso,
     BlockedTokens,
     Newsletter_emails,
-    Reportes,
     Event,
 )
 from api.utils import generate_sitemap, APIException
@@ -31,6 +30,7 @@ from firebase_admin import storage
 from sqlalchemy import func
 from firebase_admin import storage
 import tempfile
+import calendar
 
 api = Blueprint("api", __name__)
 app = Flask(__name__)
@@ -46,6 +46,7 @@ def calculate_event_for_step(step_id, user_id):
 
     print(step.nombre)
     start_date = step.inicio
+
     match step.periodo[0]:
         case "D":
             # print('It is Day')
@@ -101,7 +102,28 @@ def calculate_event_for_step(step_id, user_id):
             db.session.commit()
 
         case "M":
+            day = start_date.day
             print("It is Month")
+            while start_date <= step.terminacion:
+                db.session.add(
+                    Event(
+                        user_id=user_id,
+                        step_source=step.id,
+                        scheduled_date=start_date,
+                        scheduled_time=step.time,
+                        done=False,
+                    )
+                )
+                new_month = start_date.month + int(step.repeticion)
+                new_year = start_date.year + (new_month - 1) // 12
+                new_month = (new_month - 1) % 12 + 1
+                num_days_in_month = calendar.monthrange(new_year, new_month)[1]
+                new_day = min(day, num_days_in_month)
+                start_date = date(new_year, new_month, new_day)
+            db.session.commit()
+                    
+
+
 
         case "Y":
             print("It is Year")
@@ -154,8 +176,11 @@ def user_login():
 @jwt_required()
 def mostrar_rutinas():
     user = get_jwt_identity()
-    rutinas = Rutina.query.filter_by(user_id=user).all()
-    response_body = list(map(lambda r: r.serialize_with_steps(), rutinas))
+
+    rutinas = Rutina.query.filter_by(user_id=user).order_by(Rutina.order).all()
+
+    response_body = [ r.serialize_with_steps() for r in rutinas]
+
     return jsonify(response_body), 200
 
 
@@ -189,7 +214,9 @@ def crear_rutina():
     name = request.json.get("name")
     description = request.json.get("description")
     steps = request.json.get("steps")
-    nueva_rutina = Rutina(name=name, description=description, user_id=user_id)
+    order = request.json.get('order')
+    color = request.json.get('color')
+    nueva_rutina = Rutina(name=name, description=description, user_id=user_id, order = order, color = color)
     db.session.add(nueva_rutina)
     try:
         db.session.commit()
@@ -285,12 +312,15 @@ def get_user_info():
     print(user.__repr__)
     response_data = user.serialize_info()
     print(response_data)
-    bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
     profile_pic = user.profile_pic
+    
+    if profile_pic is None:
+        response_data["profile_pic"] = 'https://firebasestorage.googleapis.com/v0/b/trackbit-4cb19.appspot.com/o/istockphoto-1209654046-612x612.jpg?alt=media&token=10f3621d-7295-4374-8d7e-53c72f100ccd'
+        return jsonify(response_data)
+
+    bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
     resource = bucket.blob(profile_pic)
-    profile_pic_url = resource.generate_signed_url(
-        version="v4", expiration=timedelta(minutes=10), method="GET"
-    )
+    profile_pic_url = resource.generate_signed_url(version="v4", expiration=timedelta(minutes=10), method="GET")
     response_data["profile_pic"] = profile_pic_url
     return jsonify(response_data)
 

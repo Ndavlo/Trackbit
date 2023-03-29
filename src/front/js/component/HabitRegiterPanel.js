@@ -24,7 +24,7 @@ export function HabitRegisterPanel({ closeHandler }) {
           <button className="btn" onClick={() => {
             actions.clearNewsSteps()
             closeHandler()
-          }}><i class="bi bi-x-circle"></i></button>
+          }}><i className="bi bi-x-circle"></i></button>
           <div className="habito">
             <label>Nombre</label>
             <input type="text" onChange={(e) => setName(e.target.value)} />
@@ -48,7 +48,12 @@ export function HabitRegisterPanel({ closeHandler }) {
 
           </div>
           <button className="btn" onClick={() => { 
-            actions.addHabit(name, description, store.newSteps)
+            actions.addHabit(
+              name, 
+              description, 
+              store.habits.length, 
+              `#${Math.floor(Math.random() * 256 * 256 * 256).toString(16)}`, 
+              store.newSteps)
             closeHandler()
             }}>
             Registrar Habito

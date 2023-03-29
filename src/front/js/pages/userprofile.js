@@ -73,7 +73,7 @@ export const Userprofile = () => {
                             <form id="updateForm">
                               <div className="mb-3">
                                 <div className="picUpdate">
-                                <label for="avatar">Sube tu foto de perfil</label>
+                                <label htmlFor="avatar">Sube tu foto de perfil</label>
                                 <input type="file"
                                   id="avatar" name='file'
                                   accept="image/png, image/jpeg, image/jpg" onChange={(e)=> setProfilePic(e.target.files[0])}/>
