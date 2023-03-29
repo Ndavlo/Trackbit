@@ -1,9 +1,11 @@
 
 *fbk.json
+*firebase-key.json
 
 # ignore all files starting with .
 .*
 fbk.json
+firebase-key.json
 
 # track this file .gitignore (i.e. do NOT ignore it)
 !.gitignore
