@@ -59,7 +59,7 @@ function HabitContaitner() {
                                                 <div className="tb-step-bar">
                                                     {
                                                         Array.apply(null, Array(step.total_events)).map((el, iin) => {
-                                                            return (<div key={iin} style={iin > step.done_count ? {} : { backgroundColor: e.color }} />)
+                                                            return (<div key={iin} style={iin >= step.done_count ? {} : { backgroundColor: e.color }} />)
                                                         })
                                                     }
                                                 </div>
@@ -98,7 +98,7 @@ export function HabitsPanel() {
     }, [store.accessToken])
 
     return (
-        <div>
+        <div className="tb-hbt-section">
             <h1>Tus Habitos:</h1>
 
             <HabitContaitner />

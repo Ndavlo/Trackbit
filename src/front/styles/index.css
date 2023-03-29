@@ -277,3 +277,7 @@ nav {
     border-radius: 2px;
     border: 1px solid grey;
 }
+
+.tb-hbt-section>h1 {
+  color: white;
+}
