@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { HabitRegisterPanel } from "../component/HabitRegiterPanel";
 import { ActivityGraph } from "../component/ActivityGraph";
-import { ActivityRegisterPanel } from "../component/activityRegisterPanel";
 import { HabitsPanel } from "../component/habitsPanel";
 
 export function Dashboard() {
@@ -24,10 +23,6 @@ export function Dashboard() {
     }
   }, [store.accessToken])
 
-
-  function showPanelHandler(panelName) {
-    setShowPanel(panelName);
-  }
   function closePanelHandler() {
     setShowPanel(false);
   }
@@ -50,8 +45,7 @@ export function Dashboard() {
             <div className={stl["dashboard-bar"]}>
               <button className="btn mb-3"
                 onClick={() => {
-                  []
-                  showPanelHandler("habit");
+                  actions.showModal('newHabit');
                 }}
               >
                 Crear nuevo habito

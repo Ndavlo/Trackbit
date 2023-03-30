@@ -12,7 +12,6 @@ from api.models import (
     Paso,
     BlockedTokens,
     Newsletter_emails,
-    Reportes,
     Event,
 )
 from api.utils import generate_sitemap, APIException
@@ -31,21 +30,23 @@ from firebase_admin import storage
 from sqlalchemy import func
 from firebase_admin import storage
 import tempfile
+import calendar
 
 api = Blueprint("api", __name__)
 app = Flask(__name__)
 crypto = Bcrypt(app)
 
 
-def calculate_event_for_step (step_id, user_id):
-    #delete previusly created events for given step id
-    events = Event.query.filter_by(step_source = step_id).delete()
+def calculate_event_for_step(step_id, user_id):
+    # delete previusly created events for given step id
+    events = Event.query.filter_by(step_source=step_id).delete()
     db.session.commit()
-    
+
     step = Paso.query.get(step_id)
-    
+
     print(step.nombre)
     start_date = step.inicio
+
     match step.periodo[0]:
         case "D":
             # print('It is Day')
@@ -101,7 +102,28 @@ def calculate_event_for_step (step_id, user_id):
             db.session.commit()
 
         case "M":
+            day = start_date.day
             print("It is Month")
+            while start_date <= step.terminacion:
+                db.session.add(
+                    Event(
+                        user_id=user_id,
+                        step_source=step.id,
+                        scheduled_date=start_date,
+                        scheduled_time=step.time,
+                        done=False,
+                    )
+                )
+                new_month = start_date.month + int(step.repeticion)
+                new_year = start_date.year + (new_month - 1) // 12
+                new_month = (new_month - 1) % 12 + 1
+                num_days_in_month = calendar.monthrange(new_year, new_month)[1]
+                new_day = min(day, num_days_in_month)
+                start_date = date(new_year, new_month, new_day)
+            db.session.commit()
+                    
+
+
 
         case "Y":
             print("It is Year")
@@ -154,20 +176,25 @@ def user_login():
 @jwt_required()
 def mostrar_rutinas():
     user = get_jwt_identity()
-    rutinas = Rutina.query.filter_by(user_id=user).all()
-    response_body = list(map(lambda r: r.serialize_with_steps(), rutinas))
+
+    rutinas = Rutina.query.filter_by(user_id=user).order_by(Rutina.order).all()
+
+    response_body = [ r.serialize_with_steps() for r in rutinas]
+
     return jsonify(response_body), 200
 
-@api.route('/habit', methods= ['PATCH'])
+
+@api.route("/habit", methods=["PATCH"])
 @jwt_required()
 def patch_habit():
     user_id = get_jwt_identity()
-    habit_id = request.json.get('habit_id')
-    habit = Rutina.query.filter_by(user_id=user_id, id = habit_id).first()
+    habit_id = request.json.get("habit_id")
+    habit = Rutina.query.filter_by(user_id=user_id, id=habit_id).first()
     body = request.get_json()
     msg = ""
     for key, value in body.items():
-        if key == 'habit_id': continue
+        if key == "habit_id":
+            continue
         try:
             habit[key] = value
             print(f'Habit "{key}" field updated to : {value}')
@@ -177,11 +204,7 @@ def patch_habit():
     db.session.commit()
     return jsonify({"msg": "ok"}), 200
 
-    
-
-
-
-    return jsonify({'msg':"habit updated"}), 200
+    return jsonify({"msg": "habit updated"}), 200
 
 
 @api.route("/rutina", methods=["POST"])
@@ -191,7 +214,9 @@ def crear_rutina():
     name = request.json.get("name")
     description = request.json.get("description")
     steps = request.json.get("steps")
-    nueva_rutina = Rutina(name=name, description=description, user_id=user_id)
+    order = request.json.get('order')
+    color = request.json.get('color')
+    nueva_rutina = Rutina(name=name, description=description, user_id=user_id, order = order, color = color)
     db.session.add(nueva_rutina)
     try:
         db.session.commit()
@@ -199,24 +224,22 @@ def crear_rutina():
         # TODO check if there is a rutine with the same name, handle exception
         return jsonify({"msg": "There is a rutine with the same name"}), 409
 
-    
     for step in steps:
         step = Paso(
-                rutina_id=nueva_rutina.id,
-                nombre=step["name"],
-                descripcion=step["description"],
-                contenido=step["content"],
-                inicio=step["startDate"],
-                terminacion=step["endDate"],
-                periodo=step["interval"],
-                repeticion=step["repetition"],
-                user_id=user_id,
-                time=step["time"],
-            )
-        db.session.add(step)  
+            rutina_id=nueva_rutina.id,
+            nombre=step["name"],
+            descripcion=step["description"],
+            contenido=step["content"],
+            inicio=step["startDate"],
+            terminacion=step["endDate"],
+            periodo=step["interval"],
+            repeticion=step["repetition"],
+            user_id=user_id,
+            time=step["time"],
+        )
+        db.session.add(step)
         db.session.commit()
-        calculate_event_for_step(step_id=step.id, user_id=user_id)    
-        
+        calculate_event_for_step(step_id=step.id, user_id=user_id)
 
     return jsonify({"msg": "Rutina creada!", "id": nueva_rutina.id})
 
@@ -229,14 +252,13 @@ def eliminar_rutina(rutina_id):
     if not rutina:
         return jsonify({"msg": "No existe esa rutina"}), 404
 
-    #hay que cambiar esto para que se borre en cascada aprovechando la BD
+    # hay que cambiar esto para que se borre en cascada aprovechando la BD
     steps = Paso.query.filter_by(rutina_id=rutina.id).all()
 
     for step in steps:
-        print(step.id)
-        events = Event.query.filter_by(step_source = step.id).delete()
+        Event.query.filter_by(step_source=step.id).delete()
 
-    Paso.query.filter_by(rutina_id=rutina.id).delete()    
+    Paso.query.filter_by(rutina_id=rutina.id).delete()
     db.session.delete(rutina)
     db.session.commit()
     return jsonify({"msg": "Rutina eliminada correctamente"})
@@ -302,6 +324,7 @@ def get_user_info():
     response_data["profile_pic"] = profile_pic_url
     return jsonify(response_data)
 
+
 #### Ruta para cambiear la informacion del usuario
 @api.route("/user", methods=["PATCH"])
 @jwt_required()
@@ -326,24 +349,24 @@ def patch_user_info():
     db.session.commit()
     return jsonify({"msg": "ok"}), 200
 
-@api.route('/setprofilepic', methods=['POST'])
+
+@api.route("/setprofilepic", methods=["POST"])
 @jwt_required()
 def upload_pic():
     user_id = get_jwt_identity()
-    file=request.files['file']
-    extension=file.filename.split('.')[1]
-    temp=tempfile.NamedTemporaryFile(delete=False)
+    file = request.files["file"]
+    extension = file.filename.split(".")[1]
+    temp = tempfile.NamedTemporaryFile(delete=False)
     file.save(temp)
-    bucket=storage.bucket(name="trackbit-4cb19.appspot.com")
-    filename="profile_pics/"+str(user_id)+"."+extension
+    bucket = storage.bucket(name="trackbit-4cb19.appspot.com")
+    filename = "profile_pics/" + str(user_id) + "." + extension
     resource = bucket.blob(filename)
-    resource.upload_from_filename(temp.name, content_type="image/"+extension)
+    resource.upload_from_filename(temp.name, content_type="image/" + extension)
     user = User.query.get(user_id)
-    user.profile_pic=filename
+    user.profile_pic = filename
     db.session.add(user)
     db.session.commit()
     return jsonify({"msg": "se subio la imagen"})
-
 
 
 @api.route("/refresh")
@@ -416,6 +439,24 @@ def subscribe_newsletter():
         return jsonify({"msg": "You are already subscribed"}), 400
 
 
+@api.route("/report", methods=["POST"])
+@jwt_required()
+def report():
+    user_id = get_jwt_identity()
+    step_id = request.json.get("stepId")
+    time = request.json.get("time")
+    if time == "NOW":
+        time = datetime.now()
+    else:
+        time = datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%f%z")
+    reporte = Reportes(
+        user_id=user_id, step_id=step_id, time=time.time(), date=time.date()
+    )
+    db.session.add(reporte)
+    db.session.commit()
+    return (jsonify({"msg": "report registered"})), 200
+
+
 @api.route("/steps")
 @jwt_required()
 def get_steps():
@@ -431,7 +472,12 @@ def get_events():
     user_id = get_jwt_identity()
     beginning_date = date.fromisoformat(request.json.get("beginning_date"))
     ending_date = date.fromisoformat(request.json.get("ending_date"))
-    dates = db.session.query(Event.scheduled_date).group_by(Event.scheduled_date).order_by(Event.scheduled_date).all()
+    dates = (
+        db.session.query(Event.scheduled_date)
+        .filter(Event.user_id == user_id,Event.scheduled_date.between(beginning_date, ending_date))
+       .group_by(Event.scheduled_date).order_by(Event.scheduled_date).all()
+    )
+
     date_collection = [
         (
             {
@@ -450,12 +496,12 @@ def get_events():
     return jsonify(date_collection), 200
 
 
-@api.route('/task', methods=['PATCH'])
+@api.route("/task", methods=["PATCH"])
 @jwt_required()
 def set_task_done():
-    task_id = request.json.get('task_id')
+    task_id = request.json.get("task_id")
     task = Event.query.get(task_id)
-    task.done = request.json.get('value')
+    task.done = request.json.get("value")
     db.session.add(task)
     db.session.commit()
-    return jsonify({'msg': 'task updated'}), 200
+    return jsonify({"msg": "task updated"}), 200

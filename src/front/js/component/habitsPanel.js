@@ -4,107 +4,73 @@ import { motion, AnimatePresence } from "framer-motion";
 import { TBMenu } from "./menu";
 import stl from '../../styles/dashboard.module.css'
 
-export function DeleteHabitConfirmationPanel({ closeHandler, habitName, habitId }) {
-    const { store, actions } = useContext(Context);
-
-    console.log(habitId)
-
-    return (
-        <motion.div
-            initial={false}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={stl.backdrop}
-        >
-            <div className="stepContainer">
-                <button onClick={() => closeHandler()}>x</button>
-                <span> Realmente quieres borrar el habito {habitName}</span>
-                <button onClick={() => {
-                    console.log(habitId)
-                    actions.deleteHabit(habitId)
-                    closeHandler()}}>Si</button>
-                <button onClick={() => closeHandler()}>No</button>
-            </div>
-        </motion.div>
-    );
-}
 
 function HabitContaitner() {
     const { store, actions } = useContext(Context);
     const [active, setActive] = useState(-1)
     const [deleteConfirmation, setDeleteConfirmation] = useState(-1)
 
-
-    
-
-    const variants = {
-        open: {
-            height: 'auto',
-            transition: {
-                type: "spring",
-                damping: 10,
-                stiffness: 100
-            },
-        },
-        closed: {
-            height: 0,
-            transition: {
-                type: "spring",
-                damping: 10,
-                stiffness: 100
-            },
-
-        }
-    }
-
     return (
-        <div>
+        <div className="tb-habits-container">
             {store.habits.map((e, i) => {
-                return (<div key={i}>
-                    <AnimatePresence>
-                        {(deleteConfirmation == i) ?
-                            <DeleteHabitConfirmationPanel closeHandler={() => setDeleteConfirmation(-1)} habitName={e.name} habitId={e.id} />
-                            :
-                            ''
-                        }
-                    </AnimatePresence>
-
-                    <div className="tb-habit-header"
-                        onClick={(e) => setActive(active == i ? -1 : i)}>
-                        <h2>{e.name}</h2>
-                        <div>
-                            <div className="tb-habit-color"
-                                onClick={(ele) => {
-                                    ele.stopPropagation()
-                                    actions.setHAbitColor(
-                                        e.id,
-                                        '#' + Math.floor(Math.random() * 256 * 256 * 256).toString(16))
-                                }
-                                }
-                                style={{ backgroundColor: `${e.color}` }}></div>
-                            <TBMenu menuTitle='...' options={[{
-                                option: 'Borrar Habito',
-                                action: () => { setDeleteConfirmation(i) }
-                            }]} />
-                        </div>
-                    </div>
-
-                    <motion.div
-                        animate={active == i ? "open" : "closed"}
-                        variants={variants}
-                        className="tb-habit-info">
-                        <h3>Descripcion:</h3>
-                        <p>{e.Descripcion}</p>
-                        <h3>Pasos:</h3>
-                        {e.steps.map((e) => (
+                return (
+                    <div key={i}>
+                        <AnimatePresence>
+                            {(deleteConfirmation == i) ?
+                                <DeleteHabitConfirmationPanel closeHandler={() => setDeleteConfirmation(-1)} habitName={e.name} habitId={e.id} />
+                                :
+                                ''
+                            }
+                        </AnimatePresence>
+                        <div className="tb-habit-header"
+                            onClick={() => setActive(active == i ? -1 : i)}>
+                            <h2>{e.name}</h2>
                             <div>
-                                <h4>{e.name}</h4>
-
+                                <div className="tb-habit-color"
+                                    onClick={(ele) => {
+                                        ele.stopPropagation()
+                                        actions.setHAbitColor(
+                                            e.id,
+                                            '#' + Math.floor(Math.random() * 256 * 256 * 256).toString(16))
+                                    }
+                                    }
+                                    style={{ backgroundColor: `${e.color}` }}></div>
+                                <TBMenu menuTitle='...' options={[{
+                                    option: 'Borrar Habito',
+                                    action: () => { actions.showModal('deleteHabit', { id: e.id, name: e.name }) }
+                                }]} />
                             </div>
-                        )
-                        )}
-                    </motion.div>
-                </div>)
+                        </div>
+                        <AnimatePresence>
+                            {active == i ?
+                                <motion.div
+                                    initial={{ height: 0 }}
+                                    animate={{ height: 'auto' }}
+                                    exit={{ height: 0 }}
+                                    style={{ overflow: 'hidden' }}
+                                >
+                                    <div className="tb-habit-info">
+                                        <h3>Descripcion:</h3>
+                                        <p>{e.description}</p>
+                                        <h3>Pasos:</h3>
+                                        {e.steps.map((step, ind) => (
+                                            <div key={ind}>
+                                                <h4>{step.name}</h4>
+                                                <div className="tb-step-bar">
+                                                    {
+                                                        Array.apply(null, Array(step.total_events)).map((el, iin) => {
+                                                            return (<div key={iin} style={iin >= step.done_count ? {} : { backgroundColor: e.color }} />)
+                                                        })
+                                                    }
+                                                </div>
+                                            </div>
+                                        )
+                                        )}
+                                    </div>
+                                </motion.div> : null}
+
+                        </AnimatePresence>
+                    </div>)
             }
             )
 
@@ -132,7 +98,7 @@ export function HabitsPanel() {
     }, [store.accessToken])
 
     return (
-        <div className="tb-habits-container">
+        <div className="tb-hbt-section">
             <h1>Tus Habitos:</h1>
 
             <HabitContaitner />

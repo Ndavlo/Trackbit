@@ -70,15 +70,14 @@ function Day({ date, data }) {
     return (
         <div
             className={expanded ? `expanded-day` : `${stl.cell} ${stl.day}`}
+            tabIndex={0}
             style={{ gridArea: `${week}/${day + 1}/${week}/${day + 1}` }}
             onClick={!expanded ? (e) => {
                 setExpanded(!expanded)
             } : null}
+            onBlur={(e)=>{console.log('Hola');setExpanded(false)}}
         >
             <span>{time.toLocaleString('es-US', { month: "short", day: 'numeric', weekday: 'short' })}</span>
-            <span className="close-x" onClick={expanded ? (e) => {
-                setExpanded(!expanded)
-            } : null}>X</span>
             {bars.sort((a,b)=>(a.habitId>b.habitId)?1:-1).map((e, i) => {
                 return (
                     <div className='h-bar' key={i}>

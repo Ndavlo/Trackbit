@@ -10,6 +10,7 @@ import injectContext from "./store/appContext";
 import { Blog } from "./pages/blog";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import { ModalDisplay } from "./component/modalDisplay";
 import { Dashboard } from "./pages/dashboard";
 import { Signup } from "./pages/signup";
 
@@ -21,6 +22,7 @@ const Layout = () => {
 
     return (
         <div>
+            <ModalDisplay/>
             <BrowserRouter basename={basename}>
                     <Navbar />
                     <Routes>

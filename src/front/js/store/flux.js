@@ -151,10 +151,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			getEvents: async () => {
-				const daysToAdd = 6 - new Date().getDay()
+				const daysToAdd = 7 - new Date().getDay()
 				let enddate = new Date()
-				enddate = new Date(enddate.setDate(enddate.getDate() + daysToAdd))
-				console.log(enddate.toISOString())
+				enddate.setDate(enddate.getDate() + daysToAdd)
+				const startDate = new Date(enddate.getDate()-371)
 				const resp = await fetchProtected(`${apiUrl}/events`,
 					{
 						method: 'POST',
@@ -162,8 +162,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						},
 						body: JSON.stringify({
-							beginning_date: "2022-12-31",
-							ending_date: `${enddate.toISOString().slice(0,10)}`
+							beginning_date: `${startDate.toISOString().slice(0, 10)}`,
+							ending_date: `${enddate.toISOString().slice(0, 10)}`
 						})
 					}
 				)
@@ -177,26 +177,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ events: data })
 			},
 
-			addReport: async (time, stepId) => {
-				await fetchProtected(`${apiUrl}/report`, {
-					method: 'POST',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({ time, stepId })
-				})
-				getActions().getReports()
-			},
-
-			addHabit: async (name, description, steps) => {
+			addHabit: async (name, description, order, color, steps) => {
 				await fetchProtected(`${apiUrl}/rutina`, {
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ name, description, steps })
+					body: JSON.stringify({ name, description, order, color, steps })
 				})
 				getActions().getHabits()
+
 			},
 
 			deleteHabit: async (id) => {
@@ -213,6 +203,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json()
 				setStore({ habits: data })
 				getActions().getSteps()
+				getActions().getEvents()
 			},
 
 			getSteps: async () => {
@@ -229,15 +220,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			pushNewStepInStore: () => {
 				let newSteps = getStore().newSteps
-				//default values for a new step
+				const startDate = new Date()
+				const endDate = new Date(startDate.getTime() + 86400 * 1000 * 30)
+				console.log(startDate.toISOString())
+				console.log(endDate.toISOString())
 				newSteps.push({
 					name: 'Paso',
 					description: 'Descripcion',
 					content: 'Contenido',
 					repetition: '1',
 					interval: 'D',
-					startDate: '',
-					endDate: '',
+					startDate: startDate.toISOString().slice(0,10),
+					endDate: endDate.toISOString().slice(0,10),
 					time: '00:00:00'
 				})
 				setStore({ newSteps: newSteps })
@@ -273,10 +267,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 				})
 				getActions().getEvents()
+				getActions().getHabits()
 			},
 
 			setHAbitColor: async (habitId, color) => {
-				console.log(habitId)
 				const response = await fetchProtected(`${apiUrl}/habit`, {
 					method: 'PATCH',
 					headers: {
@@ -294,6 +288,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().getEvents()
 
 			},
+
+			showModal: (modal, data) => {
+				setStore({
+					modal: {
+						modal: modal,
+						data: data
+					}
+				})
+			},
+
+			closeModal: () => {
+				setStore({ modal: false })
+			}
 
 
 
