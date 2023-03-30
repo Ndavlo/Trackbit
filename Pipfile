@@ -22,6 +22,8 @@ flask-jwt-extended = "*"
 flask-bcrypt = "*"
 firebase-admin = "*"
 sendgrid = "*"
+importlib-metadata = "*"
+importlib-resources = "*"
 
 [requires]
 python_version = "3.10"
