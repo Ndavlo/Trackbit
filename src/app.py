@@ -17,7 +17,7 @@ from flask_jwt_extended import JWTManager
 import firebase_admin
 from firebase_admin import credentials
 
-cred = credentials.Certificate("firebase-key.json")
+cred = credentials.Certificate("firebase_credentials.json")
 firebase_admin.initialize_app(cred)
 
 #from models import Person
