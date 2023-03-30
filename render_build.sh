@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # exit on error
 set -o errexit
-
+cat .env
 npm install
 npm run build
 
