@@ -61,7 +61,7 @@ Thumbs.db
 *.rar
 *.tar
 *.zip
-
+Pipfile.lock
 # ignore node/grunt dependency directories
 node_modules/
 
